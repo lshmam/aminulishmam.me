@@ -1,0 +1,40 @@
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1f2937; /* dark gray color */
+  border-radius: 5px;
+  border: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #374151; /* slightly lighter on hover */
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1f2937 transparent;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera when not hovering */
+::-webkit-scrollbar {
+  width: 0;
+  transition: width 0.2s;
+}
+
+/* Show scrollbar on hover */
+*:hover::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Ensure the scrollbar doesn't affect layout */
+* {
+  scrollbar-gutter: stable;
+}
+
