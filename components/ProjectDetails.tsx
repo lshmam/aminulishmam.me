@@ -1,17 +1,4 @@
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  liveUrl: string;
-  githubUrl: string;
-  futureWork?: {
-    title: string;
-    description: string;
-    skills: string[];
-  };
-}
+import type { Project } from "@/types/index";
 
 export default function ProjectDetails({ project }: { project: Project }) {
   return (

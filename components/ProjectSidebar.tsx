@@ -2,21 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Mail, ArrowRight } from "lucide-react";
 import Image from "next/image";
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  liveUrl: string;
-  githubUrl: string;
-  futureWork?: {
-    title: string;
-    description: string;
-    skills: string[];
-  };
-}
+import type { Project } from "@/types/index";
 
 export default function ProjectSidebar({ project }: { project: Project }) {
   return (
