@@ -1,4 +1,4 @@
-import type { Project } from "@/types/index";
+import type { Project } from "@/types"
 
 export default function ProjectDetails({ project }: { project: Project }) {
   return (
@@ -6,10 +6,9 @@ export default function ProjectDetails({ project }: { project: Project }) {
       <section>
         <h2 className="text-2xl font-semibold mb-4">Project Overview</h2>
         <p className="text-gray-300">
-          This is where you would provide a more detailed description of the
-          project, including its goals, challenges, and solutions. You can
-          expand on the brief description provided in the sidebar, giving
-          visitors a comprehensive understanding of the project.
+          This is where you would provide a more detailed description of the project, including its goals, challenges,
+          and solutions. You can expand on the brief description provided in the sidebar, giving visitors a
+          comprehensive understanding of the project.
         </p>
       </section>
 
@@ -25,21 +24,19 @@ export default function ProjectDetails({ project }: { project: Project }) {
       <section>
         <h2 className="text-2xl font-semibold mb-4">Development Process</h2>
         <p className="text-gray-300">
-          Here you can describe the development process, including any
-          interesting challenges you faced and how you overcame them. This is a
-          great place to showcase your problem-solving skills and attention to
-          detail.
+          Here you can describe the development process, including any interesting challenges you faced and how you
+          overcame them. This is a great place to showcase your problem-solving skills and attention to detail.
         </p>
       </section>
 
       <section>
         <h2 className="text-2xl font-semibold mb-4">Results and Impact</h2>
         <p className="text-gray-300">
-          Discuss the outcomes of the project. Did it meet its goals? What was
-          the impact on the client or users? If you have any metrics or
-          testimonials, this would be a great place to include them.
+          Discuss the outcomes of the project. Did it meet its goals? What was the impact on the client or users? If you
+          have any metrics or testimonials, this would be a great place to include them.
         </p>
       </section>
     </div>
-  );
+  )
 }
+

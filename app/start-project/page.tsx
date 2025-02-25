@@ -1,20 +1,14 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
+import { useState } from "react"
+import Sidebar from "@/components/Sidebar"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "@/components/ui/use-toast"
 
 export default function StartProjectPage() {
   const [formData, setFormData] = useState({
@@ -23,36 +17,28 @@ export default function StartProjectPage() {
     projectType: "",
     budget: "",
     description: "",
-  });
+  })
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, projectType: value }));
-  };
+    setFormData((prev) => ({ ...prev, projectType: value }))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     // Here you would typically send the form data to your backend or email service
-    console.log(formData);
+    console.log(formData)
     toast({
       title: "Project Request Submitted",
       description: "Thank you for your interest. I'll get back to you soon!",
-    });
+    })
     // Reset form after submission
-    setFormData({
-      name: "",
-      email: "",
-      projectType: "",
-      budget: "",
-      description: "",
-    });
-  };
+    setFormData({ name: "", email: "", projectType: "", budget: "", description: "" })
+  }
 
   return (
     <>
@@ -60,8 +46,8 @@ export default function StartProjectPage() {
       <main className="space-y-8">
         <h1 className="text-4xl font-bold mb-8">Start a Project</h1>
         <p className="text-xl text-gray-300 mb-8">
-          Excited to bring your ideas to life? Fill out the form below, and
-          let's start creating something amazing together!
+          Excited to bring your ideas to life? Fill out the form below, and let's start creating something amazing
+          together!
         </p>
         <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
           <div className="space-y-2">
@@ -78,10 +64,7 @@ export default function StartProjectPage() {
             />
           </div>
           <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-200"
-            >
+            <label htmlFor="email" className="text-sm font-medium text-gray-200">
               Email Address
             </label>
             <Input
@@ -95,16 +78,10 @@ export default function StartProjectPage() {
             />
           </div>
           <div className="space-y-2">
-            <label
-              htmlFor="projectType"
-              className="text-sm font-medium text-gray-200"
-            >
+            <label htmlFor="projectType" className="text-sm font-medium text-gray-200">
               Project Type
             </label>
-            <Select
-              onValueChange={handleSelectChange}
-              value={formData.projectType}
-            >
+            <Select onValueChange={handleSelectChange} value={formData.projectType}>
               <SelectTrigger className="bg-gray-800 border-gray-700">
                 <SelectValue placeholder="Select a project type" />
               </SelectTrigger>
@@ -117,10 +94,7 @@ export default function StartProjectPage() {
             </Select>
           </div>
           <div className="space-y-2">
-            <label
-              htmlFor="budget"
-              className="text-sm font-medium text-gray-200"
-            >
+            <label htmlFor="budget" className="text-sm font-medium text-gray-200">
               Budget Range
             </label>
             <Input
@@ -133,10 +107,7 @@ export default function StartProjectPage() {
             />
           </div>
           <div className="space-y-2">
-            <label
-              htmlFor="description"
-              className="text-sm font-medium text-gray-200"
-            >
+            <label htmlFor="description" className="text-sm font-medium text-gray-200">
               Project Description
             </label>
             <Textarea
@@ -156,5 +127,6 @@ export default function StartProjectPage() {
         </form>
       </main>
     </>
-  );
+  )
 }
+

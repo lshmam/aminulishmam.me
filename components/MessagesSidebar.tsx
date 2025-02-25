@@ -1,6 +1,60 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MessageSquare, ThumbsUp, AlertTriangle, Smile } from "lucide-react"
+import { supabase } from "@/utils/supabase"
+
+function MessageStats() {
+  const [stats, setStats] = useState({ total: 0, today: 0 })
+
+  useEffect(() => {
+    async function fetchStats() {
+      // Get total count
+      const { count: total } = await supabase.from("messages").select("*", { count: "exact", head: true })
+
+      // Get today's count
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      const { count: todayCount } = await supabase
+        .from("messages")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", today.toISOString())
+
+      setStats({
+        total: total || 0,
+        today: todayCount || 0,
+      })
+    }
+
+    fetchStats()
+
+    // Subscribe to changes
+    const channel = supabase
+      .channel("messages-stats")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, () => fetchStats())
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  return (
+    <ul className="space-y-2">
+      <li className="flex items-center justify-between">
+        <span className="text-gray-300">Total Messages</span>
+        <span className="text-gray-300">{stats.total}</span>
+      </li>
+      <li className="flex items-center justify-between">
+        <span className="text-gray-300">New Today</span>
+        <span className="text-gray-300">{stats.today}</span>
+      </li>
+    </ul>
+  )
+}
 
 export default function MessagesSidebar() {
   return (
@@ -31,16 +85,7 @@ export default function MessagesSidebar() {
 
       <div className="space-y-4">
         <h2 className="text-xl font-semibold mb-2">Message Stats</h2>
-        <ul className="space-y-2">
-          <li className="flex items-center justify-between">
-            <span className="text-gray-300">Total Messages</span>
-            <span className="text-gray-300">152</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <span className="text-gray-300">New Today</span>
-            <span className="text-gray-300">7</span>
-          </li>
-        </ul>
+        <MessageStats />
       </div>
 
       <div className="space-y-4">

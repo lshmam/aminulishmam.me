@@ -1,53 +1,34 @@
-"use server";
+"use server"
 
-import fs from "fs/promises";
-import path from "path";
+import { supabase } from "@/utils/supabase"
 
-interface Message {
-  id: number;
-  content: string;
-  timestamp: string;
+export interface Message {
+  id: number
+  content: string
+  created_at: string
 }
 
-const messagesFile = path.join(process.cwd(), "messages.json");
-
-export async function addMessage(message: string) {
-  const newMessage: Message = {
-    id: Date.now(),
-    content: message,
-    timestamp: new Date().toISOString(),
-  };
-
+export async function addMessage(content: string) {
   try {
-    let messages: Message[] = [];
-    try {
-      const data = await fs.readFile(messagesFile, "utf8");
-      messages = JSON.parse(data);
-    } catch (error) {
-      // File doesn't exist or is empty, start with an empty array
-    }
+    const { data, error } = await supabase.from("messages").insert([{ content }]).select()
 
-    messages.push(newMessage);
-    await fs.writeFile(messagesFile, JSON.stringify(messages, null, 2));
+    if (error) throw error
+    return { success: true, data }
   } catch (error) {
-    console.error("Error adding message:", error);
-    throw new Error("Failed to add message");
+    console.error("Error adding message:", error)
+    throw new Error("Failed to add message")
   }
 }
 
 export async function getMessages(): Promise<Message[]> {
   try {
-    try {
-      await fs.access(messagesFile);
-    } catch (error) {
-      // File doesn't exist, create it with an empty array
-      await fs.writeFile(messagesFile, "[]");
-    }
+    const { data, error } = await supabase.from("messages").select("*").order("created_at", { ascending: false })
 
-    const data = await fs.readFile(messagesFile, "utf8");
-    return JSON.parse(data);
+    if (error) throw error
+    return data || []
   } catch (error) {
-    console.error("Error reading messages:", error);
-    return [];
+    console.error("Error fetching messages:", error)
+    return []
   }
 }
+

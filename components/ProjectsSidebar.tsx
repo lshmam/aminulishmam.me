@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Clock, FlameIcon as Fire } from "lucide-react";
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, Star, Clock, FlameIcon as Fire } from "lucide-react"
 
 export default function ProjectsSidebar() {
   return (
@@ -9,34 +9,22 @@ export default function ProjectsSidebar() {
         <h2 className="text-xl font-semibold mb-2">Project Categories</h2>
         <ul className="space-y-2">
           <li>
-            <Link
-              href="/projects?category=web"
-              className="text-gray-300 hover:text-white"
-            >
+            <Link href="/projects?category=web" className="text-gray-300 hover:text-white">
               Web Development
             </Link>
           </li>
           <li>
-            <Link
-              href="/projects?category=mobile"
-              className="text-gray-300 hover:text-white"
-            >
+            <Link href="/projects?category=mobile" className="text-gray-300 hover:text-white">
               Mobile Apps
             </Link>
           </li>
           <li>
-            <Link
-              href="/projects?category=ui"
-              className="text-gray-300 hover:text-white"
-            >
+            <Link href="/projects?category=ui" className="text-gray-300 hover:text-white">
               UI/UX Design
             </Link>
           </li>
           <li>
-            <Link
-              href="/projects?category=branding"
-              className="text-gray-300 hover:text-white"
-            >
+            <Link href="/projects?category=branding" className="text-gray-300 hover:text-white">
               Branding
             </Link>
           </li>
@@ -47,19 +35,13 @@ export default function ProjectsSidebar() {
         <h2 className="text-xl font-semibold mb-2">Featured Projects</h2>
         <ul className="space-y-2">
           <li>
-            <Link
-              href="/project/1"
-              className="text-gray-300 hover:text-white flex items-center"
-            >
+            <Link href="/project/1" className="text-gray-300 hover:text-white flex items-center">
               <Star className="w-4 h-4 mr-2" />
               E-commerce Platform
             </Link>
           </li>
           <li>
-            <Link
-              href="/project/2"
-              className="text-gray-300 hover:text-white flex items-center"
-            >
+            <Link href="/project/2" className="text-gray-300 hover:text-white flex items-center">
               <Star className="w-4 h-4 mr-2" />
               Task Management App
             </Link>
@@ -71,19 +53,13 @@ export default function ProjectsSidebar() {
         <h2 className="text-xl font-semibold mb-2">Project Highlights</h2>
         <ul className="space-y-2">
           <li>
-            <Link
-              href="/projects?sort=recent"
-              className="text-gray-300 hover:text-white flex items-center"
-            >
+            <Link href="/projects?sort=recent" className="text-gray-300 hover:text-white flex items-center">
               <Clock className="w-4 h-4 mr-2" />
               Recent Projects
             </Link>
           </li>
           <li>
-            <Link
-              href="/projects?sort=popular"
-              className="text-gray-300 hover:text-white flex items-center"
-            >
+            <Link href="/projects?sort=popular" className="text-gray-300 hover:text-white flex items-center">
               <Fire className="w-4 h-4 mr-2" />
               Popular Projects
             </Link>
@@ -98,5 +74,6 @@ export default function ProjectsSidebar() {
         </Link>
       </Button>
     </div>
-  );
+  )
 }
+

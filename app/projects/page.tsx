@@ -1,5 +1,5 @@
-import Sidebar from "@/components/Sidebar";
-import AllProjectsGrid from "@/components/AllProjectsGrid";
+import Sidebar from "@/components/Sidebar"
+import AllProjectsGrid from "@/components/AllProjectsGrid"
 
 export default function AllProjectsPage() {
   return (
@@ -10,5 +10,6 @@ export default function AllProjectsPage() {
         <AllProjectsGrid />
       </main>
     </>
-  );
+  )
 }
+
