@@ -110,133 +110,28 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
           transition={{ duration: 0.8 }}
           className="max-w-5xl"
         >
-          <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] text-foreground leading-[1.1]">
-            {project.title}.{" "}
-            <span className="text-foreground/50">{project.impactStatement}</span>
+          <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
+            <span className="text-foreground/50">{project.title}.</span>{" "}
+            <span className="text-foreground">{project.impactStatement}</span>
           </h1>
 
-          {/* PM Skill Tags */}
-          <div className="flex flex-wrap gap-2 mt-8">
-            {project.pmSkills.map((skill) => (
-              <span
-                key={skill}
-                className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ───────────────────────── CONTENT GRID (Left: Scroll, Right: Sticky Accordion) ───────────────────────── */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-32">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[1.5fr_400px] gap-8 lg:gap-16 items-start">
-          
-          {/* Left Column — Primary Image & Deep Dives */}
-          <div className="w-full space-y-24 lg:space-y-32">
+          {/* Page Header — PM Metrics & Executive Summary */}
+          <div className="flex flex-col gap-12 mt-12 pb-20 border-b border-foreground/5 mb-24">
             
-            {/* Primary Image */}
-            <FadeIn delay={0.2} className="w-full">
-              <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
-                <Image
-                  src={project.images[0]}
-                  alt={project.title}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                />
-              </div>
-            </FadeIn>
-
-            {/* Deep Dive Sections */}
-            <div className="space-y-24 lg:space-y-32">
-              {project.sections.map((section, index) => {
-                const layout = sectionLayouts[index % sectionLayouts.length];
-
-                if (layout === "full-dark") {
-                  return (
-                    <FadeIn key={section.label}>
-                      <div className="bg-foreground p-8 sm:p-12 md:p-16">
-                        <p className="text-[10px] tracking-[0.12em] uppercase text-white/40 font-medium mb-4">
-                          {section.label}
-                        </p>
-                        <h3 className="text-[24px] sm:text-[32px] md:text-[36px] font-normal tracking-[-0.01em] text-white leading-[1.2] max-w-3xl mb-6">
-                          {section.heading}
-                        </h3>
-                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-white/60 max-w-3xl mb-12">
-                          {section.body}
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {section.images.map((img, imgIdx) => (
-                            <div key={imgIdx} className="overflow-hidden relative" style={{ aspectRatio: "16/10" }}>
-                              <Image src={img} alt={`${section.label} ${imgIdx + 1}`} fill className="object-cover" sizes="50vw" />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </FadeIn>
-                  );
-                }
-
-                // text-left or text-right alternating layouts
-                const isReversed = layout === "text-right";
-
-                return (
-                  <FadeIn key={section.label}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-                      {/* Text Side */}
-                      <div className={`${isReversed ? "md:order-2" : "md:order-1"}`}>
-                        <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-4">
-                          {section.label}
-                        </p>
-                        <h3 className="text-[24px] sm:text-[28px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
-                          {section.heading}
-                        </h3>
-                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-foreground/60">
-                          {section.body}
-                        </p>
-                      </div>
-
-                      {/* Image Side */}
-                      <div className={`${isReversed ? "md:order-1" : "md:order-2"} space-y-5`}>
-                        {section.images.map((img, imgIdx) => (
-                          <div key={imgIdx} className="overflow-hidden relative" style={{ aspectRatio: imgIdx === 0 ? "4/3" : "16/10" }}>
-                            <Image src={img} alt={`${section.label} ${imgIdx + 1}`} fill className="object-cover" sizes="50vw" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </FadeIn>
-                );
-              })}
+            {/* PM Skill Tags */}
+            <div className="flex flex-wrap gap-2">
+              {project.pmSkills.map((skill) => (
+                <span
+                  key={skill}
+                  className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
+                >
+                  {skill}
+                </span>
+              ))}
             </div>
 
-            {/* Outcome */}
-            <FadeIn>
-              <div className="max-w-4xl mx-auto text-center py-16">
-                <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
-                  Outcome
-                </p>
-                <p className="text-[28px] sm:text-[36px] font-normal leading-[1.3] tracking-[-0.01em] text-foreground">
-                  &ldquo;{project.outcome}&rdquo;
-                </p>
-              </div>
-            </FadeIn>
-
-            {/* Final Image */}
-            <FadeIn>
-              <div className="w-full overflow-hidden relative" style={{ aspectRatio: "16/9" }}>
-                <Image src={project.images[0]} alt={`${project.title} — final`} fill className="object-cover" sizes="100vw" />
-              </div>
-            </FadeIn>
-
-          </div>
-
-          {/* Right Column — Sticky Accordion */}
-          <div className="w-full lg:sticky lg:top-12 pt-4 lg:pt-0">
-            <FadeIn delay={0.3} className="w-full">
+            {/* Modular Executive Summary (Accordion) — Now at Top */}
+            <div className="w-full max-w-[800px]">
               <div className="flex flex-col gap-[2px]">
                 {accordionItems.map((item, i) => (
                   <AccordionItem
@@ -248,24 +143,104 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
                   />
                 ))}
 
-                {/* Website Link Button - Integrated with gap-2px */}
+                {/* Website Link Button */}
                 {project.websiteUrl && (
                   <div className="flex">
                     <Link 
                       href={project.websiteUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+                      className="inline-flex items-center justify-center px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight mt-1"
                     >
                       {project.websiteLabel || "Visit Website"}
                     </Link>
                   </div>
                 )}
               </div>
-            </FadeIn>
+            </div>
           </div>
+        </motion.div>
+      </div>
 
-        </div>
+      {/* ───────────────────────── SCROLL-SYNCED SECTIONS ───────────────────────── */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 space-y-40 pb-40">
+        
+        {/* Primary Hero Image */}
+        <FadeIn delay={0.2} className="w-full">
+          <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
+            <Image
+              src={project.images[0]}
+              alt={project.title}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        </FadeIn>
+
+        {/* Deep Dive Sections: Scroll-Sync Logic */}
+        {project.sections.map((section, index) => (
+          <section key={section.label} className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-24 items-start">
+            
+            {/* Left Column — Scrolling Content (Multiple Images) */}
+            <div className="space-y-12">
+              {section.images.map((img, imgIdx) => (
+                <FadeIn key={imgIdx}>
+                  <div className="w-full overflow-hidden relative border border-foreground/5" style={{ aspectRatio: "4/3" }}>
+                    <Image
+                      src={img}
+                      alt={`${section.label} — image ${imgIdx + 1}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+
+            {/* Right Column — Sticky Text (Fades in and stays fixed) */}
+            <div className="lg:sticky lg:top-32 self-start py-4">
+              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
+                0{index + 1} — {section.label}
+              </p>
+              <h3 className="text-[28px] sm:text-[32px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                {section.heading}
+              </h3>
+              <p className="text-[15px] sm:text-[16px] leading-[1.8] text-foreground/60 max-w-lg">
+                {section.body}
+              </p>
+            </div>
+          </section>
+        ))}
+
+        {/* Outcome Section — Centered Accent */}
+        <FadeIn>
+          <div className="max-w-4xl mx-auto text-center pt-20 pb-10 border-t border-foreground/5">
+            <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-8">
+              Project Outcome
+            </p>
+            <p className="text-[32px] sm:text-[42px] font-normal leading-[1.25] tracking-[-0.02em] text-foreground italic decoration-foreground/20">
+              &ldquo;{project.outcome}&rdquo;
+            </p>
+
+            {/* Redundant Website Link Button — Bottom */}
+            {project.websiteUrl && (
+              <div className="mt-12 flex justify-center">
+                <Link 
+                  href={project.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3.5 bg-foreground text-background text-[14px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+                >
+                  {project.websiteLabel || "Visit Website"}
+                </Link>
+              </div>
+            )}
+          </div>
+        </FadeIn>
+
       </div>
 
       {/* ───────────────────────── FOOTER NAV ───────────────────────── */}
