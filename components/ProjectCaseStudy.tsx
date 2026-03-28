@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, X, ArrowUpRight } from "lucide-react";
 import { Project } from "@/lib/projects";
 
 // Fade-in on scroll component
@@ -33,169 +33,243 @@ function FadeIn({
   );
 }
 
-// Parallax image component
-function ParallaxImage({
-  src,
-  alt,
-  className = "",
+// Accordion Item
+function AccordionItem({
+  title,
+  content,
+  isOpen,
+  onToggle,
 }: {
-  src: string;
-  alt: string;
-  className?: string;
+  title: string;
+  content: string;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [-40, 40]);
-
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
-      <motion.div style={{ y }} className="relative w-full h-full">
-        <Image src={src} alt={alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 80vw" />
-      </motion.div>
+    <div className={`bg-foreground/[0.03] border border-foreground/5 rounded-[4px] overflow-hidden transition-all duration-300 ${isOpen ? "bg-foreground/[0.05] border-foreground/10" : ""}`}>
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between py-4 px-6 text-left group cursor-pointer transition-all duration-300 hover:bg-foreground/[0.02]"
+      >
+        <span className={`text-[13px] sm:text-[14px] font-medium transition-colors duration-300 ${isOpen ? "text-foreground" : "text-foreground/90 group-hover:text-foreground"} tracking-tight`}>
+          {title}
+        </span>
+        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? "border-foreground bg-foreground text-background rotate-90" : "border-foreground/40 text-foreground/60 group-hover:border-foreground/40 group-hover:text-foreground"}`}>
+          {isOpen ? <X size={14} strokeWidth={2.5} /> : <Plus size={14} strokeWidth={2.5} />}
+        </div>
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+          >
+            <div className="px-6 pb-8">
+              <p className="text-[13px] leading-[1.8] text-foreground/60 max-w-[90%] font-light">
+                {content}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
+// Section layouts
+const sectionLayouts = ["text-left", "text-right", "full-dark", "text-left"] as const;
+
 export default function ProjectCaseStudy({ project }: { project: Project }) {
+  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+
+  const accordionItems = [
+    { title: "The Problem", content: project.accordion.problem },
+    { title: "The Solution", content: project.accordion.solution },
+    { title: "My Role", content: project.accordion.myRole },
+    { title: "Business Impact", content: project.accordion.businessImpact },
+  ];
+
   return (
     <article className="min-h-screen">
 
+      {/* Back Button */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
+        <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          Back to Home
+        </Link>
+      </div>
 
-      {/* Hero Text */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 pt-16 pb-12">
+      {/* ───────────────────────── HERO TEXT ───────────────────────── */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-4xl"
+          className="max-w-5xl"
         >
-          <p className="text-[11px] tracking-[0.1em] uppercase text-muted font-medium mb-5">
-            {project.role}
-          </p>
-          <h1 className="text-[36px] sm:text-[48px] md:text-[60px] font-normal tracking-[-0.02em] text-foreground leading-[1.1]">
-            {project.tagline}
+          <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] text-foreground leading-[1.1]">
+            {project.title}.{" "}
+            <span className="text-foreground/50">{project.impactStatement}</span>
           </h1>
-          <p className="text-[18px] sm:text-[22px] text-muted font-light mt-6 max-w-2xl">
-            {project.title}
-          </p>
+
+          {/* PM Skill Tags */}
+          <div className="flex flex-wrap gap-2 mt-8">
+            {project.pmSkills.map((skill) => (
+              <span
+                key={skill}
+                className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
         </motion.div>
       </div>
 
-      {/* Primary Image below text */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 pb-16">
-        <FadeIn delay={0.2}>
-          <div className="w-full rounded-[24px] overflow-hidden relative" style={{ height: 'auto', aspectRatio: '16/9' }}>
-            <Image
-              src={project.images[0]}
-              alt={project.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-            />
+      {/* ───────────────────────── CONTENT GRID (Left: Scroll, Right: Sticky Accordion) ───────────────────────── */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-32">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[1.5fr_400px] gap-8 lg:gap-16 items-start">
+          
+          {/* Left Column — Primary Image & Deep Dives */}
+          <div className="w-full space-y-24 lg:space-y-32">
+            
+            {/* Primary Image */}
+            <FadeIn delay={0.2} className="w-full">
+              <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
+                <Image
+                  src={project.images[0]}
+                  alt={project.title}
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                />
+              </div>
+            </FadeIn>
+
+            {/* Deep Dive Sections */}
+            <div className="space-y-24 lg:space-y-32">
+              {project.sections.map((section, index) => {
+                const layout = sectionLayouts[index % sectionLayouts.length];
+
+                if (layout === "full-dark") {
+                  return (
+                    <FadeIn key={section.label}>
+                      <div className="bg-foreground p-8 sm:p-12 md:p-16">
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-white/40 font-medium mb-4">
+                          {section.label}
+                        </p>
+                        <h3 className="text-[24px] sm:text-[32px] md:text-[36px] font-normal tracking-[-0.01em] text-white leading-[1.2] max-w-3xl mb-6">
+                          {section.heading}
+                        </h3>
+                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-white/60 max-w-3xl mb-12">
+                          {section.body}
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {section.images.map((img, imgIdx) => (
+                            <div key={imgIdx} className="overflow-hidden relative" style={{ aspectRatio: "16/10" }}>
+                              <Image src={img} alt={`${section.label} ${imgIdx + 1}`} fill className="object-cover" sizes="50vw" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </FadeIn>
+                  );
+                }
+
+                // text-left or text-right alternating layouts
+                const isReversed = layout === "text-right";
+
+                return (
+                  <FadeIn key={section.label}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                      {/* Text Side */}
+                      <div className={`${isReversed ? "md:order-2" : "md:order-1"}`}>
+                        <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-4">
+                          {section.label}
+                        </p>
+                        <h3 className="text-[24px] sm:text-[28px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                          {section.heading}
+                        </h3>
+                        <p className="text-[15px] sm:text-[16px] leading-[1.7] text-foreground/60">
+                          {section.body}
+                        </p>
+                      </div>
+
+                      {/* Image Side */}
+                      <div className={`${isReversed ? "md:order-1" : "md:order-2"} space-y-5`}>
+                        {section.images.map((img, imgIdx) => (
+                          <div key={imgIdx} className="overflow-hidden relative" style={{ aspectRatio: imgIdx === 0 ? "4/3" : "16/10" }}>
+                            <Image src={img} alt={`${section.label} ${imgIdx + 1}`} fill className="object-cover" sizes="50vw" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </FadeIn>
+                );
+              })}
+            </div>
+
+            {/* Outcome */}
+            <FadeIn>
+              <div className="max-w-4xl mx-auto text-center py-16">
+                <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
+                  Outcome
+                </p>
+                <p className="text-[28px] sm:text-[36px] font-normal leading-[1.3] tracking-[-0.01em] text-foreground">
+                  &ldquo;{project.outcome}&rdquo;
+                </p>
+              </div>
+            </FadeIn>
+
+            {/* Final Image */}
+            <FadeIn>
+              <div className="w-full overflow-hidden relative" style={{ aspectRatio: "16/9" }}>
+                <Image src={project.images[0]} alt={`${project.title} — final`} fill className="object-cover" sizes="100vw" />
+              </div>
+            </FadeIn>
+
           </div>
-        </FadeIn>
+
+          {/* Right Column — Sticky Accordion */}
+          <div className="w-full lg:sticky lg:top-12 pt-4 lg:pt-0">
+            <FadeIn delay={0.3} className="w-full">
+              <div className="flex flex-col gap-[2px]">
+                {accordionItems.map((item, i) => (
+                  <AccordionItem
+                    key={item.title}
+                    title={item.title}
+                    content={item.content}
+                    isOpen={openAccordion === i}
+                    onToggle={() => setOpenAccordion(openAccordion === i ? null : i)}
+                  />
+                ))}
+
+                {/* Website Link Button - Integrated with gap-2px */}
+                {project.websiteUrl && (
+                  <div className="flex">
+                    <Link 
+                      href={project.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+                    >
+                      {project.websiteLabel || "Visit Website"}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </FadeIn>
+          </div>
+
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 py-20 space-y-32">
-
-        {/* Overview + stats row */}
-        <FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-16">
-            <div className="space-y-8">
-              <div>
-                <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-2">Role</p>
-                <p className="text-[15px] text-foreground">{project.role}</p>
-              </div>
-              <div>
-                <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-2">Year</p>
-                <p className="text-[15px] text-foreground">{project.year}</p>
-              </div>
-              <div>
-                <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-2">Tags</p>
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map(tag => (
-                    <span key={tag} className="text-[12px] px-3 py-1 rounded-full border border-foreground/15 text-foreground/60">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div>
-              <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-4">Overview</p>
-              <p className="text-[18px] sm:text-[22px] font-normal leading-[1.6] text-foreground">
-                {project.overview}
-              </p>
-            </div>
-          </div>
-        </FadeIn>
-
-        {/* Full-width feature image */}
-        <FadeIn>
-          <div className="w-full rounded-[24px] overflow-hidden relative" style={{ height: 560 }}>
-            <Image
-              src={project.images[1]}
-              alt={`${project.title} — feature`}
-              fill
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        </FadeIn>
-
-        {/* Challenge & Solution */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <FadeIn>
-            <div className="bg-foreground/[0.04] rounded-[20px] p-8 sm:p-10 h-full">
-              <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-4">The Challenge</p>
-              <p className="text-[16px] leading-[1.7] text-foreground/80">{project.challenge}</p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.1}>
-            <div className="bg-foreground rounded-[20px] p-8 sm:p-10 h-full">
-              <p className="text-[10px] tracking-[0.1em] uppercase text-white/40 font-medium mb-4">The Solution</p>
-              <p className="text-[16px] leading-[1.7] text-white/80">{project.solution}</p>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* 2-up image grid */}
-        <div className="grid grid-cols-2 gap-5">
-          <FadeIn className="col-span-1">
-            <div className="rounded-[20px] overflow-hidden" style={{ aspectRatio: "3/4", position: "relative" }}>
-              <Image src={project.images[2]} alt={`${project.title} detail A`} fill className="object-cover" sizes="50vw" />
-            </div>
-          </FadeIn>
-          <FadeIn delay={0.1} className="col-span-1 flex flex-col gap-5">
-            <div className="rounded-[20px] overflow-hidden flex-1" style={{ position: "relative", minHeight: 200 }}>
-              <Image src={project.images[3]} alt={`${project.title} detail B`} fill className="object-cover" sizes="50vw" />
-            </div>
-            <div className="rounded-[20px] overflow-hidden flex-1" style={{ position: "relative", minHeight: 200 }}>
-              <Image src={project.images[4]} alt={`${project.title} detail C`} fill className="object-cover" sizes="50vw" />
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* Outcome */}
-        <FadeIn>
-          <div className="max-w-3xl">
-            <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/40 font-medium mb-5">Outcome</p>
-            <p className="text-[24px] sm:text-[32px] font-normal leading-[1.4] text-foreground">
-              {project.outcome}
-            </p>
-          </div>
-        </FadeIn>
-
-        {/* Final full-width image */}
-        <FadeIn>
-          <div className="w-full rounded-[24px] overflow-hidden" style={{ height: 480, position: "relative" }}>
-            <Image src={project.images[0]} alt={`${project.title} — final`} fill className="object-cover" sizes="100vw" />
-          </div>
-        </FadeIn>
-
-        {/* Next project link */}
+      {/* ───────────────────────── FOOTER NAV ───────────────────────── */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
         <FadeIn>
           <div className="flex items-center justify-between pt-8 border-t border-foreground/10 pb-24">
             <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">

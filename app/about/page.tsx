@@ -1,12 +1,13 @@
 import Header from "@/components/Header";
 import BottomDock from "@/components/BottomDock";
+import ProjectCatalog from "@/components/ProjectCatalog";
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen max-w-[620px] mx-auto px-5 sm:px-6">
       <Header />
       <section className="pt-6 pb-40">
-        <h1 className="text-[26px] sm:text-[30px] font-normal tracking-[-0.01em] text-foreground mb-10">
+        <h1 className="text-[26px] sm:text-[30px] font-normal tracking-[0.01em] text-foreground mb-10">
           About
         </h1>
 
@@ -45,6 +46,8 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
+
+        <ProjectCatalog />
       </section>
       <BottomDock />
     </main>

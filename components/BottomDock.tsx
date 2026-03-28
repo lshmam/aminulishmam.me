@@ -28,30 +28,34 @@ export default function BottomDock() {
           WebkitBackdropFilter: "blur(12px)",
         }}
       >
-        {isWorkPage ? (
-          <Link
-            href="/"
-            className="relative px-6 py-2 rounded-full text-[13.5px] font-medium text-white/60 hover:text-white flex items-center gap-2 transition-colors"
-          >
-            <ArrowLeft size={15} strokeWidth={2.2} />
-            Go Back
-          </Link>
-        ) : (
-          navItems.map(({ label, href }) => {
-            const isActive = pathname === href;
+        {navItems.map(({ label, href }) => {
+          const isActive = pathname === href;
+
+          if (isWorkPage && label === "Work") {
             return (
               <Link
-                key={label}
-                href={href}
-                className={`relative px-4 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 ${
-                  isActive ? "text-white" : "text-white/60 hover:text-white"
-                }`}
+                key="back"
+                href="/"
+                className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[13px] font-medium text-white/60 hover:text-white transition-all duration-200"
               >
-                {label}
+                <ArrowLeft size={14} strokeWidth={2.2} />
+                Back
               </Link>
             );
-          })
-        )}
+          }
+
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`relative px-4 py-1.5 rounded-full text-[13px] font-medium transition-all duration-200 ${
+                isActive ? "text-white bg-white/10" : "text-white/60 hover:text-white"
+              }`}
+            >
+              {label}
+            </Link>
+          );
+        })}
       </motion.nav>
     </div>
   );
