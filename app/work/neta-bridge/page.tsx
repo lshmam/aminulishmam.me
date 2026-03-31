@@ -119,6 +119,17 @@ export default function NetaBridgePage() {
               trust signals into every transaction layer — moving over $50M in the first quarter alone.
             </p>
 
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link
+                href="https://netabridge.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+              >
+                netabridge.com <ArrowUpRight size={14} />
+              </Link>
+            </div>
+
             {/* Hero Meta Strip */}
             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
               {[
