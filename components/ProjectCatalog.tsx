@@ -19,37 +19,40 @@ const catalogItems = [
 
 export default function ProjectCatalog() {
   return (
-    <div className="mt-16 pt-8 border-t border-border">
-      <h2 className="text-[10.5px] font-medium tracking-[0.08em] uppercase text-muted mb-8">
-        Project Catalog
+    <div className="mt-24 pt-10 border-t border-foreground/10 font-mono uppercase tracking-widest">
+      <h2 className="text-[20px] sm:text-[28px] font-bold text-foreground mb-12 flex items-center gap-4">
+        <span className="w-2.5 h-4 bg-foreground animate-pulse" />
+        PROJECT LOG
       </h2>
       
       {/* Timeline Container */}
       <div className="relative pr-2 sm:pr-4">
         {/* Continuous Line */}
-        <div className="absolute left-[13px] top-2 bottom-4 w-[1px] bg-border" />
+        <div className="absolute left-[13px] top-2 bottom-4 w-[1px] bg-foreground/20" />
         
-        <div className="space-y-8 relative pb-4">
+        <div className="space-y-10 relative pb-4">
           {catalogItems.map((item) => (
-            <div key={item.id} className="relative pl-10">
-              {/* Timeline Node / Number */}
+            <div key={item.id} className="relative pl-12">
+              {/* Timeline Node / Number — Military Box */}
               <div 
-                className="absolute left-[3px] top-[2px] w-[21px] h-[21px] rounded-full bg-background border border-border flex items-center justify-center z-10 shadow-sm"
+                className="absolute left-[0px] top-[2px] bg-foreground px-1.5 py-[2px] z-10 shadow-sm"
               >
-                <span className="text-[9px] font-mono font-medium text-foreground">{item.id}</span>
+                <span className="text-[10px] sm:text-[11px] font-bold text-background leading-none block">
+                  {String(item.id).padStart(3, '0')}
+                </span>
               </div>
               
               <div className="flex flex-col group cursor-default">
-                <div className="flex items-center gap-3 mb-1">
-                  <h3 className="text-foreground text-[14px] font-medium tracking-tight group-hover:text-foreground/80 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 mb-2">
+                  <h3 className="text-foreground text-[14px] sm:text-[15px] font-bold tracking-widest group-hover:text-foreground/80 transition-colors">
                     {item.title}
                   </h3>
-                  <span className="text-[11px] text-muted font-mono bg-foreground/[0.04] border border-foreground/[0.05] px-2 py-0.5 rounded-full">
-                    {item.year}
+                  <span className="text-[11px] text-foreground/50 tracking-widest">
+                    [{item.year}]
                   </span>
                 </div>
-                <p className="text-muted text-[13px] leading-relaxed">
-                  {item.subtitle}
+                <p className="text-foreground/70 text-[12px] sm:text-[13px] leading-relaxed tracking-wider lowercase">
+                  &gt; {item.subtitle}
                 </p>
               </div>
             </div>

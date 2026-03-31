@@ -57,9 +57,9 @@ export default function ProjectGrid() {
                   <div className="absolute inset-0 z-0 bg-black">
                     <ParticlesBackground id="neta-particles" />
                   </div>
-                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-                    <h3 className="text-4xl font-semibold text-white tracking-tighter mix-blend-difference">
-                      NetaBridge
+                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none font-mono tracking-widest uppercase">
+                    <h3 className="text-[28px] sm:text-[36px] font-bold text-white mix-blend-difference">
+                      NETABRIDGE
                     </h3>
                   </div>
                 </>
@@ -85,16 +85,18 @@ export default function ProjectGrid() {
               </div>
 
               {/* Text Content */}
-              <div className="absolute bottom-0 left-0 w-full p-8 flex flex-col justify-end z-20 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2">
-                <div className="flex items-center gap-3 mb-3">
+              <div className="absolute bottom-0 left-0 w-full p-8 flex flex-col justify-end z-20 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2 font-mono uppercase tracking-widest">
+                <div className="flex items-center gap-3 mb-4">
                   {project.tags.map((tag) => (
-                    <span key={tag} className="text-[11px] tracking-[0.08em] uppercase font-medium text-white/80">
-                      {tag}
+                    <span key={tag} className="text-[10px] font-bold text-white/70 lowercase">
+                      [{tag}]
                     </span>
                   ))}
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-normal text-white tracking-[-0.02em]">{project.title}</h3>
-                <p className="text-[15px] sm:text-[16px] text-white/70 mt-2 font-light max-w-sm">{project.description}</p>
+                <h3 className="text-[20px] sm:text-[24px] font-bold text-white leading-tight mb-2">{project.title}</h3>
+                <p className="text-[12px] sm:text-[13px] text-white/80 leading-relaxed lowercase max-w-sm">
+                  &gt; {project.description}
+                </p>
               </div>
             </Link>
           ))}

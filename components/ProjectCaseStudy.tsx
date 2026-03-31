@@ -181,7 +181,7 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
 
         {/* Deep Dive Sections: Scroll-Sync Logic */}
         {project.sections.map((section, index) => (
-          <section key={section.label} className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-12 lg:gap-24 items-start">
+          <section key={section.label} className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] xl:grid-cols-2 gap-12 lg:gap-24 items-start">
             
             {/* Left Column — Scrolling Content (Multiple Images) */}
             <div className="space-y-12">
@@ -205,10 +205,10 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
                 0{index + 1} — {section.label}
               </p>
-              <h3 className="text-[28px] sm:text-[32px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+              <h3 className="text-[32px] sm:text-[40px] font-normal tracking-[-0.01em] text-foreground leading-[1.15] mb-8">
                 {section.heading}
               </h3>
-              <p className="text-[15px] sm:text-[16px] leading-[1.8] text-foreground/60 max-w-lg">
+              <p className="text-[16px] xl:text-[18px] leading-[1.8] xl:leading-[1.9] text-foreground/60 max-w-2xl">
                 {section.body}
               </p>
             </div>

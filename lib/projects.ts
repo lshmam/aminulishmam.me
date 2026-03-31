@@ -64,9 +64,9 @@ export const projects: Project[] = [
     },
     sections: [
       {
-        label: "Market Research",
-        heading: "Understanding the dental industry's revenue leak",
-        body: "I conducted 30+ interviews with dental office managers and receptionists across 3 states. The key insight: clinics were losing an average of $8,000/month in missed upsell opportunities simply because receptionists lacked the training and tools to recommend services confidently during patient calls.",
+        label: "A Story in Market Research",
+        heading: "Understanding that AI Receptionists aren't always the answer",
+        body: "Like a lot I got pulled into the AI receptionist hype.  I built one over the weekend, bought a domain, made a website had brochures printed out and got down to the field. I went to auto shops because it each of their calls could lead to high Average Order Value. After talking to a few auto body shops around the area I quickly realised that 'people wanna talk to people'. Ok time for a pivot, how about we make receptionists better instead of replacing them? I saw a reel that expressed the need for receptonists for being good sales people and realised that could be the next move. A platform for receptionists to turn into better salespeople. A sales copilot for receptionists. Updated the platform. Talked to some medspa owners in person and through Linkedin. Pitched to them and then found that this area was actually missing. There was a gap here and then gave up on the project.",
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
