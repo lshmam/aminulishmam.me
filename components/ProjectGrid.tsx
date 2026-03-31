@@ -32,6 +32,19 @@ export default function ProjectGrid() {
                     <img src="/Frame 79.png" alt="Neucler UI" className="w-[15%] md:w-[10%] h-auto object-contain" />
                   </div>
                 </>
+              ) : project.title === "Faeth Studio" ? (
+                <>
+                  <div className="absolute inset-0 z-0 bg-black/40" />
+                  <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none font-mono tracking-[0.4em] uppercase">
+                    <div className="flex flex-col items-center gap-4">
+                      <h3 className="text-[32px] sm:text-[48px] font-bold text-white mix-blend-difference">
+                        FAETH STUDIO
+                      </h3>
+                      <div className="h-[1px] w-24 bg-white/30" />
+                      <span className="text-[10px] text-white/50 tracking-[0.2em]">0-TO-1 DESIGN AGENCY</span>
+                    </div>
+                  </div>
+                </>
               ) : project.title === "Jim Coach" ? (
                 <video
                   autoPlay

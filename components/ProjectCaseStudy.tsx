@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Plus, X, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Project } from "@/lib/projects";
 
 // Fade-in on scroll component
@@ -33,64 +33,8 @@ function FadeIn({
   );
 }
 
-// Accordion Item
-function AccordionItem({
-  title,
-  content,
-  isOpen,
-  onToggle,
-}: {
-  title: string;
-  content: string;
-  isOpen: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <div className={`bg-foreground/[0.03] border border-foreground/5 rounded-[4px] overflow-hidden transition-all duration-300 ${isOpen ? "bg-foreground/[0.05] border-foreground/10" : ""}`}>
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between py-4 px-6 text-left group cursor-pointer transition-all duration-300 hover:bg-foreground/[0.02]"
-      >
-        <span className={`text-[13px] sm:text-[14px] font-medium transition-colors duration-300 ${isOpen ? "text-foreground" : "text-foreground/90 group-hover:text-foreground"} tracking-tight`}>
-          {title}
-        </span>
-        <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isOpen ? "border-foreground bg-foreground text-background rotate-90" : "border-foreground/40 text-foreground/60 group-hover:border-foreground/40 group-hover:text-foreground"}`}>
-          {isOpen ? <X size={14} strokeWidth={2.5} /> : <Plus size={14} strokeWidth={2.5} />}
-        </div>
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
-          >
-            <div className="px-6 pb-8">
-              <p className="text-[13px] leading-[1.8] text-foreground/60 max-w-[90%] font-light">
-                {content}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// Section layouts
-const sectionLayouts = ["text-left", "text-right", "full-dark", "text-left"] as const;
 
 export default function ProjectCaseStudy({ project }: { project: Project }) {
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
-
-  const accordionItems = [
-    { title: "The Problem", content: project.accordion.problem },
-    { title: "The Solution", content: project.accordion.solution },
-    { title: "My Role", content: project.accordion.myRole },
-    { title: "Business Impact", content: project.accordion.businessImpact },
-  ];
-
   return (
     <article className="min-h-screen">
 
@@ -110,56 +54,80 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
           transition={{ duration: 0.8 }}
           className="max-w-5xl"
         >
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {project.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Title + Tagline */}
           <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
             <span className="text-foreground/50">{project.title}.</span>{" "}
-            <span className="text-foreground">{project.impactStatement}</span>
+            <span className="text-foreground">{project.tagline}</span>
           </h1>
 
-          {/* Page Header — PM Metrics & Executive Summary */}
-          <div className="flex flex-col gap-12 mt-12 pb-20 border-b border-foreground/5 mb-24">
-            
-            {/* PM Skill Tags */}
-            <div className="flex flex-wrap gap-2">
-              {project.pmSkills.map((skill) => (
-                <span
-                  key={skill}
-                  className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
+          {/* Overview */}
+          <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
+            {project.overview}
+          </p>
+
+          {/* Website Link */}
+          {project.websiteUrl && (
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link
+                href={project.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+              >
+                {project.websiteLabel || "Visit Website"} <ArrowUpRight size={14} />
+              </Link>
+              {project.gbpUrl && (
+                <Link
+                  href={project.gbpUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 border border-foreground/20 text-foreground text-[13px] font-medium rounded-[4px] hover:bg-foreground/5 transition-all active:scale-[0.98] tracking-tight"
                 >
-                  {skill}
-                </span>
-              ))}
+                  Google Business Profile <ArrowUpRight size={14} />
+                </Link>
+              )}
             </div>
-
-            {/* Modular Executive Summary (Accordion) — Now at Top */}
-            <div className="w-full max-w-[800px]">
-              <div className="flex flex-col gap-[2px]">
-                {accordionItems.map((item, i) => (
-                  <AccordionItem
-                    key={item.title}
-                    title={item.title}
-                    content={item.content}
-                    isOpen={openAccordion === i}
-                    onToggle={() => setOpenAccordion(openAccordion === i ? null : i)}
-                  />
-                ))}
-
-                {/* Website Link Button */}
-                {project.websiteUrl && (
-                  <div className="flex">
-                    <Link 
-                      href={project.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight mt-1"
-                    >
-                      {project.websiteLabel || "Visit Website"}
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </motion.div>
+      </div>
+
+      {/* ───────────────────────── INFO CARDS ───────────────────────── */}
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-foreground/5 border border-foreground/5 mb-20">
+          {[
+            { label: "The Problem", content: project.accordion.problem },
+            { label: "The Solution", content: project.accordion.solution },
+            { label: "My Role", content: project.accordion.myRole },
+            { label: "Business Impact", content: project.accordion.businessImpact },
+          ].map((item, i) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.07 }}
+              className="bg-background p-8"
+            >
+              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/35 font-medium mb-4">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="text-[17px] font-medium tracking-tight text-foreground mb-3">{item.label}</h3>
+              <p className="text-[14px] leading-[1.75] text-foreground/55">{item.content}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* ───────────────────────── SCROLL-SYNCED SECTIONS ───────────────────────── */}
@@ -205,6 +173,19 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
                 0{index + 1} — {section.label}
               </p>
+              
+              {/* Skill Stack for Section */}
+              {section.skills && (
+                <div className="flex flex-wrap gap-1.5 mb-8">
+                  <span className="text-[9px] uppercase tracking-wider text-foreground/30 mr-1 mt-1">Skill Stack</span>
+                  {section.skills.map(skill => (
+                    <span key={skill} className="text-[10px] px-2 py-0.5 rounded-full bg-foreground/[0.03] border border-foreground/5 text-foreground/50">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               <h3 className="text-[32px] sm:text-[40px] font-normal tracking-[-0.01em] text-foreground leading-[1.15] mb-8">
                 {section.heading}
               </h3>
@@ -250,9 +231,21 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
             <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">
               ← All Projects
             </Link>
-            <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">
-              {project.company}
-            </p>
+            <div className="flex flex-col items-end gap-1">
+              <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">
+                {project.company}
+              </p>
+              {project.websiteUrl && (
+                <Link 
+                  href={project.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] text-foreground/40 hover:text-foreground transition-colors font-mono"
+                >
+                  {project.websiteLabel || project.websiteUrl.replace("https://", "")}
+                </Link>
+              )}
+            </div>
           </div>
         </FadeIn>
       </div>

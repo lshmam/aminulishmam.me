@@ -3,6 +3,7 @@ export interface ProjectSection {
   heading: string;
   body: string;
   images: string[];
+  skills?: string[];
 }
 
 export interface ProjectAccordion {
@@ -36,6 +37,7 @@ export interface Project {
   sections: ProjectSection[];
   websiteUrl?: string;
   websiteLabel?: string;
+  gbpUrl?: string;
 }
 
 export const projects: Project[] = [
@@ -70,13 +72,13 @@ export const projects: Project[] = [
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
-        label: "UI/UX & Brand",
-        heading: "Designing for zero learning curve",
+        label: "Developing the idea",
+        heading: "Sales Copilot for Receptionists",
         body: "The UI was designed to minimize cognitive load during live calls. I built a real-time sidebar that surfaces contextual recommendations without requiring the receptionist to navigate away from their workflow. The brand identity was crafted to feel clinical yet approachable — establishing trust with healthcare decision-makers.",
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
-        label: "Development",
+        label: "Building",
         heading: "Building the MVP to validate the hypothesis",
         body: "I chose Next.js for the frontend and Python/FastAPI for the AI backend to prioritize speed-to-market. The architecture was designed for real-time audio processing with sub-200ms latency. I made the deliberate trade-off of building a monolithic MVP first, knowing we could decompose into microservices once product-market fit was validated.",
         images: ["/project-saas.png", "/project-saas.png"]
@@ -150,52 +152,71 @@ export const projects: Project[] = [
     title: "Jim Coach",
     slug: "jim-coach",
     description: "AI-powered personal training app",
-    tags: ["Mobile App", "Health"],
+    tags: ["Mobile App", "Health & Fitness", "Computer Vision"],
     image: "/project-mobile.png",
     company: "Jim Fitness",
     year: "2023",
     role: "Product Designer & Developer",
-    tagline: "An AI personal trainer that watches your form and coaches you in real-time",
-    overview: "Jim Coach uses visual AI to track and correct workout form.",
-    challenge: "Real-time feedback requires an unobtrusive, lightning-fast UI.",
-    solution: "A camera-first interface with large typography for mid-workout glances.",
-    outcome: "Featured as 'App of the Day' on the App Store.",
+    tagline: "Your Dad used to tell you: get good at something and then share it.",
+    overview: "Jim Coach is a mobile AI fitness assistant born from a personal mission to lower the barriers to entry for strength training. By combining computer vision with real-time coaching, it solves the friction of knowledge, motivation, and accountability.",
+    challenge: "Barriers like cost, lack of knowledge, and injury fear prevent people from starting.",
+    solution: "A voice-based AI assistant that watches your form and coaches you in real-time.",
+    outcome: "Featured as 'App of the Day' on the App Store. 50K+ downloads. Validated by 100+ alpha users.",
     impactStatement: "Designing and building a mobile AI fitness app that earned 'App of the Day' on the App Store by solving the #1 gym problem: bad form leading to injuries.",
-    pmSkills: ["User Research", "Mobile Design", "AI/ML Integration", "App Store Optimization", "Retention Strategy"],
+    pmSkills: ["User Research", "Mobile Design", "Computer Vision", "App Store Optimization", "Retention Strategy"],
     accordion: {
-      problem: "80% of gym injuries come from poor form, yet personal trainers cost $60-120/hour. Most fitness apps track reps and calories but completely ignore form — the thing that actually prevents injuries.",
-      solution: "A camera-first mobile app that uses computer vision to analyze workout form in real-time, providing instant audio and visual corrections — like having a personal trainer watching every rep.",
-      myRole: "Product design and development: user research with 100+ gym-goers, UX design optimized for mid-workout use, and integration of the TensorFlow Lite pose estimation model.",
-      businessImpact: "Featured as 'App of the Day' on the App Store. 50K+ downloads in first 3 months. 4.8-star rating with 72% Day-30 retention."
+      problem: "People face massive barriers to working out: lack of knowledge, fear of bad form leading to injury, high cost of personal trainers, and lack of accountability.",
+      solution: "A 'Coach in your pocket' that uses AI and computer vision to show you what to do, count your reps, and correct your form in real-time.",
+      myRole: "End-to-end execution: User research with gym surveys, UI/UX design in Figma, branding, and cross-platform development using NextJS and Framer Motion.",
+      businessImpact: "Successfully validated with 100+ users via Reddit alpha launch. Reached 'App of the Day' status. Discovered key distribution nodes via personal trainer partnerships."
     },
     sections: [
       {
+        label: "User Research",
+        heading: "What barriers do people face to go and workout?",
+        skills: ["User Research", "User Interviews", "Data Visualization"],
+        body: "I conducted a survey of 15+ gym-goers to understand the friction points. The findings were clear: Time, Exercise Knowledge, Motivation, and Cost were the killers. To make the process seamless, the solution had to be accessible, educational, and quick. A well-designed app was the only way to solve all these at once.",
+        images: ["/project-mobile.png", "/project-mobile.png"]
+      },
+      {
         label: "Market Research",
-        heading: "Why existing fitness apps fail at the thing that matters most",
-        body: "I surveyed 100+ gym-goers and found that 73% had experienced an injury from poor form. Yet every major fitness app focused on rep counting and calorie tracking. The opportunity was clear: build the first app that actually watches and corrects your form.",
+        heading: "Identifying the 'Form Gap' in the App Store",
+        skills: ["Market Research", "Semantic Analysis", "Figma"],
+        body: "I analyzed top fitness apps and user reviews. While users valued custom plans and progress tracking, they were frustrated by high costs and a major gap: zero apps ensured correct form. This presented an opportunity for innovation: integrating live audio-visual form correction using computer vision and multimodal AI.",
         images: ["/project-mobile.png", "/project-mobile.png"]
       },
       {
-        label: "UI/UX & Brand",
-        heading: "Designing for sweaty hands and quick glances",
-        body: "Mid-workout users can't read small text or tap tiny buttons. I designed a camera-first interface with oversized typography, haptic feedback for form corrections, and gesture-based controls. Every interaction was tested during actual workouts to ensure usability under physical stress.",
+        label: "The LAB (Design)",
+        heading: "Engineering the User Flow",
+        skills: ["Information Architecture", "Feature Design", "Figma"],
+        body: "I designed a seamless flow from onboarding (voice-based profile setup) to the 'Real-Time Workout Loop'. The app guides equipment checks, provides exercise intros, and enters a continuous loop of CV analysis, form feedback, and motivation coaching.",
         images: ["/project-mobile.png", "/project-mobile.png"]
       },
       {
-        label: "Development",
-        heading: "Real-time pose estimation on mobile hardware",
-        body: "The biggest technical challenge was running TensorFlow Lite pose estimation at 30fps on mid-range phones without draining the battery. I optimized the model pipeline to use only 12 key skeletal points instead of the full 33, reducing inference time by 60% while maintaining form-correction accuracy.",
+        label: "Branding & Mockups",
+        heading: "Designing a 'Stern but Friendly' Coach",
+        skills: ["Logo Design", "Typography", "Design Systems"],
+        body: "I chose a sporty, stern font to invoke a 'coach' feeling — he's your friend but he'll push you. The JC logo resembles an apostrophe, depicting the conversational aspect of the app. The UI was optimized for 'sweaty hands' and quick glances during intense sets.",
         images: ["/project-mobile.png", "/project-mobile.png"]
       },
       {
-        label: "Go-to-Market",
-        heading: "From launch to App of the Day",
-        body: "I executed a pre-launch strategy targeting fitness micro-influencers on Instagram and TikTok, generating 5K waitlist signups before launch. Post-launch, I optimized the App Store listing with A/B tested screenshots and keywords, leading to the 'App of the Day' feature within 6 weeks.",
+        label: "The FACTORY (Dev)",
+        heading: "Building for Speed & Scale",
+        skills: ["NextJS", "Framer Motion", "TailwindCSS", "React"],
+        body: "I developed a web platform to test the core vision. Using NextJS and Framer Motion, I built a highly responsive experience that felt native. We launched an Alpha on Reddit, getting 100+ users who provided the critical usage data needed to iterate.",
+        images: ["/project-mobile.png", "/project-mobile.png"]
+      },
+      {
+        label: "Lessons & Next Steps",
+        heading: "Distribution is the Final Boss",
+        body: "Early validation was strong, but I realized the efficiency of 'nodes of distribution'. Instead of fighting for every user, we partnered with personal trainers who have hosts of clients. To understand this properly, I even got a job as a personal trainer myself. The next step is a full transition to mobile to leverage native camera performance for 30fps form tracking.",
         images: ["/project-mobile.png", "/project-mobile.png"]
       }
     ],
     images: ["/project-mobile.png", "/project-mobile.png", "/project-mobile.png", "/project-mobile.png", "/project-mobile.png"],
-    href: "/work/jim-coach"
+    href: "/work/jim-coach",
+    websiteUrl: "https://jim.coach",
+    websiteLabel: "jim.coach"
   },
   {
     id: 4,
@@ -251,54 +272,51 @@ export const projects: Project[] = [
   },
   {
     id: 5,
-    title: "Arrive",
-    slug: "arrive",
-    description: "Airbnb for parking",
-    tags: ["Marketplace", "Mobile App"],
-    image: "/project-analytics.png",
-    company: "Arrive Parking",
-    year: "2022",
-    role: "Co-Founder & Product Manager",
-    tagline: "A peer-to-peer marketplace that turns empty driveways into revenue",
-    overview: "Arrive allows homeowners to rent out their driveways and private parking spots to drivers in crowded cities.",
-    challenge: "Drivers need to make split-second decisions while navigating traffic, making complex UI dangerous and frustrating.",
-    solution: "Built a map-centric mobile interface with one-tap booking, large hit areas, and high-contrast availability markers.",
-    outcome: "Reached 50k active drivers in the first year with a 4.8 star app store rating.",
-    impactStatement: "Building a two-sided marketplace from scratch that reached 50K active users and a 4.8-star rating by solving urban parking scarcity through peer-to-peer driveway sharing.",
-    pmSkills: ["Marketplace Strategy", "Mobile Design", "Full-Stack Dev", "Growth Hacking", "Operations"],
+    title: "Faeth Studio",
+    slug: "faeth-studio",
+    description: "Creative design agency for 0-to-1 startups",
+    tags: ["Agency", "Design", "Products"],
+    image: "/project-brand.png",
+    company: "Faeth Studio",
+    year: "2024",
+    role: "Founder & Design Lead",
+    tagline: "Bridging the gap between founder vision and market-ready products.",
+    overview: "Faeth Studio is a specialized design agency focused on helping early-stage founders build their first version of high-impact digital products.",
+    challenge: "Early-stage founders often have clear visions but lack the technical design frameworks to communicate trust and function simultaneously.",
+    solution: "A streamlined '0-to-1' design process that prioritizes speed, clarity, and scalability.",
+    outcome: "Helped 10+ startups secure seed funding and launch their first MVPs within record time.",
+    impactStatement: "A website by itself is a self contained product: outreach, sales, discuss, develop, reiterate, until client satisfied, handoff, consistent communication.",
+    pmSkills: ["Brand Strategy", "UI/UX Design", "Product Discovery", "Client Communication", "Reiteration Cycles"],
     accordion: {
-      problem: "Urban drivers spend an average of 17 minutes searching for parking per trip, wasting time, fuel, and contributing to traffic congestion. Meanwhile, millions of private driveways and parking spots sit empty during the day.",
-      solution: "A two-sided marketplace that matches drivers with nearby available private parking spots in real-time, with one-tap booking, dynamic pricing, and instant payouts for hosts.",
-      myRole: "Co-founded the company and owned the complete product lifecycle: market validation, product strategy, UI/UX design, full-stack development (React Native + Node.js), and growth operations.",
-      businessImpact: "50K active drivers in Year 1. 4.8-star app store rating. $2.3M GMV in first 12 months. 15K host listings across 3 major cities."
+      problem: "Traditional agencies are slow, expensive, and often lose the founder's original vision in layers of management. Startups need high-fidelity design thinking integrated directly with their growth strategy.",
+      solution: "A direct-to-founder agency model where every pixel is aligned with business objectives. We don't just 'make it pretty' — we build digital tools that sell.",
+      myRole: "Founder and Lead Designer: owning the entire client lifecycle from initial outreach and sales to development, reiterate, and final handoff.",
+      businessImpact: "250% increase in client referral rate. Delivered high-fidelity MVPs for 10+ funded startups. Established a reputation for consistent, professional communication and rapid iteration."
     },
     sections: [
       {
-        label: "Market Research",
-        heading: "Quantifying the $30B urban parking problem",
-        body: "I validated the market by surveying 200+ urban drivers and analyzing parking data from 3 cities. The data showed that 30% of city traffic is caused by parking search. I also interviewed 50 homeowners and found that 78% were interested in monetizing their empty driveways — the supply side was ready.",
-        images: ["/project-analytics.png", "/project-analytics.png"]
+        label: "Client Testimony 1",
+        heading: "Fast responding and professional delivery",
+        body: "Aminul is fast responding and professional. I only gave the general ideas and Aminul is able to create my company website in the cleanest and most professional way within 2 days! Highly recommend! Thank you again Aninull! — 乔英凯 [5 STARS]",
+        images: ["/project-brand.png", "/project-brand.png"]
       },
       {
-        label: "UI/UX & Brand",
-        heading: "Designing for drivers in motion",
-        body: "Drivers make parking decisions while navigating traffic — so every interaction had to be completable in under 3 seconds. I designed a map-centric interface with oversized availability markers, one-tap booking, and a predictive 'spots near your destination' feature that pre-loads results before arrival.",
-        images: ["/project-analytics.png", "/project-analytics.png"]
+        label: "Client Testimony 2",
+        heading: "Phenomenal work in record time",
+        body: "Amazing work! They made my personal portfolio page in less than two days and it was phenomenal! Aminul was also very professional and responded quickly to my requests. Highly recommend to anyone making custom portfolios, websites or brand page. — SAYEM NAZMUZ [5 STARS]",
+        images: ["/project-brand.png", "/project-brand.png"]
       },
       {
-        label: "Development",
-        heading: "Real-time availability at scale",
-        body: "I built the MVP with React Native for cross-platform reach and Node.js for the backend. The biggest technical challenge was real-time spot availability — I implemented a WebSocket-based system that updates availability within 500ms of a booking change, preventing double-bookings across concurrent users.",
-        images: ["/project-analytics.png", "/project-analytics.png"]
-      },
-      {
-        label: "Go-to-Market",
-        heading: "Solving the chicken-and-egg with geo-focused launch",
-        body: "I solved the classic marketplace cold-start problem by launching hyper-locally: one neighborhood at a time. I door-knocked 200 homes in the first target area, offering $50 signup bonuses. Once supply density hit a critical threshold (15 spots per square mile), I activated demand through geo-targeted Instagram and Google ads.",
-        images: ["/project-analytics.png", "/project-analytics.png"]
+        label: "The Process",
+        heading: "A website as a self-contained product",
+        body: "Our process is built on the philosophy that a website is a living tool for growth. It involves: outreach, sales, discuss, develop, reiterate, until client satisfied, handoff, consistent communication. This closed-loop system ensures that the final product isn't just a design — it's a functioning asset for the startup.",
+        images: ["/project-brand.png", "/project-brand.png"]
       }
     ],
-    images: ["/project-analytics.png", "/project-analytics.png", "/project-analytics.png", "/project-analytics.png", "/project-analytics.png"],
-    href: "/work/arrive"
+    images: ["/project-brand.png", "/project-brand.png", "/project-brand.png", "/project-brand.png", "/project-brand.png"],
+    href: "/work/faeth-studio",
+    websiteUrl: "https://faeth.studio",
+    websiteLabel: "faeth.studio",
+    gbpUrl: "https://share.google/33RMwEtz7IXJYXFjv"
   }
-];
+]
