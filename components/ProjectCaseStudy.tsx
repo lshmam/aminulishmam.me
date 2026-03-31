@@ -34,7 +34,13 @@ function FadeIn({
 }
 
 
-export default function ProjectCaseStudy({ project }: { project: Project }) {
+export default function ProjectCaseStudy({ 
+  project, 
+  hideHeroImage = false 
+}: { 
+  project: Project;
+  hideHeroImage?: boolean;
+}) {
   return (
     <article className="min-h-screen">
 
@@ -134,18 +140,20 @@ export default function ProjectCaseStudy({ project }: { project: Project }) {
       <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 space-y-40 pb-40">
         
         {/* Primary Hero Image */}
-        <FadeIn delay={0.2} className="w-full">
-          <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
-            <Image
-              src={project.images[0]}
-              alt={project.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        </FadeIn>
+        {!hideHeroImage && (
+          <FadeIn delay={0.2} className="w-full">
+            <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
+              <Image
+                src={project.images[0]}
+                alt={project.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          </FadeIn>
+        )}
 
         {/* Deep Dive Sections: Scroll-Sync Logic */}
         {project.sections.map((section, index) => (

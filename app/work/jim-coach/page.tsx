@@ -130,12 +130,13 @@ export default function JimCoachPage() {
 
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
               <span className="text-foreground/50">Jim Coach.</span>{" "}
-              <span className="text-foreground">My Dad used to tell me: get good at something and then share it.</span>
+              <span className="text-foreground">An AI personal trainer in your pocket — form checked, reps counted, no gym membership required.</span>
             </h1>
 
             <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
-              Being an avid gym-goer and trying — sometimes unsuccessfully — to get my friends into the gym,
-              I thought about that advice and how I could use technology to make fitness accessible for everyone.
+              Jim Coach is a mobile AI fitness assistant built to eliminate the three biggest barriers to working out:
+              not knowing what to do, not knowing if you&apos;re doing it right, and not being able to afford someone who does.
+              Using computer vision and multimodal AI, it watches your form in real-time, counts your reps, and coaches you — like a personal trainer, but on your phone.
             </p>
 
             <div className="flex flex-wrap gap-3 mt-8">
@@ -147,6 +148,21 @@ export default function JimCoachPage() {
               >
                 jim.coach <ArrowUpRight size={14} />
               </Link>
+            </div>
+
+            {/* Hero Meta Strip */}
+            <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
+              {[
+                { label: "My Role", value: "Product Designer & Developer" },
+                { label: "Industry", value: "Health & Fitness" },
+                { label: "Stage", value: "Active — 2023–Present" },
+                { label: "Team Size", value: "4 people" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
+                  <span className="text-[15px] font-medium text-foreground">{value}</span>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>

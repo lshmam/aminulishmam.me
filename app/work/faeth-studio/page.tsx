@@ -82,8 +82,23 @@ export default function FaethStudioPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 border border-foreground/20 text-foreground text-[13px] font-medium rounded-[4px] hover:bg-foreground/5 transition-all active:scale-[0.98] tracking-tight"
               >
-                Google Business Profile <ArrowUpRight size={14} />
+                See Reviews <ArrowUpRight size={14} />
               </Link>
+            </div>
+
+            {/* Hero Meta Strip */}
+            <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
+              {[
+                { label: "My Role", value: "Founder & Design Lead" },
+                { label: "Industry", value: "Design Agency" },
+                { label: "Stage", value: "Active — 2024–Present" },
+                { label: "Team Size", value: "1 person" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
+                  <span className="text-[15px] font-medium text-foreground">{value}</span>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>
