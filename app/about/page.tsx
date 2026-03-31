@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import BottomDock from "@/components/BottomDock";
-import ProjectCatalog from "@/components/ProjectCatalog";
 import VennDiagram from "@/components/VennDiagram";
+import Link from "next/link";
 
 export default function AboutPage() {
   return (
@@ -64,7 +64,46 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <ProjectCatalog />
+        {/* Contact Section */}
+        <div className="mt-20 pt-10 border-t border-foreground/10">
+          <h2 className="text-[20px] sm:text-[28px] font-bold text-foreground mb-12 flex items-center gap-4">
+            <span className="w-2.5 h-4 bg-foreground animate-pulse" />
+            COMMUNICATION PROTOCOLS
+          </h2>
+
+          <div className="space-y-6 text-[13px] leading-[1.8] text-foreground/80 lowercase mb-12">
+            <p>
+              &gt; directive: establish encrypted channels for operational coordination, deal flow exploration, or strategic exchange.
+            </p>
+            <p>
+              &gt; response rate: slas indicate 24-48 business hours.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            {[
+              { label: "sys.email", value: "hello@aminul.com", href: "mailto:hello@aminul.com" },
+              { label: "net.twitter", value: "x.com/aminulislam", href: "https://twitter.com" },
+              { label: "net.linkedin", value: "linkedin.com/in/aminul", href: "https://linkedin.com" },
+              { label: "git.source", value: "github.com/aminul", href: "https://github.com" },
+            ].map(({ label, value, href }) => (
+              <div key={label} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 items-start opacity-70 hover:opacity-100 transition-opacity">
+                <span className="text-[11px] font-bold text-foreground/50 lowercase">
+                  [{label}]
+                </span>
+                <Link
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[13px] text-foreground lowercase decoration-foreground/30 hover:underline underline-offset-4"
+                >
+                  {value}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </section>
       <BottomDock />
     </main>

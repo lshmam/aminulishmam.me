@@ -10,10 +10,10 @@ const catalogItems = [
   { id: 5, title: "Aero Fridge", subtitle: "Smart refrigerator for Covid vaccines", year: "2021", image: "/assemblyexploded.PNG" },
   { id: 6, title: "Simply Balanced", subtitle: "Tool to track sinus rinses", year: "2022", embed: "https://drive.google.com/file/d/10H6maqXwvUWtRK97kz35E6cylCe6yBgO/preview" },
   { id: 7, title: "MyTrials", subtitle: "Clinical trial patient matching system", year: "2023", link: "/work/mytrials" },
-  { id: 8, title: "Faeth Studio", subtitle: "Creative design agency portfolio", year: "2024", link: "/work/faeth-studio", gbp: "https://share.google/33RMwEtz7IXJYXFjv" },
+  { id: 8, title: "Faeth Studio", subtitle: "Creative design agency portfolio", year: "2024", link: "/work/faeth-studio" },
   { id: 9, title: "Jim Coach", subtitle: "AI-powered personal fitness trainer", year: "2025", link: "/work/jim-coach" },
   { id: 10, title: "Neucler", subtitle: "Sales Copilot for Receptionists", year: "2025 - Present", link: "/work/neucler" },
-  { id: 11, title: "Arrive", subtitle: "AirBnB for parking", year: "2026", link: "/work/arrive" },
+  { id: 11, title: "Arrive", subtitle: "AirBnB for parking", year: "2026" },
   { id: 12, title: "Netabridge", subtitle: "B2B Trade Network Marketplace", year: "2026 - Present", link: "/work/neta-bridge" },
 ];
 
@@ -89,27 +89,7 @@ export default function ProjectCatalog() {
                   </div>
                 )}
 
-                {item.id === 8 && (
-                  <div className="mt-4 space-y-4 bg-white/5 p-4 border border-foreground/5 opacity-80 underline-offset-4">
-                    <p className="text-[10px] font-bold tracking-[0.2em] text-foreground/40 mb-1">
-                      [LOGGED_TESTIMONIALS]
-                    </p>
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <p className="text-[11px] italic leading-relaxed text-foreground/70">
-                          "Aminul is fast responding and professional. I only gave the general ideas and Aminul is able to create my company website in the cleanest and most professional way within 2 days! Highly recommend! Thank you again Aninull!"
-                        </p>
-                        <p className="text-[10px] font-bold text-foreground/50">— 乔英凯 [5 STARS]</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-[11px] italic leading-relaxed text-foreground/70">
-                          "Amazing work! They made my personal portfolio page in less than two days and it was phenomenal! Aminul was also very professional and responded quickly to my requests. Highly recommend to anyone making custom portfolios, websites or brand page."
-                        </p>
-                        <p className="text-[10px] font-bold text-foreground/50">— SAYEM NAZMUZ [5 STARS]</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+
 
                 {(item.link || item.gbp) && (
                   <div className="mt-3 flex flex-wrap gap-4">

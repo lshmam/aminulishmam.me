@@ -34,7 +34,7 @@ export default function ProjectGrid() {
                 </>
               ) : project.title === "Faeth Studio" ? (
                 <>
-                  <div className="absolute inset-0 z-0 bg-black/40" />
+                  <div className="absolute inset-0 z-0 bg-black" />
                   <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none font-mono tracking-[0.4em] uppercase">
                     <div className="flex flex-col items-center gap-4">
                       <h3 className="text-[32px] sm:text-[48px] font-bold text-white mix-blend-difference">
@@ -76,10 +76,7 @@ export default function ProjectGrid() {
                     </h3>
                   </div>
                 </>
-              ) : project.title === "Arrive" ? (
-                <div className="absolute inset-0 z-0">
-                  <AnimatedLogo />
-                </div>
+
               ) : (
                 <Image
                   src={project.image || "/placeholder.svg"}

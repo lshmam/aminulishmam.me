@@ -8,7 +8,7 @@ import { ArrowLeft } from "lucide-react";
 const navItems = [
   { label: "Work", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Catalog", href: "/catalog" },
 ];
 
 export default function BottomDock() {
