@@ -91,8 +91,8 @@ export default function FaethStudioPage() {
               {[
                 { label: "My Role", value: "Founder & Design Lead" },
                 { label: "Industry", value: "Design Agency" },
-                { label: "Stage", value: "Active — 2024–Present" },
-                { label: "Team Size", value: "1 person" },
+                { label: "Stage", value: "2024 – Present" },
+                { label: "Team Size", value: "Solo" },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
                   <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>

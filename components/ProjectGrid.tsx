@@ -26,7 +26,7 @@ export default function ProjectGrid() {
                 <>
                   <div className="absolute inset-0 z-0 bg-black">
                     {/* Passing vibrant colors to PrismaticBurst on a black background */}
-                    <ObjectBurst colors={['#FFFFFF', '#AAAAAA', '#555555', '#333333']} />
+                    <ObjectBurst colors={['#FF5733', '#33FFCE', '#335BFF', '#F033FF']} />
                   </div>
                   <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
                     <img src="/Frame 79.png" alt="Neucler UI" className="w-[15%] md:w-[10%] h-auto object-contain" />

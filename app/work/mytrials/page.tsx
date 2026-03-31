@@ -149,7 +149,7 @@ export default function MyTrialsPage() {
 
             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
               {[
-                { label: "My Role", value: "Product Lead & UX Designer" },
+                { label: "My Role", value: "Co-Founder & UX Designer" },
                 { label: "Industry", value: "Healthcare" },
                 { label: "Stage", value: "Completed — 2023" },
                 { label: "Team Size", value: "5 people" },

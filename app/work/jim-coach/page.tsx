@@ -155,7 +155,7 @@ export default function JimCoachPage() {
               {[
                 { label: "My Role", value: "Product Designer & Developer" },
                 { label: "Industry", value: "Health & Fitness" },
-                { label: "Stage", value: "Active — 2023–Present" },
+                { label: "Stage", value: "2025" },
                 { label: "Team Size", value: "4 people" },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
@@ -233,7 +233,7 @@ export default function JimCoachPage() {
                 Identifying the &apos;Form Gap&apos; in the App Store
               </h2>
               <p className="text-[14px] leading-relaxed text-foreground/50 mb-10 max-w-2xl">
-                Top fitness apps did most things well. But a major gap emerged: no app could ensure exercises were performed with correct form — 
+                Top fitness apps did most things well. But a major gap emerged: no app could ensure exercises were performed with correct form —
                 the single feature that determines results and prevents injury.
               </p>
 
@@ -245,11 +245,10 @@ export default function JimCoachPage() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.07 }}
-                    className={`flex items-center gap-3 p-4 border rounded-sm ${
-                      gap.covered
+                    className={`flex items-center gap-3 p-4 border rounded-sm ${gap.covered
                         ? "border-foreground/5 bg-foreground/[0.02]"
                         : "border-foreground/15 bg-foreground/[0.04]"
-                    }`}
+                      }`}
                   >
                     <span className={`text-[16px] ${gap.covered ? "text-foreground/25" : "text-foreground"}`}>
                       {gap.covered ? "✓" : "✕"}
@@ -376,12 +375,12 @@ export default function JimCoachPage() {
               <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
                 Early validation was strong, but scale didn&apos;t come from individual user acquisition — it clicked when I discovered
                 the efficiency of <strong className="text-foreground/80 font-medium">nodes of distribution</strong>.
-                Personal trainers weren&apos;t just users; they were multipliers. Each PT carried a roster of clients who had a real, 
+                Personal trainers weren&apos;t just users; they were multipliers. Each PT carried a roster of clients who had a real,
                 immediate need for Jim Coach.
               </p>
               <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
                 To understand this problem properly, I went all the way in: <strong className="text-foreground/80 font-medium">I got a job as a personal trainer.</strong>{" "}
-                Living the PT experience gave me an insider&apos;s perspective on how coaches think about client progress, what 
+                Living the PT experience gave me an insider&apos;s perspective on how coaches think about client progress, what
                 tools they trust, and exactly where Jim Coach could slot into their workflow.
               </p>
 

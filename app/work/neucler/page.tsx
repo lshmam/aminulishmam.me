@@ -140,7 +140,7 @@ export default function NeuclerPage() {
             {/* Hero Meta Strip */}
             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
               {[
-                { label: "My Role", value: "Co-Founder & Product Lead" },
+                { label: "My Role", value: "Founder" },
                 { label: "Industry", value: "Med Spa / Health Clinics" },
                 { label: "Stage", value: "Active — 2025–Present" },
                 { label: "Built", value: "Solo (0 to 1)" },
@@ -197,7 +197,7 @@ export default function NeuclerPage() {
                   >
                     {/* Dot */}
                     <div className={`absolute -left-[9px] w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${item.status === "active" ? "border-foreground bg-foreground" : "border-foreground/20 bg-background"}`} />
-                    
+
                     <div className="pl-8">
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-[10px] font-mono text-foreground/30">{item.step}</span>

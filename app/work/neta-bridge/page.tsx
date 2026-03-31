@@ -115,7 +115,7 @@ export default function NetaBridgePage() {
             </h1>
 
             <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
-              A B2B marketplace turning professional networks into trade opportunities by architecting 
+              A B2B marketplace turning professional networks into trade opportunities by architecting
               trust signals into every transaction layer — moving over $50M in the first quarter alone.
             </p>
 
@@ -133,9 +133,9 @@ export default function NetaBridgePage() {
             {/* Hero Meta Strip */}
             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
               {[
-                { label: "My Role", value: "Product Manager & Designer" },
+                { label: "My Role", value: "Designer & Frontend Developer" },
                 { label: "Industry", value: "B2B Marketplace" },
-                { label: "Stage", value: "Completed — 2023" },
+                { label: "Stage", value: "2026 - Present" },
                 { label: "Team Size", value: "5 people" },
               ].map(({ label, value }) => (
                 <div key={label} className="flex flex-col gap-1">
