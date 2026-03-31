@@ -53,12 +53,12 @@ const techStack = [
 ];
 
 const categoryColors: Record<string, string> = {
-  Framework: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-  Styling: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-  Animation: "bg-pink-500/10 border-pink-500/20 text-pink-400",
-  AI: "bg-green-500/10 border-green-500/20 text-green-400",
-  Design: "bg-orange-500/10 border-orange-500/20 text-orange-400",
-  Language: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
+  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Styling: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Animation: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  AI: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
 };
 
 const skills = [

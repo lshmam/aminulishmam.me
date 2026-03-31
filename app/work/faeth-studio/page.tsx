@@ -272,7 +272,7 @@ export default function FaethStudioPage() {
               >
                 <div className="flex items-center gap-1 mb-4">
                   {Array.from({ length: r.stars }).map((_, si) => (
-                    <Star key={si} size={14} className="fill-yellow-400 text-yellow-400" />
+                    <Star key={si} size={14} className="fill-foreground/40 text-foreground/40" />
                   ))}
                 </div>
                 <p className="text-[15px] leading-[1.8] text-foreground/70 mb-6 italic">

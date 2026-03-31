@@ -51,13 +51,13 @@ const techStack = [
 ];
 
 const categoryColors: Record<string, string> = {
-  Framework: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-  Backend: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
-  Database: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-  "Real-time": "bg-green-500/10 border-green-500/20 text-green-400",
-  Design: "bg-pink-500/10 border-pink-500/20 text-pink-400",
-  Language: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
-  Styling: "bg-indigo-500/10 border-indigo-500/20 text-indigo-400",
+  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Backend: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Database: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  "Real-time": "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Styling: "bg-foreground/5 border-foreground/10 text-foreground/70",
 };
 
 const pmSkills = [

@@ -40,10 +40,10 @@ const outcomes = [
 ];
 
 const trialBenefits = [
-  { label: "Free cutting-edge treatment", pct: 85, color: "bg-blue-400/70" },
-  { label: "Closer medical monitoring", pct: 78, color: "bg-purple-400/70" },
-  { label: "Access before public approval", pct: 65, color: "bg-green-400/70" },
-  { label: "Contributing to medical science", pct: 72, color: "bg-orange-400/70" },
+  { label: "Free cutting-edge treatment", pct: 85, color: "bg-foreground/40" },
+  { label: "Closer medical monitoring", pct: 78, color: "bg-foreground/30" },
+  { label: "Access before public approval", pct: 65, color: "bg-foreground/20" },
+  { label: "Contributing to medical science", pct: 72, color: "bg-foreground/15" },
 ];
 
 const readabilityTests = [
@@ -65,13 +65,13 @@ const techStack = [
 ];
 
 const categoryColors: Record<string, string> = {
-  Framework: "bg-blue-500/10 border-blue-500/20 text-blue-400",
-  AI: "bg-green-500/10 border-green-500/20 text-green-400",
-  Data: "bg-cyan-500/10 border-cyan-500/20 text-cyan-400",
-  Database: "bg-purple-500/10 border-purple-500/20 text-purple-400",
-  Algorithm: "bg-orange-500/10 border-orange-500/20 text-orange-400",
-  Design: "bg-pink-500/10 border-pink-500/20 text-pink-400",
-  Language: "bg-yellow-500/10 border-yellow-500/20 text-yellow-400",
+  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  AI: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Data: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Database: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Algorithm: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
 };
 
 const processSteps = [
@@ -294,19 +294,19 @@ export default function MyTrialsPage() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className={`flex items-center gap-4 p-4 border rounded-sm ${r.pass ? "border-green-500/30 bg-green-500/5" : "border-foreground/5 bg-foreground/[0.02]"}`}
+                    className={`flex items-center gap-4 p-4 border rounded-sm ${r.pass ? "border-foreground/30 bg-foreground/5" : "border-foreground/5 bg-foreground/[0.02]"}`}
                   >
                     <span className="text-[11px] font-mono text-foreground/40 w-16 shrink-0">{r.round}</span>
                     <div className="flex-1 h-2 bg-foreground/5 rounded-full overflow-hidden">
                       <motion.div
-                        className={`h-full rounded-full ${r.pass ? "bg-green-400/60" : "bg-foreground/30"}`}
+                        className={`h-full rounded-full ${r.pass ? "bg-foreground/60" : "bg-foreground/30"}`}
                         initial={{ width: 0 }}
                         whileInView={{ width: `${(r.score / 12) * 100}%` }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, delay: i * 0.1 }}
                       />
                     </div>
-                    <span className={`text-[12px] font-medium w-48 shrink-0 ${r.pass ? "text-green-400" : "text-foreground/50"}`}>
+                    <span className={`text-[12px] font-medium w-48 shrink-0 ${r.pass ? "text-foreground/70" : "text-foreground/50"}`}>
                       {r.label}
                     </span>
                   </motion.div>
