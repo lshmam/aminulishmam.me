@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import BottomDock from "@/components/BottomDock";
 import VennDiagram from "@/components/VennDiagram";
+import BigFiveChart from "@/components/BigFiveChart";
 import Link from "next/link";
 
 export default function AboutPage() {
@@ -30,13 +31,7 @@ export default function AboutPage() {
             <p className="mb-6">
               &gt; psychometric evaluation: big five personality traits.
             </p>
-            <div className="w-full border border-foreground/10 rounded-sm p-1 mb-6 bg-white/50">
-              <img 
-                src="/ttfdletog.png" 
-                alt="Big Five Psychometric Profile" 
-                className="w-full h-auto mix-blend-multiply opacity-90 grayscale-[20%]"
-              />
-            </div>
+            <BigFiveChart />
             <p>
               &gt; analysis: high conscientiousness (103) and extraversion (94) indicate strong operational drive and team leadership capacity. elevated agreeableness (93) and openness (85) suggest collaborative problem-solving and adaptability. low neuroticism (46) denotes stable execution under high-stress conditions.
             </p>

@@ -10,10 +10,10 @@ import AnimatedLogo from "./animations/AnimatedLogo";
 
 export default function ProjectGrid() {
   return (
-    <div className="w-full py-20 md:py-32 px-6">
+    <div className="w-full py-10 md:py-32 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
           {projects.map((project) => (
             <Link
               href={project.href}
@@ -95,16 +95,16 @@ export default function ProjectGrid() {
               </div>
 
               {/* Text Content */}
-              <div className="absolute bottom-0 left-0 w-full p-8 flex flex-col justify-end z-20 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2 font-mono uppercase tracking-widest">
-                <div className="flex items-center gap-3 mb-4">
+              <div className="absolute bottom-0 left-0 w-full p-5 sm:p-8 flex flex-col justify-end z-20 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2 font-mono uppercase tracking-widest">
+                <div className="hidden sm:flex items-center gap-3 mb-4">
                   {project.tags.map((tag) => (
                     <span key={tag} className="text-[10px] font-bold text-white/70 lowercase">
                       [{tag}]
                     </span>
                   ))}
                 </div>
-                <h3 className="text-[20px] sm:text-[24px] font-bold text-white leading-tight mb-2">{project.title}</h3>
-                <p className="text-[12px] sm:text-[13px] text-white/80 leading-relaxed lowercase max-w-sm">
+                <h3 className="text-[18px] sm:text-[24px] font-bold text-white leading-tight mb-1.5 sm:mb-2">{project.title}</h3>
+                <p className="text-[11px] sm:text-[13px] text-white/80 leading-relaxed lowercase max-w-sm">
                   &gt; {project.description}
                 </p>
               </div>
