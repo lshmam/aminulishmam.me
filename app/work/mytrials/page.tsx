@@ -2,8 +2,8 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import BottomDock from "@/components/BottomDock";
 
 function FadeIn({
@@ -96,16 +96,21 @@ const pmSkills = [
 
 export default function MyTrialsPage() {
   const maxBenefit = Math.max(...trialBenefits.map((b) => b.pct));
+  const [activeTab, setActiveTab] = useState<'product' | 'ui-ux' | 'engineering'>('product');
 
   return (
     <>
       <article className="min-h-screen">
 
         {/* Back */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
           <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
+          </Link>
+          <Link href="/work/faeth-studio" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+            Faeth Studio
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
@@ -162,6 +167,42 @@ export default function MyTrialsPage() {
             </div>
           </motion.div>
         </div>
+
+        {/* ── TAB SWITCHER (BELOW HERO) ── */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 mt-12 mb-8">
+          <div className="flex w-full overflow-hidden border-b border-foreground/10">
+            {(['product', 'ui-ux', 'engineering'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 relative px-6 py-4 text-[13px] tracking-[0.06em] uppercase font-medium transition-colors ${
+                  activeTab === tab
+                    ? "text-foreground font-bold"
+                    : "text-foreground/40 hover:text-foreground/70"
+                }`}
+              >
+                {tab === 'product' ? 'Product' : tab === 'ui-ux' ? 'UI UX' : 'Engineering'}
+                {activeTab === tab && (
+                  <motion.div
+                    layoutId="activeTabMyTrials"
+                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── CONDITIONAL CONTENT BELOW ── */}
+        <div className="min-h-[50vh]">
+          {activeTab === 'product' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── KEY STATS ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
@@ -267,6 +308,15 @@ export default function MyTrialsPage() {
             </div>
           </FadeIn>
         </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'ui-ux' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── 03: THE SOLUTION — READABILITY ROUNDS ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
@@ -315,6 +365,15 @@ export default function MyTrialsPage() {
             </div>
           </FadeIn>
         </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'engineering' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── 04: PROCESS TIMELINE ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
@@ -344,6 +403,15 @@ export default function MyTrialsPage() {
             </div>
           </FadeIn>
         </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'product' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── 05: PM SKILLS ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
@@ -376,6 +444,15 @@ export default function MyTrialsPage() {
             </div>
           </FadeIn>
         </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'engineering' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── 06: TECH STACK ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
@@ -404,6 +481,15 @@ export default function MyTrialsPage() {
             </div>
           </FadeIn>
         </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'product' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
 
         {/* ── 07: THE RAISE ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
@@ -441,6 +527,9 @@ export default function MyTrialsPage() {
               </div>
             </div>
           </FadeIn>
+        </div>
+            </motion.div>
+          )}
         </div>
 
         {/* ── FOOTER ── */}

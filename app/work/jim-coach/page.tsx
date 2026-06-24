@@ -2,9 +2,10 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import BottomDock from "@/components/BottomDock";
+import Image from "next/image";
 
 function FadeIn({
   children,
@@ -32,83 +33,67 @@ function FadeIn({
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
-const barrierData = [
-  { label: "Time", count: 6 },
-  { label: "Exercise Knowledge", count: 5 },
-  { label: "Motivation", count: 4 },
-  { label: "Fatigue", count: 4 },
-  { label: "Accountability", count: 2 },
-  { label: "Cost", count: 1 },
+const processSteps = [
+  { step: "01", label: "User Research", desc: "Surveyed 15+ gym-goers. Time, knowledge, and motivation were the top three barriers." },
+  { step: "02", label: "Market Research", desc: "Semantic analysis of top App Store fitness apps revealed a consistent gap: form feedback. Apps could show exercises. None could watch you do them." },
+  { step: "03", label: "User Flow", desc: "Mapped the full workout journey — from first open to post-workout summary — across 6 core experience pillars." },
+  { step: "04", label: "Branding", desc: "The JC mark is an apostrophe — a nod to the conversational coaching experience at the core of the product." },
+  { step: "05", label: "Development", desc: "Built the web alpha in Next.js with multimodal AI for real-time voice coaching and pose estimation." },
+  { step: "06", label: "Alpha Launch", desc: "Seeded Reddit. 100+ users in the first wave. Data used to iterate toward a full mobile launch." },
 ];
-
-const techStack = [
-  { name: "Next.js", category: "Framework" },
-  { name: "React", category: "Framework" },
-  { name: "TailwindCSS", category: "Styling" },
-  { name: "Framer Motion", category: "Animation" },
-  { name: "Google Gemini", category: "AI" },
-  { name: "Computer Vision", category: "AI" },
-  { name: "Figma", category: "Design" },
-  { name: "TypeScript", category: "Language" },
-];
-
-const categoryColors: Record<string, string> = {
-  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Styling: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Animation: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  AI: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
-};
 
 const skills = [
   { label: "User Research", level: 90 },
-  { label: "Product Strategy", level: 85 },
   { label: "UI/UX Design", level: 95 },
-  { label: "Computer Vision", level: 70 },
+  { label: "Product Strategy", level: 85 },
   { label: "Frontend Dev", level: 88 },
   { label: "Go-to-Market", level: 75 },
+  { label: "Computer Vision", level: 70 },
 ];
 
-const processSteps = [
-  { step: "01", label: "User Research", desc: "Surveyed 15+ gym-goers to map friction across knowledge, motivation, cost, and time." },
-  { step: "02", label: "Market Research", desc: "Semantic analysis of top App Store fitness apps to identify the 'Form Feedback Gap'." },
-  { step: "03", label: "User Flow", desc: "Designed an end-to-end workout journey from onboarding to real-time CV coaching loop." },
-  { step: "04", label: "Branding", desc: "Created the JC logo (an apostrophe) and a stern-but-friendly typographic system for coach-like authority." },
-  { step: "05", label: "Development", desc: "Built the web Alpha using NextJS, integrating multimodal AI for voice and pose estimation." },
-  { step: "06", label: "Alpha Launch", desc: "Seeded Reddit with early access. 100+ users provided the data to iterate toward App of the Day." },
+const uiScreens = [
+  {
+    title: "Onboarding / Conversation Screen",
+    caption: "Onboarding via voice — reduces friction for users who don't know where to start.",
+    image: "/project-mobile.png"
+  },
+  {
+    title: "Home Dashboard",
+    caption: "",
+    image: "/project-mobile.png"
+  },
+  {
+    title: "Real-time Workout Screen",
+    caption: "Workout screen — minimal UI so the camera view stays front and center.",
+    image: "/project-mobile.png"
+  },
+  {
+    title: "Summary / Progress Screen",
+    caption: "",
+    image: "/project-mobile.png"
+  },
+  {
+    title: "Social Feed",
+    caption: "",
+    image: "/project-mobile.png"
+  }
 ];
-
-const marketGaps = [
-  { label: "Custom Workout Plans", covered: true },
-  { label: "Progress Tracking", covered: true },
-  { label: "Video Demonstrations", covered: true },
-  { label: "Affordable Pricing", covered: false },
-  { label: "Real-Time Form Correction", covered: false },
-  { label: "AI Coaching Voice", covered: false },
-];
-
-const outcomes = [
-  { value: "100+", label: "Alpha Users", sub: "via Reddit launch" },
-  { value: "30fps", label: "Pose Tracking", sub: "real-time on device" },
-  { value: "6wks", label: "To Validation", sub: "concept to product" },
-  { value: "#1", label: "Form App", sub: "CV-based on App Store" },
-];
-
-// ────────────────────────────────────────────────────────────────────────────
 
 export default function JimCoachPage() {
-  const maxCount = Math.max(...barrierData.map((d) => d.count));
+  const [activeTab, setActiveTab] = useState<'product' | 'ui-ux' | 'engineering'>('product');
 
   return (
     <>
       <article className="min-h-screen">
-
         {/* Back */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
           <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
+          </Link>
+          <Link href="/work/mytrials" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+            MyTrials
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
@@ -133,12 +118,6 @@ export default function JimCoachPage() {
               <span className="text-foreground">An AI personal trainer in your pocket — form checked, reps counted, no gym membership required.</span>
             </h1>
 
-            <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
-              Jim Coach is a mobile AI fitness assistant built to eliminate the three biggest barriers to working out:
-              not knowing what to do, not knowing if you&apos;re doing it right, and not being able to afford someone who does.
-              Using computer vision and multimodal AI, it watches your form in real-time, counts your reps, and coaches you — like a personal trainer, but on your phone.
-            </p>
-
             <div className="flex flex-wrap gap-3 mt-8">
               <Link
                 href="https://jim.coach"
@@ -146,266 +125,247 @@ export default function JimCoachPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
               >
-                jim.coach <ArrowUpRight size={14} />
+                Visit Site → jim.coach <ArrowUpRight size={14} className="ml-1" />
               </Link>
             </div>
 
             {/* Hero Meta Strip */}
             <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
               {[
-                { label: "My Role", value: "Product Designer & Developer" },
+                { label: "Role", value: "Product Designer & Developer" },
                 { label: "Industry", value: "Health & Fitness" },
-                { label: "Stage", value: "2025" },
-                { label: "Team Size", value: "4 people" },
+                { label: "Year", value: "2025" },
+                { label: "Team", value: "4 people" },
               ].map(({ label, value }) => (
-                <div key={label} className="flex flex-col gap-1">
+                <div key={label} className="flex flex-col gap-1 pr-6 sm:pr-12">
                   <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
-                  <span className="text-[15px] font-medium text-foreground">{value}</span>
+                  <span className="text-[15px] font-medium text-foreground whitespace-pre-line">{value.replace(" & ", "\n& ")}</span>
                 </div>
               ))}
             </div>
           </motion.div>
         </div>
 
-        {/* ── OUTCOME STATS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
-          <FadeIn>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
-              {outcomes.map((o, i) => (
-                <motion.div
-                  key={o.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-background px-8 py-10 text-center"
-                >
-                  <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
-                  <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
-                  <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
-                </motion.div>
-              ))}
-            </div>
-          </FadeIn>
+        {/* ── TAB SWITCHER (BELOW HERO) ── */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 mt-4 mb-8">
+          <div className="flex w-full overflow-hidden border-b border-foreground/10">
+            {(['product', 'ui-ux', 'engineering'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 relative px-6 py-4 text-[13px] tracking-[0.06em] uppercase font-medium transition-colors ${
+                  activeTab === tab
+                    ? "text-foreground font-bold"
+                    : "text-foreground/40 hover:text-foreground/70"
+                }`}
+              >
+                {tab === 'product' ? 'Product' : tab === 'ui-ux' ? 'UI UX' : 'Engineering'}
+                {activeTab === tab && (
+                  <motion.div
+                    layoutId="activeTabJim"
+                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* ── USER RESEARCH BAR CHART ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — User Research</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                What barriers do people face to working out?
-              </h2>
-              <p className="text-[14px] leading-relaxed text-foreground/50 mb-12 max-w-2xl">
-                I conducted a survey of 15+ people from my gym. I wanted to understand the friction points.
-                The most common words have been visualised below by frequency.
-              </p>
-
-              {/* Bar Chart */}
-              <div className="space-y-4">
-                {barrierData.map((item, i) => (
-                  <div key={item.label} className="flex items-center gap-4">
-                    <span className="text-[12px] text-foreground/50 w-40 shrink-0 text-right pr-2">{item.label}</span>
-                    <div className="flex-1 flex items-center gap-3">
-                      <motion.div
-                        className="h-7 bg-foreground/90 rounded-sm"
-                        style={{ width: 0 }}
-                        whileInView={{ width: `${(item.count / maxCount) * 100}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                      <span className="text-[22px] font-light text-foreground/80 tabular-nums">{item.count}</span>
+        {/* ── CONDITIONAL CONTENT BELOW ── */}
+        <div className="min-h-[50vh]">
+          {activeTab === 'product' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* ── PROBLEM SECTION ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                      The Problem
+                    </h2>
+                    <div className="space-y-6 max-w-2xl text-[16px] leading-[1.85] text-foreground/60">
+                      <p>
+                        Most people don't work out because they don't know what to do, can't afford someone who does, and have no way to know if they're doing it right.
+                      </p>
+                      <p>
+                        A gym membership doesn't solve this.<br />
+                        A personal trainer costs $80/hr.<br />
+                        Existing fitness apps show videos — but can't watch back.
+                      </p>
                     </div>
                   </div>
-                ))}
+                </FadeIn>
               </div>
-            </div>
-          </FadeIn>
-        </div>
 
-        {/* ── MARKET GAP ANALYSIS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — Market Research</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                Identifying the &apos;Form Gap&apos; in the App Store
-              </h2>
-              <p className="text-[14px] leading-relaxed text-foreground/50 mb-10 max-w-2xl">
-                Top fitness apps did most things well. But a major gap emerged: no app could ensure exercises were performed with correct form —
-                the single feature that determines results and prevents injury.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {marketGaps.map((gap, i) => (
-                  <motion.div
-                    key={gap.label}
-                    initial={{ opacity: 0, scale: 0.97 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07 }}
-                    className={`flex items-center gap-3 p-4 border rounded-sm ${gap.covered
-                        ? "border-foreground/5 bg-foreground/[0.02]"
-                        : "border-foreground/15 bg-foreground/[0.04]"
-                      }`}
-                  >
-                    <span className={`text-[16px] ${gap.covered ? "text-foreground/25" : "text-foreground"}`}>
-                      {gap.covered ? "✓" : "✕"}
-                    </span>
-                    <span className={`text-[13px] font-medium ${gap.covered ? "text-foreground/40 line-through" : "text-foreground/80"}`}>
-                      {gap.label}
-                    </span>
-                    {!gap.covered && (
-                      <span className="ml-auto text-[9px] tracking-[0.1em] uppercase text-foreground/40 font-medium whitespace-nowrap">Gap</span>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* ── SKILLS APPLIED ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Skills Applied</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                End-to-end capability required
-              </h2>
-
-              <div className="space-y-5">
-                {skills.map((skill, i) => (
-                  <div key={skill.label} className="space-y-2">
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-[13px] font-medium text-foreground/70">{skill.label}</span>
-                      <span className="text-[11px] font-mono text-foreground/30">{skill.level}%</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-foreground/70 rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      />
+              {/* ── PROCESS TIMELINE ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
+                      Process
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/5">
+                      {processSteps.map((s, i) => (
+                        <motion.div
+                          key={s.step}
+                          initial={{ opacity: 0, y: 14 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          className="bg-background p-8 group"
+                        >
+                          <p className="text-[10px] font-mono text-foreground/25 mb-4">{s.step}</p>
+                          <h3 className="text-[16px] font-medium text-foreground mb-3">{s.label}</h3>
+                          <p className="text-[13px] leading-[1.7] text-foreground/50">{s.desc}</p>
+                        </motion.div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* ── TECH STACK ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Tech Stack</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                Tools that built Jim Coach
-              </h2>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {techStack.map((tech, i) => (
-                  <motion.div
-                    key={tech.name}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className={`p-4 border rounded-sm ${categoryColors[tech.category] || "bg-foreground/5 border-foreground/10 text-foreground/60"}`}
-                  >
-                    <p className="text-[9px] uppercase tracking-[0.1em] opacity-60 mb-1.5">{tech.category}</p>
-                    <p className="text-[15px] font-medium">{tech.name}</p>
-                  </motion.div>
-                ))}
+                </FadeIn>
               </div>
 
-              {/* Category legend */}
-              <div className="flex flex-wrap gap-3 mt-8 pt-8 border-t border-foreground/5">
-                {Object.entries(categoryColors).map(([cat, cls]) => (
-                  <span key={cat} className={`text-[10px] px-2.5 py-1 rounded border ${cls}`}>
-                    {cat}
-                  </span>
-                ))}
+              {/* ── SKILLS APPLIED ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                      Skills Applied
+                    </h2>
+                    <div className="space-y-5 max-w-2xl">
+                      {skills.map((skill, i) => (
+                        <div key={skill.label} className="space-y-2">
+                          <div className="flex justify-between items-baseline">
+                            <span className="text-[13px] font-medium text-foreground/70">{skill.label}</span>
+                            <span className="text-[11px] font-mono text-foreground/30">{skill.level}%</span>
+                          </div>
+                          <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full bg-foreground/70 rounded-full"
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${skill.level}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
-            </div>
-          </FadeIn>
-        </div>
 
-        {/* ── PROCESS TIMELINE ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Process</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
-                From Gym Survey to App Store
-              </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/5">
-                {processSteps.map((s, i) => (
-                  <motion.div
-                    key={s.step}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className="bg-background p-8 group"
-                  >
-                    <p className="text-[10px] font-mono text-foreground/25 mb-4">{s.step}</p>
-                    <h3 className="text-[16px] font-medium text-foreground mb-3">{s.label}</h3>
-                    <p className="text-[13px] leading-[1.7] text-foreground/50">{s.desc}</p>
-                  </motion.div>
-                ))}
+              {/* ── CLOSER ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12 text-center flex flex-col items-center">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                      What's Next
+                    </h2>
+                    <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-xl mb-8">
+                      100+ alpha users confirmed the core hypothesis. The form feedback loop works.<br /><br />
+                      Next: native mobile, progress tracking, social accountability, and App Store launch.
+                    </p>
+                    <Link
+                      href="https://jim.coach"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3.5 bg-foreground text-background text-[14px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+                    >
+                      See the live alpha → jim.coach <ArrowUpRight size={16} />
+                    </Link>
+                  </div>
+                </FadeIn>
               </div>
-            </div>
-          </FadeIn>
-        </div>
+            </motion.div>
+          )}
 
-        {/* ── DISTRIBUTION LESSON ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Lessons Learned</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                Distribution is the Final Boss
-              </h2>
-              <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
-                Early validation was strong, but scale didn&apos;t come from individual user acquisition — it clicked when I discovered
-                the efficiency of <strong className="text-foreground/80 font-medium">nodes of distribution</strong>.
-                Personal trainers weren&apos;t just users; they were multipliers. Each PT carried a roster of clients who had a real,
-                immediate need for Jim Coach.
-              </p>
-              <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
-                To understand this problem properly, I went all the way in: <strong className="text-foreground/80 font-medium">I got a job as a personal trainer.</strong>{" "}
-                Living the PT experience gave me an insider&apos;s perspective on how coaches think about client progress, what
-                tools they trust, and exactly where Jim Coach could slot into their workflow.
-              </p>
+          {activeTab === 'ui-ux' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* ── UI/UX SECTION ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                      Designing for the Gym Floor
+                    </h2>
+                    <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-2xl mb-16">
+                      The core UX challenge: design an interface people can use mid-workout — sweaty hands, low attention, high adrenaline.<br /><br />
+                      Every screen had to work in under 2 seconds.
+                    </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5">
-                {[
-                  { label: "Personal Trainers Approached", value: "12+", desc: "In local gyms & studios" },
-                  { label: "Avg. Clients per PT", value: "20–40", desc: "Immediate distribution nodes" },
-                  { label: "Next Step", value: "Mobile", desc: "Native camera & notifications" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-background p-8"
-                  >
-                    <p className="text-[38px] font-light text-foreground leading-none mb-2">{item.value}</p>
-                    <p className="text-[13px] font-medium text-foreground/65 mb-1">{item.label}</p>
-                    <p className="text-[11px] text-foreground/35 uppercase tracking-wider">{item.desc}</p>
-                  </motion.div>
-                ))}
+                    <div className="flex flex-col gap-24">
+                      {uiScreens.map((screen, idx) => (
+                        <div key={idx} className="flex flex-col items-center">
+                          <div className="w-full max-w-md aspect-[9/19] relative rounded-[32px] overflow-hidden border-[8px] border-foreground/10 bg-background shadow-2xl mb-6">
+                            <Image
+                              src={screen.image}
+                              alt={screen.title}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <h3 className="text-[18px] font-medium text-foreground mb-3">{screen.title}</h3>
+                          {screen.caption && (
+                            <p className="text-[14px] leading-[1.6] text-foreground/50 text-center max-w-sm">
+                              {screen.caption}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </FadeIn>
               </div>
-            </div>
-          </FadeIn>
+            </motion.div>
+          )}
+
+          {activeTab === 'engineering' && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* ── ENGINEERING SECTION ── */}
+              <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+                <FadeIn>
+                  <div className="border border-foreground/5 p-8 sm:p-12">
+                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                      Built to Watch You Work Out
+                    </h2>
+                    
+                    <div className="mb-10 p-6 bg-foreground/[0.02] border border-foreground/5 rounded-sm inline-block">
+                      <p className="text-[11px] uppercase tracking-[0.1em] text-foreground/40 font-medium mb-3">Tech Stack</p>
+                      <p className="text-[15px] font-medium text-foreground/80">
+                        Next.js · Tailwind CSS · Framer Motion<br />
+                        Multimodal AI · Computer Vision / Pose Estimation
+                      </p>
+                    </div>
+
+                    <div className="space-y-6 max-w-3xl text-[16px] leading-[1.85] text-foreground/60">
+                      <p>
+                        The hardest engineering problem wasn't the AI — it was latency. Form feedback that arrives 3 seconds late is useless mid-rep.
+                      </p>
+                      <p>
+                        The architecture was built around minimizing feedback loop time while keeping the experience smooth on a phone camera.
+                      </p>
+                      <p>
+                        Alpha shipped as a web app to validate the core loop before investing in native mobile development.
+                      </p>
+                    </div>
+                  </div>
+                </FadeIn>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {/* ── FOOTER ── */}

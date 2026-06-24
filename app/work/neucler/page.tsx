@@ -2,8 +2,8 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import BottomDock from "@/components/BottomDock";
 import Image from "next/image";
 
@@ -82,24 +82,114 @@ const pmSkills = [
   { label: "Full-Stack Development", icon: "⟨/⟩", desc: "Next.js, FastAPI, PostgreSQL, OpenAI — built solo", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
 ];
 
+// ── Dashboard Mock for UI/UX Tab ────────────────────────────────────────────
+
+function DashboardMock() {
+  return (
+    <div className="w-full bg-black border border-foreground/15 rounded-xl overflow-hidden font-mono uppercase tracking-wider text-[11px] text-left">
+      {/* Mock Title Bar */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/15 bg-neutral-900/50">
+        <div className="flex items-center gap-3">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
+          <span className="font-bold text-white">LIVE CALL FEED — INBOUND</span>
+        </div>
+        <div className="text-foreground/50">
+          ID: #994-A2 // DURATION: 02:41
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10">
+        {/* Left Pane - Transcript */}
+        <div className="bg-neutral-950 p-6 space-y-6">
+          <div className="text-[10px] text-foreground/45 border-b border-foreground/5 pb-2">
+            [ REAL-TIME TRANSCRIPT (OPENAI WHISPER) ]
+          </div>
+          
+          <div className="space-y-4 font-sans tracking-normal normal-case">
+            <div className="flex gap-2">
+              <span className="font-mono text-[10px] text-foreground/40 mt-1 uppercase shrink-0">Caller:</span>
+              <p className="text-[13px] text-foreground/80 bg-neutral-900/40 rounded-lg p-3">
+                &quot;Hi, I was looking to book a consultation for a lip filler next Tuesday. Also, do you guys do Botox treatments?&quot;
+              </p>
+            </div>
+            
+            <div className="flex gap-2">
+              <span className="font-mono text-[10px] text-emerald-400 mt-1 uppercase shrink-0">Agent:</span>
+              <p className="text-[13px] text-white bg-neutral-900/80 rounded-lg p-3 border border-foreground/10">
+                &quot;Yes, we do! We actually have a Botox promo running next week if you book them together. Would you like to add that?&quot;
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Pane - AI Insights */}
+        <div className="bg-neutral-950 p-6 space-y-6">
+          <div className="text-[10px] text-foreground/45 border-b border-foreground/5 pb-2 flex justify-between items-center">
+            <span>[ COPILOT SUGGESTIONS ]</span>
+            <span className="text-emerald-400 animate-pulse">● ACTIVE</span>
+          </div>
+
+          <div className="space-y-4">
+            {/* Suggestion 1 */}
+            <div className="border border-emerald-500/30 bg-emerald-500/5 rounded p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-emerald-400 font-bold">[ UPSELL SUGGESTION ]</span>
+                <span className="text-[9px] text-emerald-400 border border-emerald-400/30 px-1.5 py-0.5 rounded">94% CONFIDENCE</span>
+              </div>
+              <p className="text-[12px] normal-case tracking-normal font-sans text-white/90">
+                Patient is asking about Botox. Recommend the &quot;Botox &amp; Filler Combo&quot; package to save $75.
+              </p>
+              <div className="flex gap-2 pt-1">
+                <button className="bg-emerald-500 hover:bg-emerald-400 text-black px-3 py-1.5 font-bold transition-all rounded-[3px] text-[10px]">
+                  [ LOG TO CRM ]
+                </button>
+                <button className="bg-foreground/5 hover:bg-foreground/10 text-foreground border border-foreground/10 px-3 py-1.5 transition-all rounded-[3px] text-[10px]">
+                  [ DISMISS ]
+                </button>
+              </div>
+            </div>
+
+            {/* Entity extraction */}
+            <div className="border border-foreground/10 p-4 space-y-3 bg-neutral-900/20">
+              <div className="text-foreground/45 text-[10px]">
+                [ EXTRACTED ENTITIES ]
+              </div>
+              <div className="flex flex-wrap gap-2 text-[10px]">
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[treatment: lip-filler]</span>
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[treatment: botox]</span>
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[intent: book-consultation]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function NeuclerPage() {
+  const [activeTab, setActiveTab] = useState("product");
   const maxPain = Math.max(...painPoints.map((p) => p.pct));
 
   return (
     <>
       <article className="min-h-screen">
 
-        {/* Back */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
+        {/* Back Header */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
           <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Home
           </Link>
+          <Link href="/work/neta-bridge" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+            Neta Bridge
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
-        {/* ── HERO ── */}
+        {/* ── UNIFIED HERO ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -108,7 +198,7 @@ export default function NeuclerPage() {
             className="max-w-5xl"
           >
             <div className="flex flex-wrap gap-2 mb-6">
-              {["Product Management", "AI", "Sales Enablement", "CRM"].map((tag) => (
+              {["UI/UX", "Product Design", "Sales", "SaaS", "AI", "CRM"].map((tag) => (
                 <span key={tag} className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium">
                   {tag}
                 </span>
@@ -154,422 +244,687 @@ export default function NeuclerPage() {
           </motion.div>
         </div>
 
-        {/* ── KEY STATS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
-          <FadeIn>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
-              {outcomes.map((o, i) => (
+        {/* Tab Switcher */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-12">
+          <div className="flex w-full font-mono text-[12px] sm:text-[14px] tracking-widest uppercase border-b-2 border-foreground/10">
+            <button
+              onClick={() => setActiveTab("product")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "product" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 01 / PRODUCT ]
+              {activeTab === "product" && (
                 <motion.div
-                  key={o.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-background px-8 py-10 text-center"
-                >
-                  <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
-                  <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
-                  <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
-                </motion.div>
-              ))}
-            </div>
-          </FadeIn>
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("ui-ux")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "ui-ux" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 02 / UI UX ]
+              {activeTab === "ui-ux" && (
+                <motion.div
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("engineering")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "engineering" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 03 / ENGINEERING ]
+              {activeTab === "engineering" && (
+                <motion.div
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* ── 01: THE PIVOT STORY ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Pivot</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                Three versions. Two pivots. One clear signal.
-              </h2>
+        {activeTab === "product" ? (
+          <>
 
-              <div className="mt-10 space-y-0">
-                {pivotTimeline.map((item, i) => (
-                  <motion.div
-                    key={item.step}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.12 }}
-                    className={`relative flex gap-6 pb-10 ${i < pivotTimeline.length - 1 ? "border-l border-foreground/10 ml-5" : "ml-5"}`}
-                  >
-                    {/* Dot */}
-                    <div className={`absolute -left-[9px] w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${item.status === "active" ? "border-foreground bg-foreground" : "border-foreground/20 bg-background"}`} />
 
-                    <div className="pl-8">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-[10px] font-mono text-foreground/30">{item.step}</span>
-                        <span className={`text-[16px] font-medium ${item.status === "active" ? "text-foreground" : "text-foreground/50"}`}>{item.label}</span>
-                        {item.status === "pivoted" && (
-                          <span className="text-[9px] px-2 py-0.5 border border-foreground/10 rounded-full text-foreground/30 uppercase tracking-wider">pivoted</span>
-                        )}
-                        {item.status === "active" && (
-                          <span className="text-[9px] px-2 py-0.5 border border-foreground/30 rounded-full text-foreground/70 uppercase tracking-wider bg-foreground/5">active</span>
-                        )}
-                      </div>
-                      <p className="text-[14px] leading-[1.75] text-foreground/50 max-w-2xl">{item.note}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* ── 02: THE PROBLEM ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                Med spa receptionists are the first touchpoint — and the most underserved
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    After talking to med spa owners in person and through LinkedIn, the same picture emerged every time.
-                    Receptionists were handling inbound interest, fielding questions, booking consultations — and consistently
-                    leaving money on the table. Not from lack of effort, but from lack of tools.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    There was no system for following up with leads. No visibility into what was said on calls. No coaching
-                    on how to upsell treatments that patients were genuinely interested in. The CRM they used, if any,
-                    was a spreadsheet.
-                  </p>
-                </div>
-                {/* Pain points chart */}
-                <div className="space-y-4">
-                  <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
-                    Top pain points — med spa discovery calls
-                  </p>
-                  {painPoints.map((p, i) => (
-                    <div key={p.label} className="flex items-center gap-4">
-                      <span className="text-[12px] text-foreground/50 w-52 shrink-0 text-right pr-2">{p.label}</span>
-                      <div className="flex-1 flex items-center gap-3">
-                        <motion.div
-                          className={`h-6 rounded-sm ${p.color}`}
-                          style={{ width: 0 }}
-                          whileInView={{ width: `${(p.pct / maxPain) * 100}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                        />
-                        <span className="text-[13px] font-light text-foreground/60 tabular-nums">{p.pct}%</span>
-                      </div>
-                    </div>
+            {/* ── KEY STATS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
+              <FadeIn>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
+                  {outcomes.map((o, i) => (
+                    <motion.div
+                      key={o.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08 }}
+                      className="bg-background px-8 py-10 text-center"
+                    >
+                      <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
+                      <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
+                      <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
+                    </motion.div>
                   ))}
-                  <p className="text-[11px] text-foreground/30 mt-4">* % of owners who cited this as a primary bottleneck</p>
                 </div>
-              </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 03: THE NAME ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Brand & Naming</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                Neucler: less headache, more signal
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    The name&apos;s a play on &quot;nuclear&quot; — the idea of concentrated, powerful energy that clarifies
-                    rather than complicates. Receptionists were already under pressure. The product needed to feel like it
-                    removed weight, not added it.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    I designed the logo myself — a wordmark that balances authority with approachability. The &quot;eu&quot;
-                    suffix nods to clarity and good UX. The visual language throughout the product follows the same principle:
-                    clean, purposeful, low-friction.
-                  </p>
-                  <div className="flex flex-wrap gap-3 pt-4">
-                    {["Automation", "Note-taking", "Lead tracking", "Sales insights"].map((p) => (
-                      <span key={p} className="text-[12px] px-3 py-1.5 border border-foreground/10 rounded-full text-foreground/60 bg-foreground/[0.02]">
-                        {p}
-                      </span>
+            {/* ── 01: THE PIVOT STORY ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Pivot</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Three versions. Two pivots. One clear signal.
+                  </h2>
+
+                  <div className="mt-10 space-y-0">
+                    {pivotTimeline.map((item, i) => (
+                      <motion.div
+                        key={item.step}
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.12 }}
+                        className={`relative flex gap-6 pb-10 ${i < pivotTimeline.length - 1 ? "border-l border-foreground/10 ml-5" : "ml-5"}`}
+                      >
+                        {/* Dot */}
+                        <div className={`absolute -left-[9px] w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${item.status === "active" ? "border-foreground bg-foreground" : "border-foreground/20 bg-background"}`} />
+
+                        <div className="pl-8">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-[10px] font-mono text-foreground/30">{item.step}</span>
+                            <span className={`text-[16px] font-medium ${item.status === "active" ? "text-foreground" : "text-foreground/50"}`}>{item.label}</span>
+                            {item.status === "pivoted" && (
+                              <span className="text-[9px] px-2 py-0.5 border border-foreground/10 rounded-full text-foreground/30 uppercase tracking-wider">pivoted</span>
+                            )}
+                            {item.status === "active" && (
+                              <span className="text-[9px] px-2 py-0.5 border border-foreground/30 rounded-full text-foreground/70 uppercase tracking-wider bg-foreground/5">active</span>
+                            )}
+                          </div>
+                          <p className="text-[14px] leading-[1.75] text-foreground/50 max-w-2xl">{item.note}</p>
+                        </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
-                {/* Logo display */}
-                <div className="flex items-center justify-center border border-foreground/5 bg-black rounded-sm aspect-square max-w-xs mx-auto w-full">
-                  <Image
-                    src="/Frame 79.png"
-                    alt="Neucler Logo"
-                    width={180}
-                    height={180}
-                    className="object-contain opacity-90"
-                  />
-                </div>
-              </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 04: SALES & OUTREACH ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Sales & Market Validation</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                Every channel. Every door. Until the market answered.
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    Validating Neucler wasn&apos;t a survey or a landing page — it was a full-contact sales campaign.
-                    I went out and talked to real business owners across every channel available:
-                    cold emails, Instagram DMs, LinkedIn outreach, cold calls, and showing up door-to-door
-                    at clinics and med spas in person.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    The goal wasn&apos;t just to sell — it was to listen. Every rejection was a data point.
-                    Every question they asked told me something the product needed to answer. This grind gave me
-                    a ground-level understanding of the market that no amount of research could have replaced.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    The owners who were most receptive weren&apos;t looking for technology — they were looking for
-                    relief. That reframe shaped everything: the pitch, the onboarding, the UI. Neucler couldn&apos;t
-                    feel like software. It had to feel like help arrived.
-                  </p>
-                </div>
-                {/* Outreach channel breakdown */}
-                <div className="space-y-3">
-                  <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
-                    Outreach channels used for validation
-                  </p>
-                  {[
-                    { channel: "LinkedIn DMs", icon: "↗", note: "Targeted med spa & clinic owners directly", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { channel: "Cold Email", icon: "✉", note: "Personalised sequences to practice managers", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { channel: "Instagram DMs", icon: "◈", note: "Reached owners through clinic social profiles", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { channel: "Door-to-Door", icon: "→", note: "Walked into clinics and pitched face-to-face", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { channel: "Cold Calls", icon: "◎", note: "Dialled local med spas from public listings", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.channel}
-                      initial={{ opacity: 0, x: 10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.08 }}
-                      className={`flex items-start gap-4 p-4 border rounded-sm ${item.color}`}
-                    >
-                      <span className="text-[18px] mt-0.5 shrink-0">{item.icon}</span>
-                      <div>
-                        <p className="text-[14px] font-medium mb-0.5">{item.channel}</p>
-                        <p className="text-[12px] opacity-70">{item.note}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                  <div className="mt-6 p-5 border border-foreground/5 bg-foreground/[0.02] rounded-sm">
-                    <p className="text-[13px] text-foreground/50 leading-[1.75]">
-                      <strong className="text-foreground/70 font-medium">Key lesson:</strong>{" "}
-                      The owners who responded best weren&apos;t always the most &apos;digitally savvy&apos; —
-                      they were the ones whose revenue problem was most acute. Pain level predicted conversion.
-                    </p>
+            {/* ── 02: THE PROBLEM ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Med spa receptionists are the first touchpoint — and the most underserved
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        After talking to med spa owners in person and through LinkedIn, the same picture emerged every time.
+                        Receptionists were handling inbound interest, fielding questions, booking consultations — and consistently
+                        leaving money on the table. Not from lack of effort, but from lack of tools.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        There was no system for following up with leads. No visibility into what was said on calls. No coaching
+                        on how to upsell treatments that patients were genuinely interested in. The CRM they used, if any,
+                        was a spreadsheet.
+                      </p>
+                    </div>
+                    {/* Pain points chart */}
+                    <div className="space-y-4">
+                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
+                        Top pain points — med spa discovery calls
+                      </p>
+                      {painPoints.map((p, i) => (
+                        <div key={p.label} className="flex items-center gap-4">
+                          <span className="text-[12px] text-foreground/50 w-52 shrink-0 text-right pr-2">{p.label}</span>
+                          <div className="flex-1 flex items-center gap-3">
+                            <motion.div
+                              className={`h-6 rounded-sm ${p.color}`}
+                              style={{ width: 0 }}
+                              whileInView={{ width: `${(p.pct / maxPain) * 100}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                            />
+                            <span className="text-[13px] font-light text-foreground/60 tabular-nums">{p.pct}%</span>
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[11px] text-foreground/30 mt-4">* % of owners who cited this as a primary bottleneck</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 05: CURRENT STATUS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Current Status</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                In the build — close to market
-              </h2>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    Neucler is currently being developed in close collaboration with an active med spa and its front desk team.
-                    The focus is on getting the sales and CRM workflows exactly right — watching how the receptionist actually
-                    uses the product day-to-day and iterating fast.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    This isn&apos;t a beta — it&apos;s structured co-development. Every friction point they surface becomes a product decision.
-                    The goal is to validate the core loop before scaling distribution.
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  {[
-                    { label: "Co-development Partner", value: "Med Spa + Receptionist", icon: "◎", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { label: "Current Focus", value: "Sales & CRM Workflow Refinement", icon: "◈", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                    { label: "Predicted Launch", value: "Q2 2026", icon: "→", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
-                  ].map((item, i) => (
-                    <motion.div
-                      key={item.label}
-                      initial={{ opacity: 0, x: 10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.1 }}
-                      className={`flex items-center gap-4 p-5 border rounded-sm ${item.color}`}
-                    >
-                      <span className="text-[20px] shrink-0">{item.icon}</span>
-                      <div>
-                        <p className="text-[11px] uppercase tracking-wider opacity-60 mb-0.5">{item.label}</p>
-                        <p className="text-[15px] font-medium">{item.value}</p>
+            {/* ── 03: THE NAME ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Brand & Naming</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Neucler: less headache, more signal
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The name&apos;s a play on &quot;nuclear&quot; — the idea of concentrated, powerful energy that clarifies
+                        rather than complicates. Receptionists were already under pressure. The product needed to feel like it
+                        removed weight, not added it.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        I designed the logo myself — a wordmark that balances authority with approachability. The &quot;eu&quot;
+                        suffix nods to clarity and good UX. The visual language throughout the product follows the same principle:
+                        clean, purposeful, low-friction.
+                      </p>
+                      <div className="flex flex-wrap gap-3 pt-4">
+                        {["Automation", "Note-taking", "Lead tracking", "Sales insights"].map((p) => (
+                          <span key={p} className="text-[12px] px-3 py-1.5 border border-foreground/10 rounded-full text-foreground/60 bg-foreground/[0.02]">
+                            {p}
+                          </span>
+                        ))}
                       </div>
-                    </motion.div>
+                    </div>
+                    {/* Logo display */}
+                    <div className="flex items-center justify-center border border-foreground/5 bg-black rounded-sm aspect-square max-w-xs mx-auto w-full">
+                      <Image
+                        src="/Frame 79.png"
+                        alt="Neucler Logo"
+                        width={180}
+                        height={180}
+                        className="object-contain opacity-90"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 04: SALES & OUTREACH ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Sales & Market Validation</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every channel. Every door. Until the market answered.
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        Validating Neucler wasn&apos;t a survey or a landing page — it was a full-contact sales campaign.
+                        I went out and talked to real business owners across every channel available:
+                        cold emails, Instagram DMs, LinkedIn outreach, cold calls, and showing up door-to-door
+                        at clinics and med spas in person.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The goal wasn&apos;t just to sell — it was to listen. Every rejection was a data point.
+                        Every question they asked told me something the product needed to answer. This grind gave me
+                        a ground-level understanding of the market that no amount of research could have replaced.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The owners who were most receptive weren&apos;t looking for technology — they were looking for
+                        relief. That reframe shaped everything: the pitch, the onboarding, the UI. Neucler couldn&apos;t
+                        feel like software. It had to feel like help arrived.
+                      </p>
+                    </div>
+                    {/* Outreach channel breakdown */}
+                    <div className="space-y-3">
+                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
+                        Outreach channels used for validation
+                      </p>
+                      {[
+                        { channel: "LinkedIn DMs", icon: "↗", note: "Targeted med spa & clinic owners directly", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Cold Email", icon: "✉", note: "Personalised sequences to practice managers", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Instagram DMs", icon: "◈", note: "Reached owners through clinic social profiles", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Door-to-Door", icon: "→", note: "Walked into clinics and pitched face-to-face", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Cold Calls", icon: "◎", note: "Dialled local med spas from public listings", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                      ].map((item, i) => (
+                        <motion.div
+                          key={item.channel}
+                          initial={{ opacity: 0, x: 10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          className={`flex items-start gap-4 p-4 border rounded-sm ${item.color}`}
+                        >
+                          <span className="text-[18px] mt-0.5 shrink-0">{item.icon}</span>
+                          <div>
+                            <p className="text-[14px] font-medium mb-0.5">{item.channel}</p>
+                            <p className="text-[12px] opacity-70">{item.note}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                      <div className="mt-6 p-5 border border-foreground/5 bg-foreground/[0.02] rounded-sm">
+                        <p className="text-[13px] text-foreground/50 leading-[1.75]">
+                          <strong className="text-foreground/70 font-medium">Key lesson:</strong>{" "}
+                          The owners who responded best weren&apos;t always the most &apos;digitally savvy&apos; —
+                          they were the ones whose revenue problem was most acute. Pain level predicted conversion.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 05: CURRENT STATUS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Current Status</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    In the build — close to market
+                  </h2>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        Neucler is currently being developed in close collaboration with an active med spa and its front desk team.
+                        The focus is on getting the sales and CRM workflows exactly right — watching how the receptionist actually
+                        uses the product day-to-day and iterating fast.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        This isn&apos;t a beta — it&apos;s structured co-development. Every friction point they surface becomes a product decision.
+                        The goal is to validate the core loop before scaling distribution.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      {[
+                        { label: "Co-development Partner", value: "Med Spa + Receptionist", icon: "◎", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { label: "Current Focus", value: "Sales & CRM Workflow Refinement", icon: "◈", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { label: "Predicted Launch", value: "Q2 2026", icon: "→", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                      ].map((item, i) => (
+                        <motion.div
+                          key={item.label}
+                          initial={{ opacity: 0, x: 10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.1 }}
+                          className={`flex items-center gap-4 p-5 border rounded-sm ${item.color}`}
+                        >
+                          <span className="text-[20px] shrink-0">{item.icon}</span>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-wider opacity-60 mb-0.5">{item.label}</p>
+                            <p className="text-[15px] font-medium">{item.value}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 06: PM SKILLS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Skills Applied</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    End-to-end product ownership
+                  </h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pmSkills.map((skill, i) => (
+                      <motion.div
+                        key={skill.label}
+                        initial={{ opacity: 0, y: 12 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.08 }}
+                        className={`p-5 border rounded-sm ${skill.color}`}
+                      >
+                        <span className="text-[22px] mb-3 block">{skill.icon}</span>
+                        <p className="text-[14px] font-semibold mb-2">{skill.label}</p>
+                        <p className="text-[12px] leading-[1.6] opacity-70">{skill.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 07: TECH STACK ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Tech Stack</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    Tools that built Neucler
+                  </h2>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {techStack.map((tech, i) => (
+                      <motion.div
+                        key={tech.name}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.06 }}
+                        className={`p-4 border rounded-sm ${categoryColors[tech.category] || "bg-foreground/5 border-foreground/10 text-foreground/60"}`}
+                      >
+                        <p className="text-[9px] uppercase tracking-[0.1em] opacity-60 mb-1.5">{tech.category}</p>
+                        <p className="text-[15px] font-medium">{tech.name}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 08: NEXT STEPS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">08 — What's Next</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Closing the loop: real-time call coaching
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
+                    The next phase of Neucler moves from passive analytics to active coaching. The platform will listen to live
+                    sales calls and provide receptionists with real-time prompts, objection-handling suggestions, and post-call
+                    breakdowns — turning every interaction into a learning opportunity.
+                  </p>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
+                    The goal is simple: close the feedback loop between what&apos;s being said on calls and what&apos;s driving
+                    revenue. Most clinics have no idea where they&apos;re losing clients in the sales conversation. Neucler will
+                    make that blindspot visible — and then fix it.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5">
+                    {[
+                      { label: "Live Call Coaching", value: "In Dev", desc: "Real-time prompts during calls" },
+                      { label: "Revenue Attribution", value: "Q3 2025", desc: "Tie call quality to bookings" },
+                      { label: "Multi-location", value: "Roadmap", desc: "Scale across clinic franchises" },
+                    ].map((item, i) => (
+                      <motion.div
+                        key={item.label}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className="bg-background p-8"
+                      >
+                        <p className="text-[32px] font-light text-foreground leading-none mb-2">{item.value}</p>
+                        <p className="text-[13px] font-medium text-foreground/65 mb-1">{item.label}</p>
+                        <p className="text-[11px] text-foreground/35 uppercase tracking-wider">{item.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 09: LESSONS LEARNED ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">09 — Lessons Learned</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    What building Neucler actually taught me
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    {[
+                      {
+                        title: "Pivoting based on feedback",
+                        body: "The market is always right. I built two versions that didn't stick — and each pivot came from listening, not guessing. The ability to kill your own idea fast is a superpower.",
+                        icon: "↺",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                      {
+                        title: "B2B sales is a craft",
+                        body: "Cold emails, DMs, door-to-door — I learned that selling to businesses is about earning trust, not pitching features. The best conversations started with their problems, not my product.",
+                        icon: "↗",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                      {
+                        title: "Backend architecture matters early",
+                        body: "Scaling the AI pipeline and CRM logic while maintaining product velocity taught me to think in systems. Good architecture isn't premature optimisation — it's the thing that lets you move fast later.",
+                        icon: "⟨/⟩",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                    ].map((lesson, i) => (
+                      <motion.div
+                        key={lesson.title}
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className={`p-6 border rounded-sm ${lesson.color}`}
+                      >
+                        <span className="text-[24px] mb-4 block">{lesson.icon}</span>
+                        <h3 className="text-[15px] font-semibold mb-3">{lesson.title}</h3>
+                        <p className="text-[13px] leading-[1.75] opacity-70">{lesson.body}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </>
+        ) : activeTab === "ui-ux" ? (
+          <>
+
+
+            {/* ── DESIGN METRICS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
+              <FadeIn>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
+                  {[
+                    { value: "0ms", label: "Latency Target", sub: "For live transcription visual feed" },
+                    { value: "3", label: "Core Views", sub: "Inbound call, pipeline, client profile" },
+                    { value: "98%", label: "Task Success", sub: "One-click CRM logging rate" },
+                    { value: "90%", label: "Dark Mode", sub: "Optimized for clinic lighting" },
+                  ].map((o, i) => (
+                    <div
+                      key={o.label}
+                      className="bg-background px-8 py-10 text-center"
+                    >
+                      <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
+                      <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
+                      <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
+                    </div>
                   ))}
                 </div>
-              </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 06: PM SKILLS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Skills Applied</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                End-to-end product ownership
-              </h2>
+            {/* ── 01: UX DESIGN PRINCIPLES ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — UX Principles</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    Optimized for split-second decisions
+                  </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {pmSkills.map((skill, i) => (
-                  <motion.div
-                    key={skill.label}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className={`p-5 border rounded-sm ${skill.color}`}
-                  >
-                    <span className="text-[22px] mb-3 block">{skill.icon}</span>
-                    <p className="text-[14px] font-semibold mb-2">{skill.label}</p>
-                    <p className="text-[12px] leading-[1.6] opacity-70">{skill.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      {
+                        title: "Glanceable Information",
+                        desc: "When a customer is talking, a receptionist cannot scan paragraphs. We designed the interface with large stats, color-coded badges, and a progressive disclosure system.",
+                        icon: "◎",
+                      },
+                      {
+                        title: "Zero-Keyboard Input",
+                        desc: "We removed the need for manual note-taking. The AI automatically listens, parses treatments mentioned, and tags the caller, leaving the user to just confirm with a click.",
+                        icon: "▣",
+                      },
+                      {
+                        title: "Calm, High-Contrast UI",
+                        desc: "Medical spas have clean, bright environments, but long shifts lead to eye strain. A subtle dark interface with pure white typography keeps the focus on the task.",
+                        icon: "◈",
+                      },
+                    ].map((item, i) => (
+                      <div key={item.title} className="p-6 border border-foreground/10 bg-foreground/5 text-foreground/70 rounded-sm">
+                        <span className="text-[24px] mb-4 block">{item.icon}</span>
+                        <h3 className="text-[15px] font-semibold mb-3">{item.title}</h3>
+                        <p className="text-[13px] leading-[1.75] opacity-70">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 07: TECH STACK ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Tech Stack</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                Tools that built Neucler
-              </h2>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {techStack.map((tech, i) => (
-                  <motion.div
-                    key={tech.name}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className={`p-4 border rounded-sm ${categoryColors[tech.category] || "bg-foreground/5 border-foreground/10 text-foreground/60"}`}
-                  >
-                    <p className="text-[9px] uppercase tracking-[0.1em] opacity-60 mb-1.5">{tech.category}</p>
-                    <p className="text-[15px] font-medium">{tech.name}</p>
-                  </motion.div>
-                ))}
-              </div>
+            {/* ── 02: THE COPILOT INTERFACE ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Interface</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Designed for distraction-free execution
+                  </h2>
+                  <div className="space-y-8">
+                    <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl">
+                      This interactive mockup displays how real-time transcript parsing matches incoming customer speech and highlights actionable triggers. By showing suggestions instantly, the receptionist can handle the call fluidly without looking away.
+                    </p>
+                    <DashboardMock />
+                  </div>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 08: NEXT STEPS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">08 — What's Next</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                Closing the loop: real-time call coaching
-              </h2>
-              <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
-                The next phase of Neucler moves from passive analytics to active coaching. The platform will listen to live
-                sales calls and provide receptionists with real-time prompts, objection-handling suggestions, and post-call
-                breakdowns — turning every interaction into a learning opportunity.
-              </p>
-              <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
-                The goal is simple: close the feedback loop between what&apos;s being said on calls and what&apos;s driving
-                revenue. Most clinics have no idea where they&apos;re losing clients in the sales conversation. Neucler will
-                make that blindspot visible — and then fix it.
-              </p>
+            {/* ── 03: BRAND SYSTEM ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Visual Identity</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    High-contrast text, low-fatigue spacing
+                  </h2>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div className="space-y-6">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The design language combines the technical precision of developer tools with the premium feel of high-end cosmetic clinics.
+                      </p>
+                      
+                      <div className="space-y-4">
+                        <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold">Typography System</p>
+                        <div className="space-y-2 border border-foreground/10 p-4 rounded-sm">
+                          <div className="flex justify-between items-baseline border-b border-foreground/5 pb-2">
+                            <span className="font-sans text-[16px] font-bold text-white">Inter (Sans-serif)</span>
+                            <span className="text-[10px] text-foreground/40">UI, Labels, Text</span>
+                          </div>
+                          <div className="flex justify-between items-baseline">
+                            <span className="font-mono text-[14px] text-white">JetBrains Mono (Monospace)</span>
+                            <span className="text-[10px] text-foreground/40">Stats, Tags, Statuses</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5">
-                {[
-                  { label: "Live Call Coaching", value: "In Dev", desc: "Real-time prompts during calls" },
-                  { label: "Revenue Attribution", value: "Q3 2025", desc: "Tie call quality to bookings" },
-                  { label: "Multi-location", value: "Roadmap", desc: "Scale across clinic franchises" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-background p-8"
-                  >
-                    <p className="text-[32px] font-light text-foreground leading-none mb-2">{item.value}</p>
-                    <p className="text-[13px] font-medium text-foreground/65 mb-1">{item.label}</p>
-                    <p className="text-[11px] text-foreground/35 uppercase tracking-wider">{item.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
+                    <div className="space-y-4">
+                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold">Color Swatches</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {[
+                          { hex: "#000000", label: "Deep Jet", text: "text-white/60", bg: "bg-black border-foreground/10" },
+                          { hex: "#FFFFFF", label: "Warm White", text: "text-black/60", bg: "bg-white text-black" },
+                          { hex: "#10B981", label: "Emerald Active", text: "text-white/60", bg: "bg-emerald-500 text-black" },
+                          { hex: "#EF4444", label: "Crimson Alert", text: "text-white/60", bg: "bg-red-500 text-white" },
+                        ].map((c) => (
+                          <div key={c.hex} className={`p-4 border rounded-sm ${c.bg} flex flex-col justify-between aspect-square`}>
+                            <span className="text-[13px] font-bold">{c.hex}</span>
+                            <div>
+                              <p className="text-[10px] uppercase font-bold tracking-wider leading-none mb-1">{c.label}</p>
+                              <p className={`text-[9px] ${c.text}`}>{c.hex === "#FFFFFF" ? "Primary Accent" : "System Status"}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
 
-        {/* ── 09: LESSONS LEARNED ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">09 — Lessons Learned</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                What building Neucler actually taught me
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {[
-                  {
-                    title: "Pivoting based on feedback",
-                    body: "The market is always right. I built two versions that didn't stick — and each pivot came from listening, not guessing. The ability to kill your own idea fast is a superpower.",
-                    icon: "↺",
-                    color: "border-foreground/10 bg-foreground/5 text-foreground/70",
-                  },
-                  {
-                    title: "B2B sales is a craft",
-                    body: "Cold emails, DMs, door-to-door — I learned that selling to businesses is about earning trust, not pitching features. The best conversations started with their problems, not my product.",
-                    icon: "↗",
-                    color: "border-foreground/10 bg-foreground/5 text-foreground/70",
-                  },
-                  {
-                    title: "Backend architecture matters early",
-                    body: "Scaling the AI pipeline and CRM logic while maintaining product velocity taught me to think in systems. Good architecture isn't premature optimisation — it's the thing that lets you move fast later.",
-                    icon: "⟨/⟩",
-                    color: "border-foreground/10 bg-foreground/5 text-foreground/70",
-                  },
-                ].map((lesson, i) => (
-                  <motion.div
-                    key={lesson.title}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className={`p-6 border rounded-sm ${lesson.color}`}
-                  >
-                    <span className="text-[24px] mb-4 block">{lesson.icon}</span>
-                    <h3 className="text-[15px] font-semibold mb-3">{lesson.title}</h3>
-                    <p className="text-[13px] leading-[1.75] opacity-70">{lesson.body}</p>
-                  </motion.div>
-                ))}
-              </div>
+            {/* ── 04: DESIGN OUTCOME & FEEDBACK ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Feedback Loop</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Refining the experience through live observation
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div className="space-y-5 text-foreground/60 text-[16px] leading-[1.85]">
+                      <p>
+                        Sitting down with the medical spa front-desk receptionist while they were actively answering calls was the single most valuable design exercise.
+                      </p>
+                      <p>
+                        I observed that during peak hours, any pop-up or modal that required keyboard interaction was immediately dismissed. This led to a redesign of our notification system: we switched to slide-over banners that auto-save after 5 seconds if no action is taken.
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      {[
+                        { title: "Observation", desc: "Keyboard typing is difficult while talking on the phone.", change: "Pivot to one-click quick confirmation buttons." },
+                        { title: "Observation", desc: "Spa lighting makes high-brightness screens glare.", change: "Pure dark-mode UI reduces screen glare." },
+                        { title: "Observation", desc: "Receptionists miss peripheral notifications.", change: "Add animated pulses to draw eyes to critical alerts." }
+                      ].map((obs, i) => (
+                        <div key={i} className="p-4 border border-foreground/10 bg-foreground/5 rounded-sm">
+                          <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold mb-1">Observation {i+1}</p>
+                          <p className="text-[13px] text-foreground/80 mb-2 font-mono">{obs.desc}</p>
+                          <p className="text-[12px] text-emerald-400">&gt; Design solution: {obs.change}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
             </div>
-          </FadeIn>
-        </div>
+          </>
+        ) : activeTab === "engineering" ? (
+          <>
+
+
+            {/* ── ARCHITECTURE SECTION ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">Backend Architecture</p>
+                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    A decoupled, stream-first pipeline.
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
+                    The core engine relies on a robust WebSocket connection. Audio chunks from the browser (Next.js) are continuously piped into a FastAPI backend. These chunks are aggregated and periodically fed into an optimized Whisper model for speech-to-text. The raw transcript is then routed through GPT-4o for entity extraction (names, appointments, objections), which instantly blasts a structured payload back to the React client.
+                  </p>
+
+                  <div className="bg-foreground/5 border border-foreground/10 p-6 sm:p-10 font-mono text-[12px] sm:text-[14px] text-foreground/80 leading-[1.8] rounded-sm overflow-x-auto whitespace-pre">
+                    {`[ Client: Next.js ]
+  │
+  ├─ Audio Stream (WebRTC / WebSockets)
+  │    ▼
+[ Server: FastAPI ]
+  │
+  ├─ 1. Aggregator Buffers (500ms chunks)
+  ├─ 2. STT Engine (Whisper -> Text)
+  ├─ 3. LLM Router (GPT-4o -> Structured JSON)
+  │    ▼
+[ Server -> Client ]
+  │
+  └─ Broadcast State Updates (Zustand / UI Render)`}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </>
+        ) : null}
 
         {/* ── VISIT CTA ── */}
         <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-16">

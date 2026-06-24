@@ -11,9 +11,9 @@ export default function Hero() {
     >
       <div className="flex flex-col gap-8">
         <h1 className="text-[28px] sm:text-[40px] md:text-[56px] leading-[1.2] font-bold text-foreground flex flex-col gap-2">
-          <span>0 TO 1 FOUNDER.</span>
+          <span>PRODUCT DESIGNER</span>
           <span className="text-foreground/70">
-            INTERESTED IN EVERYTHING <span className="text-foreground">PRODUCT.</span>
+            AND <span className="text-foreground">DEVELOPER.</span>
           </span>
         </h1>
         <div className="flex items-center gap-4 mt-2">

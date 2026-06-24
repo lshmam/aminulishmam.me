@@ -39,7 +39,7 @@ export default function Header() {
             Aminul Islam Ishmam
           </p>
           <p className="text-[12px] text-muted leading-tight mt-0.5">
-            Founder · Product Manager · Designer
+            Founder · Designer · Engineer
           </p>
         </div>
       </div>
