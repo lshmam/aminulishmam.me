@@ -1,11 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f5f4f0;
-  --color-foreground: #1a1a1a;
-  --color-muted: #868686;
-  --color-border: #e5e3de;
+  --color-background: #f0eeea;
+  --color-foreground: #1c1c1e;
+  --color-muted: #8a8a8e;
+  --color-border: #d8d6d0;
   --font-sans: var(--font-sf-pro), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: var(--font-tiempos), Georgia, serif;
 }
 
 body {
@@ -17,6 +18,6 @@ body {
 }
 
 ::selection {
-  background: #1a1a1a;
+  background: #1c1c1e;
   color: #fff;
 }
