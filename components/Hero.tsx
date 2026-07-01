@@ -23,7 +23,7 @@ export default function Hero() {
             }}
           >
             <span className="inline-block sm:whitespace-nowrap">I&apos;m Aminul, a product</span> <br className="hidden sm:block" />
-            designer who <em className="italic" style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}>builds</em>.
+            designer who <em className="italic" style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}>engineers</em>.
           </h1>
         </div>
 
