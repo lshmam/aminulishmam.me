@@ -4,11 +4,11 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
 const traits = [
-  { label: "CONSCIENTIOUSNESS", short: "CONSCI.", score: 103, max: 120 },
-  { label: "EXTRAVERSION", short: "EXTRA.", score: 94, max: 120 },
-  { label: "AGREEABLENESS", short: "AGREE.", score: 93, max: 120 },
-  { label: "OPENNESS", short: "OPEN.", score: 85, max: 120 },
-  { label: "NEUROTICISM", short: "NEURO.", score: 46, max: 120 },
+  { label: "Conscientiousness", short: "Consci.", score: 103, max: 120 },
+  { label: "Extraversion", short: "Extra.", score: 94, max: 120 },
+  { label: "Agreeableness", short: "Agree.", score: 93, max: 120 },
+  { label: "Openness", short: "Open.", score: 85, max: 120 },
+  { label: "Neuroticism", short: "Neuro.", score: 46, max: 120 },
 ];
 
 const cx = 200;
@@ -50,7 +50,7 @@ export default function BigFiveChart() {
   const outerPath = toPath(fullPoints);
 
   return (
-    <div ref={ref} className="my-8 w-full font-mono">
+    <div ref={ref} className="my-8 w-full font-sans">
       <div className="relative w-full aspect-square max-w-[420px] mx-auto">
         <svg viewBox="0 0 400 400" className="w-full h-full">
 
@@ -144,10 +144,8 @@ export default function BigFiveChart() {
                 y={pos.y}
                 textAnchor={anchor}
                 dominantBaseline="middle"
-                className="text-foreground/50 fill-current"
-                fontSize={8}
-                fontFamily="monospace"
-                letterSpacing={1}
+                className="text-foreground/50 fill-current font-sans font-medium"
+                fontSize={9}
                 initial={{ opacity: 0 }}
                 animate={inView ? { opacity: 1 } : { opacity: 0 }}
                 transition={{ duration: 0.5, delay: 1.2 + i * 0.08 }}
@@ -165,7 +163,7 @@ export default function BigFiveChart() {
           <div key={trait.label} className="grid grid-cols-[1fr_auto] gap-4 items-center">
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] tracking-[0.15em] text-foreground/40 uppercase">
+                <span className="text-[12px] font-medium text-foreground/60">
                   {trait.label}
                 </span>
                 <motion.span

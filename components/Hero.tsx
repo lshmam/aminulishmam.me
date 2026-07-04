@@ -1,11 +1,11 @@
 "use client";
 
 const experiences = [
-  { year: "2024", company: "Neucler Inc.", role: "Co-Founder & Product Lead" },
-  { year: "2024", company: "Faeth Studio", role: "Founder & Design Lead" },
-  { year: "2023", company: "Jim Coach", role: "Product Designer & Developer" },
-  { year: "2023", company: "Neta Bridge", role: "Product Manager & Designer" },
-  { year: "2023", company: "MyTrials", role: "Product Lead & UX Designer" },
+  { year: "2026", company: "Neucler Inc.", role: "Co-Founder & Product Lead" },
+  { year: "2026", company: "Neta Bridge", role: "Product Manager & Designer" },
+  { year: "2025", company: "Faeth Studio", role: "Founder & Design Lead" },
+  { year: "2025", company: "Jim Coach", role: "Product Designer & Developer" },
+  { year: "2023", company: "MyTrials", role: "Co-Founder" },
 ];
 
 export default function Hero() {

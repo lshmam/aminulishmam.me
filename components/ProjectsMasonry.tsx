@@ -147,6 +147,15 @@ export default function ProjectsMasonry() {
 
   return (
     <section className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pb-24 flex flex-col gap-3 sm:gap-4 md:gap-5">
+      <div className="pt-4 pb-2 sm:pt-6 sm:pb-4">
+        <h2 
+          className="text-[24px] sm:text-[32px] text-foreground font-serif leading-tight"
+          style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}
+        >
+          Check out my case studies:
+        </h2>
+      </div>
+
       {/* Row 1: Neucler — full width */}
       <ProjectCard
         project={neucler}

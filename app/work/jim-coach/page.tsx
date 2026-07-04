@@ -114,7 +114,7 @@ export default function JimCoachPage() {
             </div>
 
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span className="text-foreground/50">Jim Coach.</span>{" "}
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Jim Coach.</span>{" "}
               <span className="text-foreground">An AI personal trainer in your pocket — form checked, reps counted, no gym membership required.</span>
             </h1>
 
@@ -185,7 +185,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                       The Problem
                     </h2>
                     <div className="space-y-6 max-w-2xl text-[16px] leading-[1.85] text-foreground/60">
@@ -206,7 +206,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
                       Process
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/5">
@@ -233,7 +233,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                       Skills Applied
                     </h2>
                     <div className="space-y-5 max-w-2xl">
@@ -263,7 +263,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12 text-center flex flex-col items-center">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
                       What's Next
                     </h2>
                     <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-xl mb-8">
@@ -294,7 +294,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
                       Designing for the Gym Floor
                     </h2>
                     <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-2xl mb-16">
@@ -338,7 +338,7 @@ export default function JimCoachPage() {
               <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
                 <FadeIn>
                   <div className="border border-foreground/5 p-8 sm:p-12">
-                    <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
+                    <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-6">
                       Built to Watch You Work Out
                     </h2>
                     

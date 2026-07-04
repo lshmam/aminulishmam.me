@@ -66,7 +66,7 @@ export default function FaethStudioPage() {
               ))}
             </div>
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span className="text-foreground/50">Faeth Studio.</span>{" "}
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Faeth Studio.</span>{" "}
               <span className="text-foreground">A website by itself is a self-contained product.</span>
             </h1>
             <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
@@ -199,7 +199,7 @@ export default function FaethStudioPage() {
             <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
               Agency Work as Product Management
             </p>
-            <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.02em] leading-[1.2] text-foreground mb-6">
+            <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.02em] leading-[1.2] text-foreground mb-6">
               Running an agency is just product management with a different name.
             </h2>
             <p className="text-[16px] leading-[1.8] text-foreground/60">

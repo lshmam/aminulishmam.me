@@ -132,7 +132,7 @@ export default function MyTrialsPage() {
             </div>
 
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span className="text-foreground/50">MyTrials.</span>{" "}
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">MyTrials.</span>{" "}
               <span className="text-foreground">Making clinical trials accessible to every patient, everywhere.</span>
             </h1>
 
@@ -231,7 +231,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Origin</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 A doctor watched his patients miss life-changing treatments
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
@@ -279,7 +279,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 The data exists. The interface does not.
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
@@ -323,7 +323,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — The Solution</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 AI-powered simplification, tested to a 5th-grade reading level
               </h2>
               <p className="text-[14px] leading-relaxed text-foreground/50 mb-12 max-w-2xl">
@@ -380,7 +380,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Process</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
                 From clinical insight to funded product
               </h2>
 
@@ -418,7 +418,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Skills Applied</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                 Product management across a high-stakes domain
               </h2>
 
@@ -459,7 +459,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Tech Stack</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                 Tools that built MyTrials
               </h2>
 
@@ -496,7 +496,7 @@ export default function MyTrialsPage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Investment</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                 $200,000 raised on the strength of the mission
               </h2>
               <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">

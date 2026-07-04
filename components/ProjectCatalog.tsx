@@ -19,11 +19,7 @@ const catalogItems = [
 
 export default function ProjectCatalog() {
   return (
-    <div className="mt-24 pt-10 border-t border-foreground/10 font-mono uppercase tracking-widest">
-      <h2 className="text-[20px] sm:text-[28px] font-bold text-foreground mb-12 flex items-center gap-4">
-        <span className="w-2.5 h-4 bg-foreground animate-pulse" />
-        PROJECT LOG
-      </h2>
+    <div className="mt-16 pt-10 border-t border-foreground/10">
 
       {/* Timeline Container */}
       <div className="relative pr-2 sm:pr-4">
@@ -35,24 +31,24 @@ export default function ProjectCatalog() {
             <div key={item.id} className="relative pl-12">
               {/* Timeline Node / Number — Military Box */}
               <div
-                className="absolute left-[0px] top-[2px] bg-foreground px-1.5 py-[2px] z-10 shadow-sm"
+                className="absolute left-[0px] top-[2px] bg-foreground px-2 py-0.5 z-10 shadow-sm rounded"
               >
-                <span className="text-[10px] sm:text-[11px] font-bold text-background leading-none block">
-                  {String(item.id).padStart(3, '0')}
+                <span className="text-[12px] font-bold text-background leading-none block">
+                  {item.id}
                 </span>
               </div>
 
               <div className="flex flex-col group cursor-default">
                 <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 mb-2">
-                  <h3 className="text-foreground text-[14px] sm:text-[15px] font-bold tracking-widest group-hover:text-foreground/80 transition-colors">
+                  <h3 className="text-foreground text-[16px] sm:text-[18px] font-semibold group-hover:text-foreground/80 transition-colors">
                     {item.title}
                   </h3>
-                  <span className="text-[11px] text-foreground/50 tracking-widest">
-                    [{item.year}]
+                  <span className="text-[13px] text-foreground/50">
+                    {item.year}
                   </span>
                 </div>
-                <p className="text-foreground/70 text-[12px] sm:text-[13px] leading-relaxed tracking-wider lowercase">
-                  &gt; {item.subtitle}
+                <p className="text-foreground/70 text-[14px] leading-relaxed">
+                  {item.subtitle}
                 </p>
 
                 {item.image && (
@@ -97,20 +93,20 @@ export default function ProjectCatalog() {
                       item.link.startsWith('/work/') ? (
                         <a 
                           href={item.link} 
-                          className="inline-flex items-center gap-2 bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 px-4 py-2 text-[10px] sm:text-[11px] font-bold text-foreground tracking-[0.2em] transition-all hover:gap-4 group/btn"
+                          className="inline-flex items-center gap-2 bg-foreground/5 hover:bg-foreground/10 border border-foreground/10 px-4 py-2 text-[12px] font-medium text-foreground transition-all hover:gap-3 group/btn rounded-md"
                         >
-                          [ VIEW PROJECT ]
+                          View Project
                           <span className="text-[14px] leading-none text-foreground/40 group-hover/btn:text-foreground">→</span>
                         </a>
                       ) : (
-                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-foreground/50 hover:text-foreground text-[11px] underline tracking-widest lowercase inline-block w-fit">
-                          [view project source]
+                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-foreground/60 hover:text-foreground text-[13px] underline underline-offset-2 inline-block w-fit mt-2">
+                          View project source
                         </a>
                       )
                     )}
                     {item.gbp && (
-                      <a href={item.gbp} target="_blank" rel="noopener noreferrer" className="text-foreground/50 hover:text-foreground text-[11px] underline tracking-widest lowercase inline-block w-fit">
-                        [view google business profile]
+                      <a href={item.gbp} target="_blank" rel="noopener noreferrer" className="text-foreground/60 hover:text-foreground text-[13px] underline underline-offset-2 inline-block w-fit mt-2">
+                        View Google Business Profile
                       </a>
                     )}
                   </div>

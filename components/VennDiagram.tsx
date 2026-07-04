@@ -26,24 +26,20 @@ export default function VennDiagram() {
         </g>
         
         {/* Labels */}
-        <text x="150" y="20" textAnchor="middle" className="text-[10px] font-mono fill-foreground lowercase tracking-widest font-bold opacity-60">
-          [business]
+        <text x="150" y="20" textAnchor="middle" className="text-[11px] font-sans fill-foreground font-semibold opacity-70">
+          Business
         </text>
-        <text x="50" y="146" textAnchor="middle" className="text-[10px] font-mono fill-foreground lowercase tracking-widest font-bold opacity-60">
-          [design]
+        <text x="50" y="146" textAnchor="middle" className="text-[11px] font-sans fill-foreground font-semibold opacity-70">
+          Design
         </text>
-        <text x="250" y="146" textAnchor="middle" className="text-[10px] font-mono fill-foreground lowercase tracking-widest font-bold opacity-60">
-          [engineering]
+        <text x="250" y="146" textAnchor="middle" className="text-[11px] font-sans fill-foreground font-semibold opacity-70">
+          Engineering
         </text>
         
         {/* Center Text */}
-        <text x="150" y="130" textAnchor="middle" alignmentBaseline="middle" className="text-[14px] font-bold font-mono fill-foreground lowercase tracking-widest">
-          me
+        <text x="150" y="130" textAnchor="middle" alignmentBaseline="middle" className="text-[15px] font-bold font-sans fill-foreground">
+          Me
         </text>
-
-        {/* Extra military HUD crosshairs */}
-        <path d="M 150 115 L 150 120 M 150 130 L 150 135" stroke="currentColor" strokeWidth="1" className="opacity-40" />
-        <path d="M 135 125 L 140 125 M 160 125 L 165 125" stroke="currentColor" strokeWidth="1" className="opacity-40" />
       </svg>
     </div>
   );

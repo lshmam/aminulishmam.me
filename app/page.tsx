@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProjectsMasonry from "@/components/ProjectsMasonry";
-import Footer from "@/components/Footer";
+
 import BottomDock from "@/components/BottomDock";
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
       </div>
       <Hero />
       <ProjectsMasonry />
-      <Footer />
+
       <BottomDock />
     </main>
   );

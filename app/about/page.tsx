@@ -8,96 +8,60 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen max-w-[620px] mx-auto px-5 sm:px-6">
       <Header />
-      <section className="pt-6 pb-40 font-mono uppercase tracking-widest">
-        <h1 className="text-[20px] sm:text-[28px] font-bold text-foreground mb-12 flex items-center gap-4">
-          <span className="w-2.5 h-4 bg-foreground animate-pulse" />
-          IDENTIFICATION / BIO
+      <section className="pt-6 pb-40">
+        <h1 
+          className="text-3xl sm:text-4xl font-serif text-foreground mb-10 leading-tight"
+          style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}
+        >
+          About Me
         </h1>
 
-        <div className="space-y-6 text-[13px] leading-[1.8] text-foreground/80 lowercase">
+        <div className="space-y-6 text-[15px] sm:text-[16px] leading-[1.8] text-foreground/80">
           <p>
-            &gt; subject: <strong className="text-foreground font-bold text-[14px]">aminul islam</strong> — product-focused founder specializing in zero-to-one implementation.
+            I&apos;m <strong className="text-foreground font-semibold">Aminul Islam</strong>, a product-focused founder specializing in zero-to-one implementation.
           </p>
           <p>
-            &gt; record: over the last 7 years, deployed across b2b saas, consumer apps, and marketplace sectors. bootstrapped, raised, and exited multiple operations.
+            Over the last 3 years, I&apos;ve built and deployed products across B2B SaaS, consumer apps, and marketplace sectors. I have bootstrapped, raised funding for, and successfully exited multiple operations.
           </p>
           <p>
-            &gt; operational focus: the [first mile] — the chaotic, undefined space between conceptualization and product-market fit. hypothesis: optimal founders operate simultaneously as designers, engineers, and sales personnel.
+            My core operational focus is the <strong>first mile</strong> — the chaotic, undefined space between conceptualization and product-market fit. I strongly believe that the most effective founders operate simultaneously as designers, engineers, and sales personnel.
           </p>
 
           <VennDiagram />
 
-          <div className="pt-8">
-            <p className="mb-6">
-              &gt; psychometric evaluation: big five personality traits.
-            </p>
+          <div className="pt-10">
+            <h2 className="text-[18px] font-semibold text-foreground mb-6">
+              Psychometrics & Traits
+            </h2>
             <BigFiveChart />
-            <p>
-              &gt; analysis: high conscientiousness (103) and extraversion (94) indicate strong operational drive and team leadership capacity. elevated agreeableness (93) and openness (85) suggest collaborative problem-solving and adaptability. low neuroticism (46) denotes stable execution under high-stress conditions.
+            <p className="mt-8 text-[14px] leading-[1.7] text-foreground/70">
+              High conscientiousness and extraversion indicate a strong operational drive and team leadership capacity. Elevated agreeableness and openness suggest a collaborative approach to problem-solving and adaptability, while low neuroticism denotes stable execution under high-stress conditions.
             </p>
           </div>
         </div>
 
         <div className="mt-20 pt-10 border-t border-foreground/10">
-          <h2 className="text-[14px] font-bold text-foreground mb-8">
-            CAPABILITIES SUMMARY
+          <h2 className="text-[20px] font-semibold text-foreground mb-8">
+            Capabilities
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-8">
             {[
-              "0→1 product strategy",
-              "go-to-market execution",
-              "fundraising & pitching",
-              "founding team building",
-              "growth & distribution",
-              "technical product sense",
+              "0→1 Product Strategy",
+              "Go-to-Market Execution",
+              "Fundraising & Pitching",
+              "Founding Team Building",
+              "Growth & Distribution",
+              "Technical Product Sense",
             ].map((skill) => (
-              <div key={skill} className="flex items-center gap-4 text-[13px] text-foreground/70 lowercase">
-                <span className="text-foreground font-bold">[*]</span>
+              <div key={skill} className="flex items-center gap-3 text-[15px] text-foreground/80">
+                <span className="text-foreground/40 text-[10px]">●</span>
                 {skill}
               </div>
             ))}
           </div>
         </div>
 
-        {/* Contact Section */}
-        <div className="mt-20 pt-10 border-t border-foreground/10">
-          <h2 className="text-[20px] sm:text-[28px] font-bold text-foreground mb-12 flex items-center gap-4">
-            <span className="w-2.5 h-4 bg-foreground animate-pulse" />
-            COMMUNICATION PROTOCOLS
-          </h2>
 
-          <div className="space-y-6 text-[13px] leading-[1.8] text-foreground/80 lowercase mb-12">
-            <p>
-              &gt; directive: establish encrypted channels for operational coordination, deal flow exploration, or strategic exchange.
-            </p>
-            <p>
-              &gt; response rate: slas indicate 24-48 business hours.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            {[
-              { label: "sys.email", value: "hello@aminul.com", href: "mailto:hello@aminul.com" },
-              { label: "net.twitter", value: "x.com/aminulislam", href: "https://twitter.com" },
-              { label: "net.linkedin", value: "linkedin.com/in/aminul", href: "https://linkedin.com" },
-              { label: "git.source", value: "github.com/aminul", href: "https://github.com" },
-            ].map(({ label, value, href }) => (
-              <div key={label} className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 items-start opacity-70 hover:opacity-100 transition-opacity">
-                <span className="text-[11px] font-bold text-foreground/50 lowercase">
-                  [{label}]
-                </span>
-                <Link
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[13px] text-foreground lowercase decoration-foreground/30 hover:underline underline-offset-4"
-                >
-                  {value}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
 
       </section>
       <BottomDock />

@@ -206,7 +206,7 @@ export default function NeuclerPage() {
             </div>
 
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span className="text-foreground/50">Neucler.</span>{" "}
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Neucler.</span>{" "}
               <span className="text-foreground">The sales copilot that turns every receptionist into a top closer.</span>
             </h1>
 
@@ -326,7 +326,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Pivot</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                     Three versions. Two pivots. One clear signal.
                   </h2>
 
@@ -368,7 +368,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                     Med spa receptionists are the first touchpoint — and the most underserved
                   </h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
@@ -416,7 +416,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Brand & Naming</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     Neucler: less headache, more signal
                   </h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -459,7 +459,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Sales & Market Validation</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                     Every channel. Every door. Until the market answered.
                   </h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
@@ -526,7 +526,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Current Status</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     In the build — close to market
                   </h2>
 
@@ -574,7 +574,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Skills Applied</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                     End-to-end product ownership
                   </h2>
 
@@ -603,7 +603,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Tech Stack</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                     Tools that built Neucler
                   </h2>
 
@@ -631,7 +631,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">08 — What's Next</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     Closing the loop: real-time call coaching
                   </h2>
                   <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
@@ -674,7 +674,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">09 — Lessons Learned</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                     What building Neucler actually taught me
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -748,7 +748,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — UX Principles</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                     Optimized for split-second decisions
                   </h2>
 
@@ -786,7 +786,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Interface</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     Designed for distraction-free execution
                   </h2>
                   <div className="space-y-8">
@@ -804,7 +804,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Visual Identity</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     High-contrast text, low-fatigue spacing
                   </h2>
                   
@@ -858,7 +858,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Feedback Loop</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     Refining the experience through live observation
                   </h2>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -898,7 +898,7 @@ export default function NeuclerPage() {
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
                   <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">Backend Architecture</p>
-                  <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
                     A decoupled, stream-first pipeline.
                   </h2>
                   <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">

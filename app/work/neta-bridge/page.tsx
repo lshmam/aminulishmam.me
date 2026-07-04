@@ -156,7 +156,7 @@ export default function NetaBridgePage() {
             </div>
 
             <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span className="text-foreground/50">Neta Bridge.</span>{" "}
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Neta Bridge.</span>{" "}
               <span className="text-foreground">Turning a broker&apos;s 1,000+ contacts into an intelligent deal pipeline.</span>
             </h1>
 
@@ -257,7 +257,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Origin</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 A broker with 7,000 contacts and no way to search them
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
@@ -310,7 +310,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Product</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 Contact ingestion. Deal tracking. Network intelligence.
               </h2>
               <p className="text-[14px] leading-relaxed text-foreground/50 mb-12 max-w-2xl">
@@ -382,7 +382,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Build Process</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
                 From broker interviews to live MVP
               </h2>
 
@@ -420,7 +420,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — How They Built It</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
                 Companies that combined network intelligence with marketplaces
               </h2>
               <p className="text-[14px] leading-relaxed text-foreground/50 mb-12 max-w-3xl">
@@ -514,7 +514,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Skills Applied</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                 My contribution to the build
               </h2>
 
@@ -551,7 +551,7 @@ export default function NetaBridgePage() {
           <FadeIn>
             <div className="border border-foreground/5 p-8 sm:p-12">
               <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Tech Stack</p>
-              <h2 className="text-[28px] sm:text-[36px] font-normal tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
                 Built for real-time trade intelligence
               </h2>
 
