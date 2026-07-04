@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const sfPro = localFont({
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="en" className="antialiased">
       <body className={`${sfPro.variable} ${tiempos.variable} font-sans`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
