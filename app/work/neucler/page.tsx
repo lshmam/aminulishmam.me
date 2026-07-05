@@ -719,60 +719,149 @@ export default function NeuclerPage() {
         ) : activeTab === "ui-ux" ? (
           <>
 
-
-            {/* ── DESIGN METRICS ── */}
-            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
+            {/* ── SCREEN 1: HOME DASHBOARD ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
               <FadeIn>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
-                  {[
-                    { value: "0ms", label: "Latency Target", sub: "For live transcription visual feed" },
-                    { value: "3", label: "Core Views", sub: "Inbound call, pipeline, client profile" },
-                    { value: "98%", label: "Task Success", sub: "One-click CRM logging rate" },
-                    { value: "90%", label: "Dark Mode", sub: "Optimized for clinic lighting" },
-                  ].map((o, i) => (
-                    <div
-                      key={o.label}
-                      className="bg-background px-8 py-10 text-center"
-                    >
-                      <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
-                      <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
-                      <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
-                    </div>
-                  ))}
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Daily Dashboard</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Everything a receptionist needs, at a glance
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The home dashboard greets you with a personalized snapshot — calls handled today, bookings made, revenue earned, and live conversion rate. Below the KPIs, a Priority Calls queue surfaces "Hot" leads that need immediate human follow-up, so nothing slips through.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-home-1.png"
+                      alt="Neucler home dashboard showing daily KPI cards and priority calls queue"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "Calls Today", detail: "A real-time counter against a daily target — the receptionist always knows where they stand without pulling a report." },
+                      { label: "Priority Queue", detail: "\"Hot\" badge leads are surfaced automatically, ranked by recency. Human attention goes where the revenue is." },
+                      { label: "Conversion Rate", detail: "Live conversion rate tells the owner at a glance whether today is trending up or down — no spreadsheet needed." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </FadeIn>
             </div>
 
-            {/* ── 01: UX DESIGN PRINCIPLES ── */}
+            {/* ── SCREEN 2: COACHING REVIEW ── */}
             <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
-                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — UX Principles</p>
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — AI Call Review</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every call scored, reviewed, and improved
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The Coaching → Review screen turns every call into structured feedback. Each call is automatically summarized by AI — capturing the topic, sentiment, and duration — then scored on a 0–100 scale. The color-coded scores (red for low, green for strong) let managers identify coaching gaps without listening to every recording.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-review-sc1.png"
+                      alt="Neucler coaching review screen showing AI-scored call log with sentiment and score columns"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10">
+                    {[
+                      { label: "AI-Generated Summaries", detail: "Every call gets a plain-language topic summary so managers understand what happened without listening to recordings." },
+                      { label: "Sentiment + Score", detail: "Two-axis evaluation: sentiment tells you the call's emotional tone; the score measures conversion quality. Together they pinpoint where receptionists need coaching." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── SCREEN 3: PLAYBOOKS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Sales Playbooks</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Proven call frameworks, built for med spas
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The Playbooks library is where Neucler codifies what works. Each playbook is a step-by-step call framework — from "Botox Consultation" to "Handling Laser Pricing Concerns" to "Membership Upsell Mastery" — with color-coded category tags, completion rates, and an AI Suggestion strip at the bottom that highlights which playbook to prioritize that week.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-review-sc2.png"
+                      alt="Neucler playbooks screen showing structured sales frameworks with completion rates and AI suggestions"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "Category Tags", detail: "Consultation, Retention, Objections, Process — each playbook is tagged so teams know exactly what situation it covers." },
+                      { label: "Completion Progress", detail: "A per-playbook completion bar shows how far teams have worked through each framework — gamifying the learning process." },
+                      { label: "AI Suggestion Strip", detail: "The bottom banner surfaces the single most impactful playbook to focus on this week, backed by real conversion data across all calls." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── UX DESIGN PRINCIPLES ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Design Principles</p>
                   <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                    Optimized for split-second decisions
+                    Every screen optimized for the clinic floor
                   </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                       {
                         title: "Glanceable Information",
-                        desc: "When a customer is talking, a receptionist cannot scan paragraphs. We designed the interface with large stats, color-coded badges, and a progressive disclosure system.",
+                        desc: "When a customer is talking, a receptionist cannot scan paragraphs. Large KPI numbers, color-coded badges, and progressive disclosure keep critical info instantly readable.",
                         icon: "◎",
                       },
                       {
                         title: "Zero-Keyboard Input",
-                        desc: "We removed the need for manual note-taking. The AI automatically listens, parses treatments mentioned, and tags the caller, leaving the user to just confirm with a click.",
+                        desc: "The AI listens, parses treatments mentioned, and tags the caller automatically. The receptionist just confirms with a single click — no manual note-taking required.",
                         icon: "▣",
                       },
                       {
                         title: "Calm, High-Contrast UI",
-                        desc: "Medical spas have clean, bright environments, but long shifts lead to eye strain. A subtle dark interface with pure white typography keeps the focus on the task.",
+                        desc: "Long shifts lead to eye strain. A clean light interface with strong typographic hierarchy reduces cognitive load so receptionists can focus on the conversation.",
                         icon: "◈",
                       },
-                    ].map((item, i) => (
-                      <div key={item.title} className="p-6 border border-foreground/10 bg-foreground/5 text-foreground/70 rounded-sm">
+                    ].map((item) => (
+                      <div key={item.title} className="p-6 border border-foreground/10 bg-foreground/[0.02] text-foreground/70 rounded-lg">
                         <span className="text-[24px] mb-4 block">{item.icon}</span>
-                        <h3 className="text-[15px] font-semibold mb-3">{item.title}</h3>
+                        <h3 className="text-[15px] font-semibold mb-3 text-foreground">{item.title}</h3>
                         <p className="text-[13px] leading-[1.75] opacity-70">{item.desc}</p>
                       </div>
                     ))}
@@ -781,148 +870,154 @@ export default function NeuclerPage() {
               </FadeIn>
             </div>
 
-            {/* ── 02: THE COPILOT INTERFACE ── */}
-            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-              <FadeIn>
-                <div className="border border-foreground/5 p-8 sm:p-12">
-                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Interface</p>
-                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                    Designed for distraction-free execution
-                  </h2>
-                  <div className="space-y-8">
-                    <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl">
-                      This interactive mockup displays how real-time transcript parsing matches incoming customer speech and highlights actionable triggers. By showing suggestions instantly, the receptionist can handle the call fluidly without looking away.
-                    </p>
-                    <DashboardMock />
-                  </div>
-                </div>
-              </FadeIn>
-            </div>
-
-            {/* ── 03: BRAND SYSTEM ── */}
-            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-              <FadeIn>
-                <div className="border border-foreground/5 p-8 sm:p-12">
-                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Visual Identity</p>
-                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                    High-contrast text, low-fatigue spacing
-                  </h2>
-                  
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div className="space-y-6">
-                      <p className="text-[16px] leading-[1.85] text-foreground/60">
-                        The design language combines the technical precision of developer tools with the premium feel of high-end cosmetic clinics.
-                      </p>
-                      
-                      <div className="space-y-4">
-                        <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold">Typography System</p>
-                        <div className="space-y-2 border border-foreground/10 p-4 rounded-sm">
-                          <div className="flex justify-between items-baseline border-b border-foreground/5 pb-2">
-                            <span className="font-sans text-[16px] font-bold text-white">Inter (Sans-serif)</span>
-                            <span className="text-[10px] text-foreground/40">UI, Labels, Text</span>
-                          </div>
-                          <div className="flex justify-between items-baseline">
-                            <span className="font-mono text-[14px] text-white">JetBrains Mono (Monospace)</span>
-                            <span className="text-[10px] text-foreground/40">Stats, Tags, Statuses</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold">Color Swatches</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                        {[
-                          { hex: "#000000", label: "Deep Jet", text: "text-white/60", bg: "bg-black border-foreground/10" },
-                          { hex: "#FFFFFF", label: "Warm White", text: "text-black/60", bg: "bg-white text-black" },
-                          { hex: "#10B981", label: "Emerald Active", text: "text-white/60", bg: "bg-emerald-500 text-black" },
-                          { hex: "#EF4444", label: "Crimson Alert", text: "text-white/60", bg: "bg-red-500 text-white" },
-                        ].map((c) => (
-                          <div key={c.hex} className={`p-4 border rounded-sm ${c.bg} flex flex-col justify-between aspect-square`}>
-                            <span className="text-[13px] font-bold">{c.hex}</span>
-                            <div>
-                              <p className="text-[10px] uppercase font-bold tracking-wider leading-none mb-1">{c.label}</p>
-                              <p className={`text-[9px] ${c.text}`}>{c.hex === "#FFFFFF" ? "Primary Accent" : "System Status"}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </FadeIn>
-            </div>
-
-            {/* ── 04: DESIGN OUTCOME & FEEDBACK ── */}
-            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-              <FadeIn>
-                <div className="border border-foreground/5 p-8 sm:p-12">
-                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Feedback Loop</p>
-                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                    Refining the experience through live observation
-                  </h2>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    <div className="space-y-5 text-foreground/60 text-[16px] leading-[1.85]">
-                      <p>
-                        Sitting down with the medical spa front-desk receptionist while they were actively answering calls was the single most valuable design exercise.
-                      </p>
-                      <p>
-                        I observed that during peak hours, any pop-up or modal that required keyboard interaction was immediately dismissed. This led to a redesign of our notification system: we switched to slide-over banners that auto-save after 5 seconds if no action is taken.
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      {[
-                        { title: "Observation", desc: "Keyboard typing is difficult while talking on the phone.", change: "Pivot to one-click quick confirmation buttons." },
-                        { title: "Observation", desc: "Spa lighting makes high-brightness screens glare.", change: "Pure dark-mode UI reduces screen glare." },
-                        { title: "Observation", desc: "Receptionists miss peripheral notifications.", change: "Add animated pulses to draw eyes to critical alerts." }
-                      ].map((obs, i) => (
-                        <div key={i} className="p-4 border border-foreground/10 bg-foreground/5 rounded-sm">
-                          <p className="text-[11px] uppercase tracking-wider text-foreground/40 font-bold mb-1">Observation {i+1}</p>
-                          <p className="text-[13px] text-foreground/80 mb-2 font-mono">{obs.desc}</p>
-                          <p className="text-[12px] text-emerald-400">&gt; Design solution: {obs.change}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </FadeIn>
-            </div>
           </>
         ) : activeTab === "engineering" ? (
           <>
 
-
-            {/* ── ARCHITECTURE SECTION ── */}
+            {/* ── TECH STACK ── */}
             <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
               <FadeIn>
                 <div className="border border-foreground/5 p-8 sm:p-12">
-                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">Backend Architecture</p>
-                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                    A decoupled, stream-first pipeline.
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — Tech Stack</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Built on a modern, real-time stack
                   </h2>
                   <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
-                    The core engine relies on a robust WebSocket connection. Audio chunks from the browser (Next.js) are continuously piped into a FastAPI backend. These chunks are aggregated and periodically fed into an optimized Whisper model for speech-to-text. The raw transcript is then routed through GPT-4o for entity extraction (names, appointments, objections), which instantly blasts a structured payload back to the React client.
+                    Neucler is built on Next.js with Supabase as the database and auth layer. Twilio handles phone call routing and SMS. Deepgram powers live audio transcription with sub-second latency, and Gemini drives the analysis, scoring, and AI intelligence layer across the product.
                   </p>
 
-                  <div className="bg-foreground/5 border border-foreground/10 p-6 sm:p-10 font-mono text-[12px] sm:text-[14px] text-foreground/80 leading-[1.8] rounded-sm overflow-x-auto whitespace-pre">
-                    {`[ Client: Next.js ]
-  │
-  ├─ Audio Stream (WebRTC / WebSockets)
-  │    ▼
-[ Server: FastAPI ]
-  │
-  ├─ 1. Aggregator Buffers (500ms chunks)
-  ├─ 2. STT Engine (Whisper -> Text)
-  ├─ 3. LLM Router (GPT-4o -> Structured JSON)
-  │    ▼
-[ Server -> Client ]
-  │
-  └─ Broadcast State Updates (Zustand / UI Render)`}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { name: "Next.js", category: "Frontend", desc: "Full-stack React framework — pages, API routes, and server components in one." },
+                      { name: "Supabase", category: "Database & Auth", desc: "Postgres-backed database with real-time subscriptions and row-level security for multi-tenant clinic data." },
+                      { name: "Twilio", category: "Communications", desc: "Call routing, phone number provisioning, and SMS delivery across the inbox." },
+                      { name: "Deepgram", category: "Audio AI", desc: "Real-time speech-to-text with speaker diarization — processes live call audio with sub-second latency." },
+                      { name: "Gemini", category: "AI / Analysis", desc: "Powers call scoring, sentiment analysis, business intelligence queries, and playbook suggestions." },
+                      { name: "ManyChat", category: "DM Automation", desc: "Connected to med spa Instagram and Facebook pages — automates DM responses and routes qualified leads into the inbox." },
+                    ].map((item) => (
+                      <div key={item.name} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <div className="flex items-start justify-between gap-2 mb-3">
+                          <p className="text-[15px] font-semibold text-foreground">{item.name}</p>
+                          <span className="text-[10px] font-medium text-foreground/40 border border-foreground/10 px-2 py-0.5 rounded-full shrink-0 mt-0.5">{item.category}</span>
+                        </div>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.desc}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </FadeIn>
             </div>
+
+            {/* ── PIPELINE DIAGRAM ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — Call Pipeline</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    From inbound call to structured insight
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    When a call comes in via Twilio, audio is streamed in real-time to Deepgram for live transcription. The transcript is continuously fed into Gemini for entity extraction, sentiment scoring, and upsell detection — broadcasting structured updates back to the receptionist's dashboard instantly.
+                  </p>
+
+                  <div className="bg-foreground/5 border border-foreground/10 p-6 sm:p-10 font-mono text-[12px] sm:text-[14px] text-foreground/80 leading-[1.8] rounded-lg overflow-x-auto whitespace-pre">
+                    {`[ Inbound Call: Twilio ]
+  │
+  ├─ Audio Stream (WebRTC)
+  │    ▼
+[ Deepgram: Real-Time STT ]
+  │
+  ├─ Live transcript (< 300ms latency)
+  │    ▼
+[ Gemini: Analysis Layer ]
+  │
+  ├─ Entity extraction (names, treatments, intent)
+  ├─ Sentiment scoring & call quality
+  ├─ Upsell opportunity detection
+  │    ▼
+[ Next.js Client ]
+  │
+  └─ Live dashboard update → receptionist sees suggestions instantly`}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── NEUCLER AI ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Neucler AI</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Ask anything about your business
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    Neucler AI is a dedicated Gemini-powered business intelligence layer. Owners and managers can ask natural language questions — "Who is my top performer?", "Where are we losing revenue?", "Give me a full business review" — and Neucler AI pulls live data from Supabase, analyzes it, and responds with actionable insights in plain English. It also accepts uploaded PDFs (scripts, playbooks, SOPs) and screen context for deeper analysis.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-ai.png"
+                      alt="Neucler AI interface — a Gemini-powered business intelligence chat that answers questions about call performance and revenue"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10">
+                    {[
+                      { label: "Live Data Queries", detail: "Gemini queries Supabase in real time — answers are grounded in today's actual call data, not static reports." },
+                      { label: "PDF & Screen Context", detail: "Owners can upload PDFs or share their screen — Neucler AI reads them as context to answer more specific questions about their own SOPs and scripts." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── INBOX / DM AUTOMATION ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Omnichannel Inbox</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every lead, every channel — one place
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    Neucler's Inbox aggregates every touchpoint — Instagram DMs, Facebook messages, WhatsApp, SMS, and inbound phone calls — into a single unified view. ManyChat handles automated DM replies on behalf of the clinic, qualifying leads before they hit the inbox. Every conversation gets an AI Summary so the receptionist knows exactly what happened without reading the whole thread.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-dms.png"
+                      alt="Neucler unified inbox showing Instagram, Facebook, WhatsApp, SMS, and call threads with AI summaries and ManyChat DM automation"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "ManyChat Integration", detail: "Instagram and Facebook DMs are handled automatically by ManyChat flows, capturing lead info and booking intent before a human takes over." },
+                      { label: "AI Summaries", detail: "Every call and conversation is auto-summarized by Gemini — the receptionist sees the context at a glance rather than scrolling through a full transcript." },
+                      { label: "Unified Channels", detail: "Instagram, Facebook, WhatsApp, SMS, and Calls all surface in one inbox — no more context switching between five different apps." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
           </>
         ) : null}
 
