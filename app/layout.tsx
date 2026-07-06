@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -41,6 +42,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="antialiased">
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-EDSJQBYBY3"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-EDSJQBYBY3');
+        `}
+      </Script>
       <body className={`${sfPro.variable} ${tiempos.variable} font-sans`}>
         {children}
         <Analytics />
