@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 const experiences = [
   { year: "2026", company: "Neucler Inc.", role: "Co-Founder & Product Lead" },
   { year: "2026", company: "Neta Bridge", role: "Product Manager & Designer" },
@@ -10,7 +12,12 @@ const experiences = [
 
 export default function Hero() {
   return (
-    <section className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-8 sm:pb-10">
+    <motion.section 
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.15 }}
+      className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-8 sm:pb-10"
+    >
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 sm:gap-12">
         {/* Left: Big serif headline */}
         <div className="flex-shrink-0 sm:max-w-[700px]">
@@ -58,6 +65,6 @@ export default function Hero() {
           </table>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

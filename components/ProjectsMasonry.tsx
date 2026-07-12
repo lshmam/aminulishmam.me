@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { projects } from "@/lib/projects";
 import Link from "next/link";
 import Image from "next/image";
@@ -100,43 +101,44 @@ function ProjectCard({
   className?: string;
 }) {
   return (
-    <Link
-      href={project.href}
-      className={`group relative overflow-hidden rounded-[18px] sm:rounded-[24px] block ${className}`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6 }}
+      className={className}
     >
-      <CardMedia project={project} />
+      <Link
+        href={project.href}
+        className={`group relative overflow-hidden rounded-[18px] sm:rounded-[24px] block w-full h-full`}
+      >
+        <CardMedia project={project} />
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none z-20" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 pointer-events-none z-20" />
 
-      {/* Hover arrow — hidden on touch, visible on hover for pointer devices */}
-      <div className="absolute top-4 sm:top-6 md:top-8 right-4 sm:right-6 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
-        <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
-      </div>
-
-      {/* Text content */}
-      <div className="absolute bottom-0 left-0 w-full p-5 sm:p-7 md:p-10 flex flex-col justify-end z-30 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2 font-mono uppercase tracking-widest">
-        <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-4">
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[9px] sm:text-[10px] font-bold text-white/70 lowercase bg-black/30 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full backdrop-blur-md"
-            >
-              [{tag}]
-            </span>
-          ))}
+        {/* Hover arrow — hidden on touch, visible on hover for pointer devices */}
+        <div className="absolute top-4 sm:top-6 md:top-8 right-4 sm:right-6 md:right-8 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
+          <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
-        <h3 
-          className="text-[20px] sm:text-[28px] md:text-[36px] font-normal normal-case tracking-normal text-white leading-tight mb-1 sm:mb-2 md:mb-3 font-serif"
-          style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}
-        >
-          {project.title}
-        </h3>
-        <p className="text-[11px] sm:text-[13px] md:text-[14px] text-white/80 leading-relaxed lowercase max-w-lg">
-          &gt; {project.description}
-        </p>
-      </div>
-    </Link>
+
+        {/* Text content */}
+        <div className="absolute bottom-0 left-0 w-full p-5 sm:p-7 md:p-10 flex flex-col justify-end z-30 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:-translate-y-2 font-mono uppercase tracking-widest">
+          <h3 
+            className="text-[20px] sm:text-[28px] md:text-[36px] font-normal normal-case tracking-normal text-white leading-tight mb-1 sm:mb-2 md:mb-3 font-serif"
+            style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}
+          >
+            {project.title}
+          </h3>
+          <p 
+            className="text-[11px] sm:text-[13px] md:text-[14px] text-white/80 leading-relaxed lowercase max-w-lg"
+            style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+          >
+            &gt; {project.description}
+          </p>
+        </div>
+      </Link>
+    </motion.div>
   );
 }
 
@@ -146,7 +148,12 @@ export default function ProjectsMasonry() {
   const row3 = rest.slice(2, 4);
 
   return (
-    <section className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pb-24 flex flex-col gap-3 sm:gap-4 md:gap-5">
+    <motion.section 
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pb-24 flex flex-col gap-3 sm:gap-4 md:gap-5"
+    >
       <div className="pt-4 pb-2 sm:pt-6 sm:pb-4">
         <h2 
           className="text-[24px] sm:text-[32px] text-foreground font-serif leading-tight"
@@ -175,6 +182,6 @@ export default function ProjectsMasonry() {
           <ProjectCard key={p.id} project={p} className="aspect-[4/3]" />
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

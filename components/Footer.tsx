@@ -1,32 +1,141 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
+
+const contactInfo = [
+  { label: "ishmam.aminul@gmail.com", href: "mailto:ishmam.aminul@gmail.com" },
+];
 
 const socialLinks = [
-  { label: "LINKEDIN", href: "https://www.linkedin.com/in/aminulishmam/" },
-  { label: "EMAIL", href: "mailto:ishmam.aminul@gmail.com" },
-  { label: "GITHUB", href: "https://github.com/lshmam" },
+  { label: "GitHub", href: "https://github.com/lshmam" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/aminulishmam/" },
+];
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "#" },
+  { label: "Terms", href: "#" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[#d8d6d0] max-w-[1200px] mx-auto px-4 sm:px-6 py-5 sm:py-6 mb-20 sm:mb-0">
-      <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-3 sm:gap-0">
-        <p className="text-[11px] text-muted uppercase tracking-widest text-center sm:text-left">
-          Designed + coded with ♥ by Aminul
-        </p>
-        <nav className="flex items-center gap-4 sm:gap-5">
-          {socialLinks.map(({ label, href }) => (
+    <motion.footer 
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="w-full bg-background pb-0 overflow-hidden border-t border-border/20"
+    >
+      {/* Statement */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16">
+        <h2
+          className="text-[28px] sm:text-[40px] md:text-[52px] leading-[1.15] text-foreground max-w-[800px]"
+          style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }}
+        >
+          Multidisciplinary in approach,
+          <br />
+          collaborative on vision.
+          <br />
+          <span className="text-muted">Let&apos;s create together.</span>
+        </h2>
+      </div>
+
+      {/* Info grid */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 pb-6 sm:pb-8 border-t border-border pt-12">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-6">
+          {/* Column 1: Name & bio */}
+          <div className="flex flex-col">
+            <p className="text-[14px] sm:text-[15px] font-medium text-foreground">
+              Aminul Islam Ishmam
+            </p>
+            <p className="text-[14px] sm:text-[15px] text-foreground leading-tight mt-1">
+              Product Designer & Engineer<br />
+              with a focus on 0-to-1<br />
+              Product Development.
+            </p>
+          </div>
+
+          {/* Column 2: Contact */}
+          <div className="flex flex-col">
+            <p className="text-[14px] sm:text-[15px] font-medium text-foreground mb-1">
+              Contact
+            </p>
             <Link
-              key={label}
-              href={href}
+              href="mailto:ishmam.aminul@gmail.com"
+              className="text-[14px] sm:text-[15px] text-foreground hover:text-muted transition-colors duration-200 underline decoration-1 underline-offset-4"
+            >
+              ishmam.aminul@gmail.com
+            </Link>
+            <p className="text-[14px] sm:text-[15px] text-foreground mt-1">
+              Vancouver, British Columbia
+            </p>
+          </div>
+
+          {/* Column 3: Social */}
+          <div className="flex flex-col">
+            <p className="text-[14px] sm:text-[15px] font-medium text-foreground mb-1">
+              Social
+            </p>
+            <Link
+              href="https://github.com/lshmam"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] text-muted uppercase tracking-widest hover:text-foreground transition-colors duration-150"
+              className="text-[14px] sm:text-[15px] text-foreground hover:text-muted transition-colors duration-200 underline decoration-1 underline-offset-4"
             >
-              {label}
+              GitHub
             </Link>
-          ))}
-        </nav>
+            <Link
+              href="https://www.linkedin.com/in/aminulishmam/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[14px] sm:text-[15px] text-foreground hover:text-muted transition-colors duration-200 underline decoration-1 underline-offset-4 mt-1"
+            >
+              LinkedIn
+            </Link>
+          </div>
+
+          {/* Column 4: Legal */}
+          <div className="flex flex-col">
+            <p className="text-[14px] sm:text-[15px] font-medium text-foreground mb-1">
+              Imprint
+            </p>
+            <Link
+              href="#"
+              className="text-[14px] sm:text-[15px] text-foreground hover:text-muted transition-colors duration-200 underline decoration-1 underline-offset-4"
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="#"
+              className="text-[14px] sm:text-[15px] text-foreground hover:text-muted transition-colors duration-200 underline decoration-1 underline-offset-4 mt-1"
+            >
+              Terms
+            </Link>
+            <span className="text-[14px] sm:text-[15px] text-foreground mt-1">
+              &copy; 2026
+            </span>
+          </div>
+        </div>
       </div>
-    </footer>
+
+      {/* Name at the bottom */}
+      <div className="w-full px-4 sm:px-6 pb-2 sm:pb-4 pt-0 flex justify-center overflow-hidden">
+        <p
+          className="whitespace-nowrap select-none pointer-events-none text-center"
+          style={{
+            fontFamily:
+              "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontWeight: 500,
+            fontSize: "clamp(70px, 19vw, 350px)",
+            lineHeight: 1,
+            letterSpacing: "-0.04em",
+            color: "var(--muted)",
+            opacity: 0.6,
+          }}
+        >
+          Aminul Islam
+        </p>
+      </div>
+    </motion.footer>
   );
 }
