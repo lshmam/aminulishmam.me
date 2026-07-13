@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const contactInfo = [
   { label: "ishmam.aminul@gmail.com", href: "mailto:ishmam.aminul@gmail.com" },
@@ -18,6 +19,9 @@ const legalLinks = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/animation-1") return null;
+
   return (
     <motion.footer
       initial={{ opacity: 0, y: 40 }}
@@ -27,7 +31,7 @@ export default function Footer() {
       className="w-full bg-background pb-0 overflow-hidden border-t border-border/20"
     >
       {/* Statement */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-12 sm:pb-16">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-4 sm:pb-6">
         <h2
           className="text-[28px] sm:text-[40px] md:text-[52px] leading-[1.15] text-foreground max-w-[800px]"
           style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif", fontWeight: 500 }}

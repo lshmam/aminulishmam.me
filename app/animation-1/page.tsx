@@ -9,6 +9,8 @@ import Header from "@/components/Header";
 import { projects } from "@/lib/projects";
 import ObjectBurst from "@/components/animations/PrismaticBurst";
 import { ParticlesBackground } from "@/components/animations/particles-background";
+import VerticalProjectList from "@/components/VerticalProjectList";
+import AboutSection from "@/components/AboutSection";
 
 // ── Call Widget Component ──
 function CallWidget() {
@@ -145,6 +147,7 @@ function CardMedia({ project }: { project: (typeof projects)[number] }) {
 export default function Animation1Page() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const section1Ref = useRef<HTMLDivElement>(null);
+  const section4Ref = useRef<HTMLDivElement>(null);
 
   // ── SCROLL RESPONSIVE ROTATION ──
   const { scrollY, scrollYProgress } = useScroll();
@@ -175,10 +178,13 @@ export default function Animation1Page() {
 
   // Carousel moves up slowly
   const carouselY = useTransform(s1Progress, [0, 1], ["0vh", "-100vh"]);
-  // ani-2 moves up faster, starting from below the screen and ending fully off the top to leave a solid black screen
-  const ani2Y = useTransform(s1Progress, [0, 0.7], ["100vh", "-100vh"]);
-  // Stretch effect
-  const ani2ScaleY = useTransform(s1Progress, [0, 0.7], [1, 1.8]);
+  // Video darken effect
+  const videoDarkenOpacity = useTransform(s1Progress, [0.09, 0.21], [0, 1]);
+
+  // ── SQUISH DOWN ANIMATIONS ──
+  const { scrollYProgress: s4Progress } = useScroll({ target: section4Ref, offset: ["start end", "end start"] });
+  const ani3ScaleY = useTransform(s4Progress, [0, 1], [1.2, 1]);
+  const ani3Y = useTransform(s4Progress, [0, 1], ["0%", "15%"]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -266,7 +272,7 @@ export default function Animation1Page() {
             left: 0,
             right: 0,
             height: "135vh",
-            backgroundColor: "#fff",
+            backgroundColor: "transparent",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -277,8 +283,6 @@ export default function Animation1Page() {
           <div className="absolute top-0 left-0 right-0 z-50 max-w-[1200px] mx-auto px-4 sm:px-6 w-full mix-blend-difference">
             <Header />
           </div>
-
-          {/* 
 
           <motion.div className="carousel-scene" style={{ y: carouselY }}>
             <motion.div className="carousel-ring" style={{ transform: rotateYStr }}>
@@ -296,7 +300,7 @@ export default function Animation1Page() {
                   >
                     <CardMedia project={project} />
 
-                    {/* Frosted fade at the bottom *\/}
+                    {/* Frosted fade at the bottom */}
                     <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-2xl bg-gradient-to-t from-white/60 to-transparent z-10 pointer-events-none [mask-image:linear-gradient(to_top,black_10%,transparent_100%)]" />
 
                     <div
@@ -311,35 +315,7 @@ export default function Animation1Page() {
               })}
             </motion.div>
           </motion.div>
-          */}
 
-          {/* Full Screen Video Hero */}
-          <motion.div className="absolute top-20 md:top-24 left-0 right-0 w-full h-[75vh] p-4 md:p-8 mx-auto max-w-[1600px]" style={{ y: carouselY }}>
-            <div className="w-full h-full rounded-[32px] overflow-hidden shadow-2xl relative bg-zinc-900">
-              <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-                <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
-              </video>
-            </div>
-          </motion.div>
-
-          {/* ani-2 — anchored to top inside sticky, moved by parallax y */}
-          <motion.div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              x: "-50%",
-              width: "100%",
-              zIndex: 10,
-              pointerEvents: "none",
-              y: ani2Y,
-              scaleY: ani2ScaleY,
-              transformOrigin: "bottom center",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ani-2.png" alt="" style={{ width: "100%", height: "auto", display: "block" }} />
-          </motion.div>
         </div>
       </section>
 
@@ -360,16 +336,37 @@ export default function Animation1Page() {
         <CallWidget />
       </section>
 
-      {/* ── SECTION 4: ani-2 rotated 180deg ── */}
+      {/* ── SECTION 4: ani-3 transition (black to white) ── */}
       <section
+        ref={section4Ref}
         style={{
-          height: "161vh",
-          backgroundImage: "url('/ani-2.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          transform: "rotate(180deg)",
+          height: "120vh",
+          position: "relative",
+          overflow: "hidden",
+          backgroundColor: "#000"
         }}
-      />
+      >
+        <motion.div 
+          style={{
+            position: "absolute",
+            inset: -50, // bleed edges to prevent gaps when scaling
+            backgroundImage: "url('/ani-3.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            scaleY: ani3ScaleY,
+            y: ani3Y,
+            transformOrigin: "bottom center",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 15%, black 100%)",
+            maskImage: "linear-gradient(to bottom, transparent, black 15%, black 100%)"
+          }}
+        />
+      </section>
+
+      {/* ── SECTION 5: Vertical Projects List ── */}
+      <VerticalProjectList />
+
+      {/* ── SECTION 6: About Bio Section (Includes Reveal Footer) ── */}
+      <AboutSection />
     </>
   );
 }
