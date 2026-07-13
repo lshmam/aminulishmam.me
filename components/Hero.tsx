@@ -35,7 +35,10 @@ export default function Hero() {
         </div>
 
         {/* Right: Experience table */}
-        <div className="mb-1 w-full sm:w-auto">
+        <div 
+          className="mb-1 w-full sm:w-auto font-medium"
+          style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}
+        >
           {/* Mobile view */}
           <div className="sm:hidden flex flex-col gap-2">
             {experiences.map(({ year, company, role }) => (
