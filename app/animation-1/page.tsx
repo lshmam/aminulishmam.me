@@ -5,6 +5,7 @@ import { motion, useScroll, useVelocity, useSpring, useMotionValue, useAnimation
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Phone, X } from "lucide-react";
+import Header from "@/components/Header";
 import { projects } from "@/lib/projects";
 import ObjectBurst from "@/components/animations/PrismaticBurst";
 import { ParticlesBackground } from "@/components/animations/particles-background";
@@ -272,7 +273,13 @@ export default function Animation1Page() {
             overflow: "hidden",
           }}
         >
+          {/* Main Landing Page Header */}
+          <div className="absolute top-0 left-0 right-0 z-50 max-w-[1200px] mx-auto px-4 sm:px-6 w-full mix-blend-difference">
+            <Header />
+          </div>
+
           {/* 
+
           <motion.div className="carousel-scene" style={{ y: carouselY }}>
             <motion.div className="carousel-ring" style={{ transform: rotateYStr }}>
               {[...projects, ...projects, ...projects, ...projects].map((project, i, arr) => {
@@ -307,10 +314,12 @@ export default function Animation1Page() {
           */}
 
           {/* Full Screen Video Hero */}
-          <motion.div className="absolute inset-0 w-full h-full" style={{ y: carouselY }}>
-            <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-              <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
-            </video>
+          <motion.div className="absolute top-20 md:top-24 left-0 right-0 w-full h-[75vh] p-4 md:p-8 mx-auto max-w-[1600px]" style={{ y: carouselY }}>
+            <div className="w-full h-full rounded-[32px] overflow-hidden shadow-2xl relative bg-zinc-900">
+              <video autoPlay muted loop playsInline className="w-full h-full object-cover">
+                <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
+              </video>
+            </div>
           </motion.div>
 
           {/* ani-2 — anchored to top inside sticky, moved by parallax y */}
