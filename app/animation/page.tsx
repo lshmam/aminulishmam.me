@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
 
 export default function AnimationPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -12,6 +12,11 @@ export default function AnimationPage() {
   });
 
   const smooth = useSpring(scrollYProgress, { stiffness: 50, damping: 18 });
+
+  const [scrollPercent, setScrollPercent] = useState("0%");
+  useMotionValueEvent(smooth, "change", (latest) => {
+    setScrollPercent(Math.round(latest * 100) + "%");
+  });
 
   // Container height is 1500vh. All breakpoints are scaled mathematically to ensure
   // the Intro and Text sections scroll at the exact same physical velocity as before
@@ -24,7 +29,7 @@ export default function AnimationPage() {
   const img2Y = useTransform(smooth, [0.0, 0.433], ["240vh", "-10vh"]);
 
   // ── BLACK OVERLAY (Fades to white before images fade out) ──
-  const blackOpacity = useTransform(smooth, [0.166, 0.333, 0.880, 0.920], [0, 1, 1, 0]);
+  const blackOpacity = useTransform(smooth, [0.166, 0.333, 0.860, 0.860], [0, 1, 1, 0]);
 
   // ── TEXT (Scaled x0.66) ──
   const textOpacity = useTransform(smooth, [0.360, 0.413, 0.466, 0.506], [0, 1, 1, 0]);
@@ -44,6 +49,15 @@ export default function AnimationPage() {
 
   return (
     <main className="bg-white">
+      {/* ── SCROLL PROGRESS BAR ── */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-white z-[100] origin-left mix-blend-difference"
+        style={{ scaleX: smooth }}
+      />
+      <div className="fixed top-4 right-6 z-[100] font-mono text-sm font-bold text-white mix-blend-difference pointer-events-none">
+        {scrollPercent}
+      </div>
+
       <div ref={containerRef} className="relative" style={{ height: "1500vh" }}>
         <div className="sticky top-0 h-screen w-full overflow-hidden bg-white">
 
