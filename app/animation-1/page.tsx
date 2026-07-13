@@ -1,13 +1,76 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useScroll, useVelocity, useSpring, useMotionValue, useAnimationFrame, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useVelocity, useSpring, useMotionValue, useAnimationFrame, useTransform, useInView, AnimatePresence, useMotionValueEvent } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Phone, X } from "lucide-react";
 import { projects } from "@/lib/projects";
 import ObjectBurst from "@/components/animations/PrismaticBurst";
 import { ParticlesBackground } from "@/components/animations/particles-background";
+
+// ── Call Widget Component ──
+function CallWidget() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { margin: "-30% 0px -30% 0px" });
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (isInView) {
+      const timer = setTimeout(() => setExpanded(true), 600);
+      return () => clearTimeout(timer);
+    } else {
+      setExpanded(false);
+    }
+  }, [isInView]);
+
+  return (
+    <div ref={containerRef} className="flex items-center justify-center w-full h-full">
+      <motion.div
+        layout
+        initial={{ borderRadius: 64, width: 64, height: 64, opacity: 0, scale: 0.5 }}
+        animate={{
+          opacity: isInView ? 1 : 0,
+          scale: isInView ? 1 : 0.8,
+          width: expanded ? 320 : 64,
+          borderRadius: expanded ? 40 : 64,
+        }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="bg-[#1c1c1e] flex items-center p-2 overflow-hidden shadow-2xl"
+      >
+        <motion.div layout className="flex-shrink-0 w-12 h-12 rounded-full bg-zinc-700 overflow-hidden flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-500" />
+        </motion.div>
+
+        <AnimatePresence>
+          {expanded && (
+            <motion.div
+              initial={{ opacity: 0, filter: "blur(4px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, filter: "blur(4px)" }}
+              transition={{ delay: 0.1, duration: 0.3 }}
+              className="flex items-center justify-between flex-1 ml-4 mr-1 whitespace-nowrap"
+            >
+              <div className="flex flex-col justify-center">
+                <span className="text-white/50 text-[11px] uppercase tracking-wider font-semibold leading-tight">Hey</span>
+                <span className="text-white font-medium text-[15px] leading-tight">I'm Aminul</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-lg">
+                  <X className="w-5 h-5 text-white" />
+                </div>
+                <div className="w-10 h-10 rounded-full bg-[#34c759] flex items-center justify-center shadow-lg">
+                  <Phone className="w-5 h-5 text-white fill-white" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
+  );
+}
 
 // ── Exact same CardMedia from ProjectsMasonry ──
 function CardMedia({ project }: { project: (typeof projects)[number] }) {
@@ -39,16 +102,26 @@ function CardMedia({ project }: { project: (typeof projects)[number] }) {
   }
   if (project.title === "Jim Coach") {
     return (
-      <video autoPlay muted loop playsInline className="w-full h-full object-cover object-right">
-        <source src="/jim-box.mp4" type="video/mp4" />
-      </video>
+      <div className="w-full h-full bg-gradient-to-br from-blue-900 to-black flex flex-col items-center justify-center p-8">
+        <div className="w-24 h-24 rounded-full border-2 border-blue-500/30 flex items-center justify-center mb-6">
+          <div className="w-16 h-16 rounded-full bg-blue-500/20 animate-pulse" />
+        </div>
+        <h3 className="text-2xl font-bold text-white tracking-widest uppercase text-center">JIM COACH</h3>
+        <p className="text-blue-300/60 mt-2 text-sm tracking-widest uppercase">AI Fitness Tracking</p>
+      </div>
     );
   }
   if (project.title === "MyTrials") {
     return (
-      <video autoPlay muted loop playsInline className="w-full h-full object-cover">
-        <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
-      </video>
+      <div className="w-full h-full bg-gradient-to-tr from-emerald-900 to-black flex flex-col items-center justify-center p-8">
+        <div className="w-full max-w-xs h-32 rounded-xl border border-emerald-500/20 bg-black/50 p-4 flex flex-col justify-between mb-6 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+          <div className="w-3/4 h-3 rounded-full bg-emerald-500/40" />
+          <div className="w-1/2 h-3 rounded-full bg-emerald-500/20" />
+          <div className="w-full h-12 mt-4 rounded-lg bg-emerald-500/10" />
+        </div>
+        <h3 className="text-2xl font-bold text-white tracking-widest uppercase text-center">MYTRIALS</h3>
+        <p className="text-emerald-300/60 mt-2 text-sm tracking-widest uppercase">Clinical Dashboard</p>
+      </div>
     );
   }
   if (project.title === "Neta Bridge") {
@@ -70,25 +143,41 @@ function CardMedia({ project }: { project: (typeof projects)[number] }) {
 
 export default function Animation1Page() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const section1Ref = useRef<HTMLDivElement>(null);
 
   // ── SCROLL RESPONSIVE ROTATION ──
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, { damping: 100, stiffness: 50, mass: 2 });
   const baseRotation = useMotionValue(0);
 
+  // ── SCROLL PERCENTAGE TRACKER ──
+  const [scrollPercent, setScrollPercent] = useState("0%");
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollPercent(Math.round(latest * 100) + "%");
+  });
+
   useAnimationFrame((t, delta) => {
-    // Base speed: 120s per spin = ~3 degrees per second
     let moveBy = 3 * (delta / 1000);
-
-    // Speed boost when scrolling
     const velocityFactor = Math.abs(smoothVelocity.get());
-    moveBy += velocityFactor * 0.02 * (delta / 1000);
-
+    moveBy += velocityFactor * 0.003 * (delta / 1000);
     baseRotation.set(baseRotation.get() + moveBy);
   });
 
-  const rotateYStr = useTransform(baseRotation, (r) => `translateZ(1000px) rotateY(${r}deg)`);
+  const rotateYStr = useTransform(baseRotation, (r) => `translateZ(2200px) rotateY(${r}deg)`);
+
+  // ── PARALLAX OVERLAP LOGIC ──
+  const { scrollYProgress: s1Progress } = useScroll({
+    target: section1Ref,
+    offset: ["start start", "end end"],
+  });
+
+  // Carousel moves up slowly
+  const carouselY = useTransform(s1Progress, [0, 1], ["0vh", "-100vh"]);
+  // ani-2 moves up faster, starting from below the screen and ending fully off the top to leave a solid black screen
+  const ani2Y = useTransform(s1Progress, [0, 0.7], ["100vh", "-100vh"]);
+  // Stretch effect
+  const ani2ScaleY = useTransform(s1Progress, [0, 0.7], [1, 1.8]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -103,6 +192,15 @@ export default function Animation1Page() {
 
   return (
     <>
+      {/* ── SCROLL PROGRESS BAR ── */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-zinc-900 z-[100] origin-left mix-blend-difference"
+        style={{ scaleX: scrollYProgress }}
+      />
+      <div className="fixed top-4 right-6 z-[100] font-mono text-sm font-bold text-white mix-blend-difference pointer-events-none">
+        {scrollPercent}
+      </div>
+
       <style>{`
         .text-content {
           opacity: 0;
@@ -151,75 +249,92 @@ export default function Animation1Page() {
         }
       `}</style>
 
-      {/* ── SECTION 1: 3D infinite rotating carousel ── */}
+      {/* ── SECTION 1: Parallax Carousel + ani-2 overlap ── */}
       <section
+        ref={section1Ref}
         style={{
-          height: "100vh",
-          background: "#fff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          height: "300vh",
+          background: "#000",
           position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div className="carousel-scene">
-          <motion.div className="carousel-ring" style={{ transform: rotateYStr }}>
-            {[...projects, ...projects].map((project, i, arr) => {
-              const angle = (360 / arr.length) * i;
-              const radius = 1400;
-              return (
-                <Link
-                  key={`${project.id}-${i}`}
-                  href={project.href}
-                  className="carousel-card group"
-                  style={{
-                    transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
-                  }}
-                >
-                  <CardMedia project={project} />
-                  <div
-                    className="card-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
-                    style={{ opacity: 0.6 }}
-                  />
-                  <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
-                    <ArrowUpRight className="w-4 h-4" />
-                  </div>
-                </Link>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        <div className="fan-bottom-mist" />
-      </section>
-
-      {/* ── SECTION 2: ani-2 rises (250vh white) ── */}
-      <section
-        style={{
-          height: "250vh",
-          position: "relative",
-          overflow: "hidden",
-          background: "#fff",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "100%",
-            zIndex: 10,
-            pointerEvents: "none",
+            position: "sticky",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "135vh",
+            backgroundColor: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/ani-2.png" alt="" style={{ width: "100%", height: "auto", display: "block" }} />
+          {/* 
+          <motion.div className="carousel-scene" style={{ y: carouselY }}>
+            <motion.div className="carousel-ring" style={{ transform: rotateYStr }}>
+              {[...projects, ...projects, ...projects, ...projects].map((project, i, arr) => {
+                const angle = (360 / arr.length) * i;
+                const radius = 2600;
+                return (
+                  <Link
+                    key={`${project.id}-${i}`}
+                    href={project.href}
+                    className="carousel-card group"
+                    style={{
+                      transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
+                    }}
+                  >
+                    <CardMedia project={project} />
+
+                    {/* Frosted fade at the bottom *\/}
+                    <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-2xl bg-gradient-to-t from-white/60 to-transparent z-10 pointer-events-none [mask-image:linear-gradient(to_top,black_10%,transparent_100%)]" />
+
+                    <div
+                      className="card-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
+                      style={{ opacity: 0.6 }}
+                    />
+                    <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
+                      <ArrowUpRight className="w-4 h-4" />
+                    </div>
+                  </Link>
+                );
+              })}
+            </motion.div>
+          </motion.div>
+          */}
+
+          {/* Full Screen Video Hero */}
+          <motion.div className="absolute inset-0 w-full h-full" style={{ y: carouselY }}>
+            <video autoPlay muted loop playsInline className="w-full h-full object-cover">
+              <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
+            </video>
+          </motion.div>
+
+          {/* ani-2 — anchored to top inside sticky, moved by parallax y */}
+          <motion.div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              x: "-50%",
+              width: "100%",
+              zIndex: 10,
+              pointerEvents: "none",
+              y: ani2Y,
+              scaleY: ani2ScaleY,
+              transformOrigin: "bottom center",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ani-2.png" alt="" style={{ width: "100%", height: "auto", display: "block" }} />
+          </motion.div>
         </div>
       </section>
 
-      {/* ── SECTION 3: Black background with text ── */}
+      {/* ── SECTION 2: Black background with text ── */}
       <section
         ref={sectionRef}
         style={{
@@ -233,40 +348,13 @@ export default function Animation1Page() {
           gap: "16px",
         }}
       >
-        <div className="text-content" style={{ textAlign: "center" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-tiempos), Georgia, serif",
-              fontWeight: 400,
-              fontSize: "clamp(40px, 8vw, 96px)",
-              lineHeight: 1,
-              color: "#fff",
-              margin: 0,
-            }}
-          >
-            Designed to
-            <br />
-            <em>feel different.</em>
-          </h2>
-          <p
-            style={{
-              fontFamily: "'Neue Montreal', 'Helvetica Neue', sans-serif",
-              color: "rgba(255,255,255,0.5)",
-              fontSize: "clamp(11px, 1.5vw, 14px)",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              marginTop: "20px",
-            }}
-          >
-            Built from first principles. Crafted for people.
-          </p>
-        </div>
+        <CallWidget />
       </section>
 
       {/* ── SECTION 4: ani-2 rotated 180deg ── */}
       <section
         style={{
-          height: "150vh",
+          height: "161vh",
           backgroundImage: "url('/ani-2.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
