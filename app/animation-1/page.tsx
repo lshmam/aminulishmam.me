@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useVelocity, useSpring, useMotionValue, useAnimationFrame, useTransform, useInView, AnimatePresence, useMotionValueEvent } from "framer-motion";
+import { useAnimationFrame } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Phone, X } from "lucide-react";
-import Header from "@/components/Header";
 import { projects } from "@/lib/projects";
 import ObjectBurst from "@/components/animations/PrismaticBurst";
 import { ParticlesBackground } from "@/components/animations/particles-background";
@@ -145,227 +144,122 @@ function CardMedia({ project }: { project: (typeof projects)[number] }) {
 }
 
 export default function Animation1Page() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const section1Ref = useRef<HTMLDivElement>(null);
-  const section4Ref = useRef<HTMLDivElement>(null);
-
-  // ── SCROLL RESPONSIVE ROTATION ──
-  const { scrollY, scrollYProgress } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 100, stiffness: 50, mass: 2 });
+  // ── CAROUSEL ROTATION ──
   const baseRotation = useMotionValue(0);
-
-  // ── SCROLL PERCENTAGE TRACKER ──
-  const [scrollPercent, setScrollPercent] = useState("0%");
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    setScrollPercent(Math.round(latest * 100) + "%");
-  });
 
   useAnimationFrame((t, delta) => {
     let moveBy = 3 * (delta / 1000);
-    const velocityFactor = Math.abs(smoothVelocity.get());
-    moveBy += velocityFactor * 0.003 * (delta / 1000);
     baseRotation.set(baseRotation.get() + moveBy);
   });
 
   const rotateYStr = useTransform(baseRotation, (r) => `translateZ(2200px) rotateY(${r}deg)`);
 
-  // ── PARALLAX OVERLAP LOGIC ──
-  const { scrollYProgress: s1Progress } = useScroll({
-    target: section1Ref,
-    offset: ["start start", "end end"],
-  });
-
-  // Carousel moves up slowly
-  const carouselY = useTransform(s1Progress, [0, 1], ["0vh", "-100vh"]);
-  // Video darken effect
-  const videoDarkenOpacity = useTransform(s1Progress, [0.09, 0.21], [0, 1]);
-
-  // ── SQUISH DOWN ANIMATIONS ──
-  const { scrollYProgress: s4Progress } = useScroll({ target: section4Ref, offset: ["start end", "end start"] });
-  const ani3ScaleY = useTransform(s4Progress, [0, 1], [1.2, 1]);
-  const ani3Y = useTransform(s4Progress, [0, 1], ["0%", "15%"]);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => section.classList.toggle("text-visible", entry.isIntersecting),
-      { threshold: 0.3 }
-    );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
-      {/* ── SCROLL PROGRESS BAR ── */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1.5 bg-zinc-900 z-[100] origin-left mix-blend-difference"
-        style={{ scaleX: scrollYProgress }}
-      />
-      <div className="fixed top-4 right-6 z-[100] font-mono text-sm font-bold text-white mix-blend-difference pointer-events-none">
-        {scrollPercent}
-      </div>
-
-      <style>{`
-        .text-content {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .text-visible .text-content {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .carousel-scene {
-          width: 800px;
-          height: 500px;
-          perspective: 1200px;
-          margin: 0 auto;
-        }
-        .carousel-ring {
-          width: 100%;
-          height: 100%;
-          position: relative;
-          transform-style: preserve-3d;
-        }
-        .carousel-card {
-          position: absolute;
-          width: 800px;
-          height: 500px;
-          border-radius: 16px;
-          overflow: hidden;
-          left: 0;
-          top: 0;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-          text-decoration: none;
-          display: block;
-          backface-visibility: hidden;
-        }
-        .carousel-card:hover .card-overlay { opacity: 0.85 !important; }
-        .fan-bottom-mist {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 180px;
-          background: linear-gradient(to top, #ffffff, transparent);
-          pointer-events: none;
-          z-index: 30;
-        }
-      `}</style>
-
-      {/* ── SECTION 1: Parallax Carousel + ani-2 overlap ── */}
+      {/* ── HERO + PROJECTS: one seamless section with ani-3 bg ── */}
       <section
-        ref={section1Ref}
         style={{
-          height: "300vh",
-          background: "#000",
           position: "relative",
+          backgroundColor: "#FAFAFA",
         }}
       >
+        {/* ani-3 background fading to white at the bottom */}
         <div
           style={{
-            position: "sticky",
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: "135vh",
-            backgroundColor: "transparent",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-          }}
-        >
-          {/* Main Landing Page Header */}
-          <div className="absolute top-0 left-0 right-0 z-50 max-w-[1200px] mx-auto px-4 sm:px-6 w-full mix-blend-difference">
-            <Header />
-          </div>
-
-          <motion.div className="carousel-scene" style={{ y: carouselY }}>
-            <motion.div className="carousel-ring" style={{ transform: rotateYStr }}>
-              {[...projects, ...projects, ...projects, ...projects].map((project, i, arr) => {
-                const angle = (360 / arr.length) * i;
-                const radius = 2600;
-                return (
-                  <Link
-                    key={`${project.id}-${i}`}
-                    href={project.href}
-                    className="carousel-card group"
-                    style={{
-                      transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
-                    }}
-                  >
-                    <CardMedia project={project} />
-
-                    {/* Frosted fade at the bottom */}
-                    <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-2xl bg-gradient-to-t from-white/60 to-transparent z-10 pointer-events-none [mask-image:linear-gradient(to_top,black_10%,transparent_100%)]" />
-
-                    <div
-                      className="card-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
-                      style={{ opacity: 0.6 }}
-                    />
-                    <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </div>
-                  </Link>
-                );
-              })}
-            </motion.div>
-          </motion.div>
-
-        </div>
-      </section>
-
-      {/* ── SECTION 2: Black background with text ── */}
-      <section
-        ref={sectionRef}
-        style={{
-          height: "150vh",
-          backgroundColor: "#000",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 24px",
-          gap: "16px",
-        }}
-      >
-        <CallWidget />
-      </section>
-
-      {/* ── SECTION 4: ani-3 transition (black to white) ── */}
-      <section
-        ref={section4Ref}
-        style={{
-          height: "120vh",
-          position: "relative",
-          overflow: "hidden",
-          backgroundColor: "#000"
-        }}
-      >
-        <motion.div 
-          style={{
-            position: "absolute",
-            inset: -50, // bleed edges to prevent gaps when scaling
+            height: "160vh",
             backgroundImage: "url('/ani-3.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            scaleY: ani3ScaleY,
-            y: ani3Y,
-            transformOrigin: "bottom center",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 15%, black 100%)",
-            maskImage: "linear-gradient(to bottom, transparent, black 15%, black 100%)"
+            zIndex: 0,
+            WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+            maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
           }}
         />
+
+        {/* Name + Tagline */}
+        <div className="relative z-20 flex flex-col items-center text-center pt-32 mb-10 pointer-events-none px-4">
+          <h1
+            className="text-white leading-none tracking-tight"
+            style={{
+              fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+              fontWeight: 500,
+              fontSize: "clamp(40px, 6vw, 90px)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Aminul Islam Ishmam
+          </h1>
+          <p
+            className="text-white/60 mt-3 tracking-widest uppercase text-[12px] md:text-[13px]"
+            style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif", letterSpacing: "0.2em" }}
+          >
+            Designer&nbsp;&nbsp;&middot;&nbsp;&nbsp;Founder&nbsp;&nbsp;&middot;&nbsp;&nbsp;Engineer
+          </p>
+        </div>
+
+        {/* 3D Carousel — static, no sticky, overflow clipped */}
+        <div style={{ overflow: "hidden", width: "100%" }}>
+        <div
+          className="relative z-10 mb-32"
+          style={{ width: 260, height: 165, perspective: 3000, margin: "0 auto", overflow: "visible" }}
+        >
+          <motion.div
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "relative",
+              transformStyle: "preserve-3d",
+              transform: rotateYStr,
+            }}
+          >
+            {[...projects, ...projects, ...projects, ...projects].map((project, i, arr) => {
+              const angle = (360 / arr.length) * i;
+              const radius = 900;
+              return (
+                <Link
+                  key={`${project.id}-${i}`}
+                  href={project.href}
+                  className="group"
+                  style={{
+                    position: "absolute",
+                    width: 260,
+                    height: 165,
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    left: 0,
+                    top: 0,
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
+                    textDecoration: "none",
+                    display: "block",
+                    backfaceVisibility: "hidden",
+                    transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
+                  }}
+                >
+                  <CardMedia project={project} />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
+                    style={{ opacity: 0.6 }}
+                  />
+                  <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
+                    <ArrowUpRight className="w-4 h-4" />
+                  </div>
+                </Link>
+              );
+            })}
+          </motion.div>
+        </div>
+        </div>{/* end carousel overflow wrapper */}
+
+
+        {/* Vertical Projects List — same container, seamless */}
+        <VerticalProjectList />
       </section>
 
-      {/* ── SECTION 5: Vertical Projects List ── */}
-      <VerticalProjectList />
-
-      {/* ── SECTION 6: About Bio Section (Includes Reveal Footer) ── */}
+      {/* ── About Bio Section (Includes Footer) ── */}
       <AboutSection />
     </>
   );

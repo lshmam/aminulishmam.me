@@ -2,42 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function AboutSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Parallax: image moves slower than the scroll (drifts upward)
+  const bgY = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"]);
+  // Subtle scale stretch as you scroll in
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1.15, 1.0]);
+
   return (
-    <>
-    {/* ── About Content ── */}
-    <section className="relative z-10 w-full bg-[#FAFAFA] pb-32">
-      <div className="max-w-[500px] mx-auto px-6 font-sans text-[13px] md:text-[14px] leading-[1.6] text-black pb-32">
-        <h2 className="text-center text-[20px] md:text-[24px] font-medium mb-8 text-black">
-          A little about me
-        </h2>
-        
-        <div className="space-y-4 text-left text-black/80 font-medium">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-          <p>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-          </p>
-        </div>
-
-        <div className="w-full max-w-[300px] mx-auto mt-16 aspect-[3/4] relative overflow-hidden bg-zinc-200">
-           <Image 
-              src="/project-saas.png" 
-              alt="Portrait" 
-              fill 
-              className="object-cover" 
-           />
-        </div>
-      </div>
-    </section>
-
-    {/* ── Footer with ani-2 Background ── */}
     <section
+      ref={sectionRef}
       style={{
         position: "relative",
         overflow: "hidden",
@@ -48,31 +31,66 @@ export default function AboutSection() {
         backgroundColor: "#FAFAFA",
       }}
     >
-      {/* ani-2 background image with top fade */}
-      <div
+      {/* ani-2 parallax background */}
+      <motion.div
         style={{
           position: "absolute",
-          inset: -50,
+          inset: -100,
           backgroundImage: "url('/ani-2.png')",
           backgroundSize: "cover",
-          backgroundPosition: "bottom",
+          backgroundPosition: "center",
           zIndex: 0,
-          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 20%, black 100%)",
-          maskImage: "linear-gradient(to bottom, transparent, black 20%, black 100%)",
+          y: bgY,
+          scale: bgScale,
+          WebkitMaskImage: "linear-gradient(to bottom, transparent, black 30%, black 100%)",
+          maskImage: "linear-gradient(to bottom, transparent, black 30%, black 100%)",
         }}
       />
 
-      {/* Text over the aura */}
-      <div className="relative z-10 w-full max-w-[500px] mx-auto px-6 mb-auto pt-32 text-white/90 text-[13px] md:text-[14px] leading-[1.6] space-y-8 text-center font-medium">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </p>
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
+      {/* All content sits above the footer, inside the same container */}
+      <div className="relative z-10 flex flex-col flex-1">
+
+        {/* ── About Content ── */}
+        <div className="w-full max-w-[500px] mx-auto px-6 pt-32 pb-32 font-sans text-[13px] md:text-[14px] leading-[1.6]">
+          <h2 className="text-center text-[20px] md:text-[24px] font-medium mb-8 text-black">
+            A little about me
+          </h2>
+
+          <div className="space-y-4 text-left text-black/80 font-medium">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+            <p>
+              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+            <p>
+              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+            </p>
+          </div>
+
+          <div className="w-full max-w-[300px] mx-auto mt-16 aspect-[3/4] relative overflow-hidden bg-zinc-200">
+            <Image
+              src="/project-saas.png"
+              alt="Portrait"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {/* ── White text over the aura ── */}
+        <div className="w-full max-w-[500px] mx-auto px-6 pb-24 text-white/90 text-[13px] md:text-[14px] leading-[1.6] space-y-8 text-center font-medium">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </p>
+          <p>
+            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </div>
+
       </div>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="w-full bg-transparent pb-0 overflow-hidden relative z-10">
         <div
           className="w-full px-4 sm:px-8 md:px-12 flex flex-col items-center text-white"
@@ -129,6 +147,5 @@ export default function AboutSection() {
         </div>
       </footer>
     </section>
-    </>
   );
 }
