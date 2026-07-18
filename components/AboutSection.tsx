@@ -13,10 +13,9 @@ export default function AboutSection() {
     offset: ["start end", "end start"],
   });
 
-  // Parallax: image moves slower than the scroll (drifts upward)
-  const bgY = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"]);
-  // Subtle scale stretch as you scroll in
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.15, 1.0]);
+  // Inverted squash effect: starts very squashed (0.05) when it enters the viewport,
+  // and expands to full height (1) as you scroll down.
+  const scaleY = useTransform(scrollYProgress, [0, 0.15], [0.05, 1]);
 
   return (
     <section
@@ -35,13 +34,16 @@ export default function AboutSection() {
       <motion.div
         style={{
           position: "absolute",
-          inset: -100,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
           backgroundImage: "url('/ani-2.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           zIndex: 0,
-          y: bgY,
-          scale: bgScale,
+          scaleY: scaleY,
+          transformOrigin: "50% 100%",
           WebkitMaskImage: "linear-gradient(to bottom, transparent, black 30%, black 100%)",
           maskImage: "linear-gradient(to bottom, transparent, black 30%, black 100%)",
         }}
@@ -128,14 +130,14 @@ export default function AboutSection() {
               <span className="text-[14px] sm:text-[15px] text-white/80 mt-1">&copy; 2026</span>
             </div>
           </div>
-          <div className="w-full pb-2 sm:pb-4 pt-0 flex justify-center overflow-hidden">
+          <div className="w-full pt-0 flex justify-center overflow-hidden">
             <p
               className="whitespace-nowrap select-none pointer-events-none text-center"
               style={{
                 fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif",
                 fontWeight: 500,
                 fontSize: "clamp(70px, 19vw, 255px)",
-                lineHeight: 1,
+                lineHeight: 0.75,
                 letterSpacing: "-0.04em",
                 color: "white",
                 opacity: 0.9,

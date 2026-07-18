@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import { useAnimationFrame } from "framer-motion";
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, useScroll, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Phone, X } from "lucide-react";
@@ -153,35 +154,48 @@ export default function Animation1Page() {
   });
 
   const rotateYStr = useTransform(baseRotation, (r) => `translateZ(2200px) rotateY(${r}deg)`);
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  // The section is very tall, so we make the scale effect finish by 25% scroll progress
+  // so it's extremely obvious while the user is still viewing the top of the page.
+  const scaleY = useTransform(scrollYProgress, [0, 0.25], [1, 0.05]);
 
   return (
     <>
+
+
       {/* ── HERO + PROJECTS: one seamless section with ani-3 bg ── */}
       <section
+        ref={sectionRef}
         style={{
           position: "relative",
           backgroundColor: "#FAFAFA",
         }}
       >
         {/* ani-3 background fading to white at the bottom */}
-        <div
+        <motion.div
           style={{
             position: "absolute",
             top: 0,
             left: 0,
             right: 0,
-            height: "160vh",
+            height: "260vh",
             backgroundImage: "url('/ani-3.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             zIndex: 0,
             WebkitMaskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
             maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+            transformOrigin: "50% 0%",
+            scaleY: scaleY,
           }}
         />
 
         {/* Name + Tagline */}
-        <div className="relative z-20 flex flex-col items-center text-center pt-32 mb-10 pointer-events-none px-4">
+        <div className="relative z-20 flex flex-col items-center text-center pt-32 mb-20 pointer-events-none px-4">
           <h1
             className="text-white leading-none tracking-tight"
             style={{
@@ -202,10 +216,10 @@ export default function Animation1Page() {
         </div>
 
         {/* 3D Carousel — static, no sticky, overflow clipped */}
-        <div style={{ overflow: "hidden", width: "100%" }}>
+        <div style={{ overflow: "hidden", width: "100%", padding: "120px 0" }} className="mb-10">
         <div
-          className="relative z-10 mb-32"
-          style={{ width: 260, height: 165, perspective: 3000, margin: "0 auto", overflow: "visible" }}
+          className="relative z-10"
+          style={{ width: 360, height: 240, perspective: 3000, margin: "0 auto", overflow: "visible" }}
         >
           <motion.div
             style={{
@@ -218,7 +232,7 @@ export default function Animation1Page() {
           >
             {[...projects, ...projects, ...projects, ...projects].map((project, i, arr) => {
               const angle = (360 / arr.length) * i;
-              const radius = 900;
+              const radius = 1300;
               return (
                 <Link
                   key={`${project.id}-${i}`}
@@ -226,10 +240,9 @@ export default function Animation1Page() {
                   className="group"
                   style={{
                     position: "absolute",
-                    width: 260,
-                    height: 165,
-                    borderRadius: 16,
-                    overflow: "hidden",
+                    width: 360,
+                    height: 240,
+                    borderRadius: 32,
                     left: 0,
                     top: 0,
                     boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
@@ -239,11 +252,13 @@ export default function Animation1Page() {
                     transform: `rotateY(${angle}deg) translateZ(-${radius}px)`,
                   }}
                 >
-                  <CardMedia project={project} />
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
-                    style={{ opacity: 0.6 }}
-                  />
+                  <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: 32, WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}>
+                    <CardMedia project={project} />
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none z-20 transition-opacity duration-500"
+                      style={{ opacity: 0.6 }}
+                    />
+                  </div>
                   <div className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl z-30 scale-90 group-hover:scale-100">
                     <ArrowUpRight className="w-4 h-4" />
                   </div>

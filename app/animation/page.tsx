@@ -1,7 +1,13 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValueEvent,
+} from "framer-motion";
 
 export default function AnimationPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,7 +17,7 @@ export default function AnimationPage() {
     offset: ["start start", "end end"],
   });
 
-  const smooth = useSpring(scrollYProgress, { stiffness: 50, damping: 18 });
+  const smooth = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
 
   // ── SCROLL PERCENTAGE TRACKER ──
   const [scrollPercent, setScrollPercent] = useState("0%");
@@ -19,70 +25,163 @@ export default function AnimationPage() {
     setScrollPercent(Math.round(latest * 100) + "%");
   });
 
-  // 1. Intro: ani-2 scrolls up and out
-  const introY = useTransform(smooth, [0, 0.40], ["100vh", "-100vh"]);
+  // ─────────────────────────────────────────────────────────────────────────
+  // FRAMER-STYLE: each image is full-bleed (cover) and parallax-scrolled.
+  // The images slide through at staggered scroll ranges so they cross-dissolve
+  // via position overlap — no opacity needed, just Y translation.
+  //
+  //  Phase 0→0.33  : ani-1 rises from bottom → exits top   (white bg revealed → black bg)
+  //  Phase 0.33→0.66: ani-2 rises from bottom → exits top  (transition gradient)
+  //  Phase 0.66→1.0 : ani-3 rises from bottom → exits top  (outro / black to white)
+  //
+  // Each image travels from +100vh (below fold) to -100vh (above fold).
+  // Because they're full-cover, they act as seamless scene transitions.
+  // ─────────────────────────────────────────────────────────────────────────
 
-  // 2. Black card with text: scrolls in after intro, scrolls out before outro
-  const cardY = useTransform(smooth, [0.38, 0.62], ["100vh", "-100vh"]);
+  // ani-1: white bg, orange arc peaking from bottom — rises first
+  const y1 = useTransform(smooth, [0, 0.4], ["100vh", "-120vh"]);
 
-  // 3. Outro: ani-2 rotated 180° scrolls up and out
-  const outroY = useTransform(smooth, [0.60, 1.0], ["200vh", "-200vh"]);
+  // ani-2: black gradient hill — enters as ani-1 exits
+  const y2 = useTransform(smooth, [0.28, 0.68], ["100vh", "-120vh"]);
+
+  // ani-3: black top / orange arc / white bottom — enters as ani-2 exits
+  const y3 = useTransform(smooth, [0.56, 1.0], ["100vh", "-120vh"]);
+
+  // ── TEXT layers that ride on top of each scene ──
+  // Text 1 appears while ani-1 is visible
+  const textY1 = useTransform(smooth, [0.0, 0.28], ["60px", "-80px"]);
+  const textOpacity1 = useTransform(smooth, [0.0, 0.08, 0.22, 0.28], [0, 1, 1, 0]);
+
+  // Text 2 appears while ani-2 is visible
+  const textY2 = useTransform(smooth, [0.28, 0.56], ["60px", "-80px"]);
+  const textOpacity2 = useTransform(smooth, [0.28, 0.36, 0.5, 0.56], [0, 1, 1, 0]);
+
+  // Text 3 appears while ani-3 is visible
+  const textY3 = useTransform(smooth, [0.56, 1.0], ["60px", "-20px"]);
+  const textOpacity3 = useTransform(smooth, [0.56, 0.64, 0.9, 1.0], [0, 1, 1, 0]);
 
   return (
     <main className="bg-white">
       {/* ── SCROLL PROGRESS BAR ── */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1.5 bg-black z-[100] origin-left"
+        className="fixed top-0 left-0 right-0 h-1 bg-black z-[200] origin-left"
         style={{ scaleX: smooth }}
       />
-      <div className="fixed top-4 right-6 z-[100] font-mono text-sm font-bold text-black pointer-events-none">
+      <div className="fixed top-4 right-6 z-[200] font-mono text-xs font-bold text-black/30 pointer-events-none mix-blend-multiply">
         {scrollPercent}
       </div>
 
-      <div ref={containerRef} className="relative" style={{ height: "1500vh" }}>
-        <div className="sticky top-0 h-screen w-full overflow-hidden bg-white">
+      {/* ── SCROLL CONTAINER ── */}
+      <div ref={containerRef} className="relative" style={{ height: "400vh" }}>
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
 
-          {/* 1. INTRO: ani-2 rises and scrolls off the top */}
+          {/* ── BASE: white background ── */}
+          <div className="absolute inset-0 bg-white" />
+
+          {/* ── LAYER 1: ani-1 (orange arc on white) ── */}
           <motion.div
-            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full pointer-events-none"
-            style={{ y: introY }}
+            className="absolute inset-0 pointer-events-none"
+            style={{ y: y1 }}
           >
-            <img src="/ani-2.png" alt="" className="w-full h-auto" />
+            <img
+              src="/ani-1.png"
+              alt=""
+              className="w-full h-full"
+              style={{ objectFit: "cover", objectPosition: "center bottom" }}
+              draggable={false}
+            />
           </motion.div>
 
-          {/* 2. BLACK CARD + TEXT: scrolls in from bottom, out to top */}
+          {/* ── TEXT 1 ── */}
           <motion.div
-            className="absolute left-0 right-0 bg-black flex flex-col items-center justify-center px-6 gap-4 pointer-events-none"
-            style={{ y: cardY, height: "100vh", top: "-100vh" }}
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+            style={{ y: textY1, opacity: textOpacity1 }}
           >
-            <h2
-              className="text-white text-[44px] sm:text-[72px] md:text-[96px] leading-none text-center max-w-[900px]"
-              style={{ fontFamily: "var(--font-tiempos), Georgia, serif", fontWeight: 400 }}
-            >
-              Designed to
-              <br />
-              <em>feel different.</em>
-            </h2>
             <p
-              className="text-white/50 text-[13px] sm:text-[16px] tracking-[0.2em] uppercase text-center"
+              className="text-[11px] tracking-[0.3em] uppercase text-black/40 mb-4"
               style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', sans-serif" }}
             >
-              Built from first principles. Crafted for people.
+              Beginning
             </p>
+            <h2
+              className="text-[56px] sm:text-[80px] md:text-[96px] leading-none text-center text-black max-w-[860px]"
+              style={{ fontFamily: "var(--font-tiempos), Georgia, serif", fontWeight: 400 }}
+            >
+              Rise and<br /><em>unfold.</em>
+            </h2>
           </motion.div>
 
-          {/* 3. OUTRO: ani-2 rotated 180° scrolls up and out */}
+          {/* ── LAYER 2: ani-2 (dark gradient hill) ── */}
           <motion.div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full pointer-events-none"
-            style={{ y: outroY, rotate: 180 }}
+            className="absolute inset-0 pointer-events-none"
+            style={{ y: y2 }}
           >
-            <img src="/ani-2.png" alt="" className="w-full h-auto" />
+            <img
+              src="/ani-2.png"
+              alt=""
+              className="w-full h-full"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              draggable={false}
+            />
+          </motion.div>
+
+          {/* ── TEXT 2 ── */}
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10"
+            style={{ y: textY2, opacity: textOpacity2 }}
+          >
+            <p
+              className="text-[11px] tracking-[0.3em] uppercase text-white/50 mb-4"
+              style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', sans-serif" }}
+            >
+              Transition
+            </p>
+            <h2
+              className="text-[56px] sm:text-[80px] md:text-[96px] leading-none text-center text-white max-w-[860px]"
+              style={{ fontFamily: "var(--font-tiempos), Georgia, serif", fontWeight: 400 }}
+            >
+              Designed to<br /><em>feel different.</em>
+            </h2>
+          </motion.div>
+
+          {/* ── LAYER 3: ani-3 (black top / white bottom) ── */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ y: y3 }}
+          >
+            <img
+              src="/ani-3.png"
+              alt=""
+              className="w-full h-full"
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              draggable={false}
+            />
+          </motion.div>
+
+          {/* ── TEXT 3 ── */}
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10"
+            style={{ y: textY3, opacity: textOpacity3 }}
+          >
+            <p
+              className="text-[11px] tracking-[0.3em] uppercase text-black/40 mb-4"
+              style={{ fontFamily: "'Neue Montreal', 'Helvetica Neue', sans-serif" }}
+            >
+              Resolution
+            </p>
+            <h2
+              className="text-[56px] sm:text-[80px] md:text-[96px] leading-none text-center text-black max-w-[860px]"
+              style={{ fontFamily: "var(--font-tiempos), Georgia, serif", fontWeight: 400 }}
+            >
+              Built from<br /><em>first principles.</em>
+            </h2>
           </motion.div>
 
         </div>
       </div>
 
-      <div className="h-[30vh] w-full bg-white" />
+      {/* ── FOOTER PADDING ── */}
+      <div className="h-[20vh] w-full bg-white" />
     </main>
   );
 }
