@@ -28,7 +28,7 @@ export default function LandingPage4() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<BlobPart[]>([]);
@@ -165,7 +165,7 @@ export default function LandingPage4() {
   const updateAudioData = () => {
     if (!analyserRef.current || !dataArrayRef.current) return;
     
-    analyserRef.current.getByteFrequencyData(dataArrayRef.current);
+    analyserRef.current.getByteFrequencyData(dataArrayRef.current as any);
     
     // Calculate volume for the Orb Grainient
     let sum = 0;
@@ -252,11 +252,22 @@ export default function LandingPage4() {
       <div className="flex-1 flex flex-col items-center justify-center relative w-full z-20 -mt-8 md:-mt-16">
         
         {/* Container for Orb and Levitation Shadow */}
-        <div className="relative flex flex-col items-center justify-center -mb-24 md:-mb-40">
+        <div className="relative w-[500px] h-[500px] md:w-[700px] md:h-[700px] -mb-24 md:-mb-40">
           
+          {/* Levitation Ground Shadow (Mirrored jagged mask) */}
+          <div 
+            className="absolute inset-0 bg-black/20 blur-md pointer-events-none z-0"
+            style={{
+              transform: `translateY(160px) scaleY(0.25) scaleX(${isRecording ? 1.0 + audioData * 0.5 : 0.8})`,
+              maskImage: isRecording ? 'url(#fadeMask)' : 'radial-gradient(circle at center, black 0%, black 40%, transparent 40.5%)',
+              WebkitMaskImage: isRecording ? 'url(#fadeMask)' : 'radial-gradient(circle at center, black 0%, black 40%, transparent 40.5%)',
+              transition: isRecording ? 'none' : 'transform 0.5s ease-out, mask-image 0.5s ease-out, -webkit-mask-image 0.5s ease-out'
+            }}
+          />
+
           {/* Drop shadow wrapper for the masked orb */}
           <div 
-            className="relative transition-all duration-300 z-10"
+            className="absolute inset-0 transition-all duration-300 z-10"
             style={{
               filter: isRecording 
                 ? `drop-shadow(0 0 40px rgba(168, 85, 247, ${0.4 + audioData}))` 
@@ -267,7 +278,7 @@ export default function LandingPage4() {
             <button 
               ref={orbContainerRef}
               onClick={handleOrbClick}
-              className="relative z-10 w-[500px] h-[500px] md:w-[700px] md:h-[700px] group focus:outline-none hover:opacity-90 transition-opacity"
+              className="w-full h-full group focus:outline-none hover:opacity-90 transition-opacity"
               style={{
                 transform: isRecording ? `scale(${1.0 + audioData * 0.5})` : 'scale(0.8)',
                 maskImage: isRecording ? 'url(#fadeMask)' : 'radial-gradient(circle at center, black 0%, black 40%, transparent 40.5%)',
@@ -312,17 +323,6 @@ export default function LandingPage4() {
               )}
             </button>
           </div>
-
-          {/* Levitation Ground Shadow (Mirrored jagged mask) */}
-          <div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 mt-[120px] md:mt-[160px] w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-black/20 blur-md pointer-events-none"
-            style={{
-              transform: `translate(-50%, -50%) scaleY(0.25) scaleX(${isRecording ? 1.0 + audioData * 0.5 : 0.8})`,
-              maskImage: isRecording ? 'url(#fadeMask)' : 'radial-gradient(circle at center, black 0%, black 40%, transparent 40.5%)',
-              WebkitMaskImage: isRecording ? 'url(#fadeMask)' : 'radial-gradient(circle at center, black 0%, black 40%, transparent 40.5%)',
-              transition: isRecording ? 'none' : 'transform 0.5s ease-out, mask-image 0.5s ease-out, -webkit-mask-image 0.5s ease-out'
-            }}
-          />
         </div>
 
         {/* Real-time Transcription Display */}

@@ -13,6 +13,25 @@ const buildKeyframes = (from, steps) => {
   return keyframes;
 };
 
+/**
+ * @typedef {Object} BlurTextProps
+ * @property {string} [text]
+ * @property {number} [delay]
+ * @property {string} [className]
+ * @property {'words'|'letters'} [animateBy]
+ * @property {'top'|'bottom'} [direction]
+ * @property {number} [threshold]
+ * @property {string} [rootMargin]
+ * @property {any} [animationFrom]
+ * @property {any} [animationTo]
+ * @property {Function} [easing]
+ * @property {Function} [onAnimationComplete]
+ * @property {number} [stepDuration]
+ */
+
+/**
+ * @param {BlurTextProps} props
+ */
 const BlurText = ({
   text = '',
   delay = 200,

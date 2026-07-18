@@ -1,0 +1,29 @@
+{
+  "neucler": {
+    "intro": "Let me show you Neucler, one of Aminul's most complex full-stack web applications.",
+    "points": [
+      "Neucler is a SaaS platform designed for managing and visualizing complex nuclear reactor data.",
+      "It features a high-performance interactive dashboard built with Next.js and Three.js.",
+      "The backend uses a scalable microservices architecture to process real-time sensor streams."
+    ],
+    "outro": "It really showcases his ability to combine heavy data processing with stunning 3D data visualization."
+  },
+  "faeth": {
+    "intro": "Here is Faeth, an incredible e-commerce experience Aminul built.",
+    "points": [
+      "Faeth is a boutique fashion brand website focused on fluid animations and premium typography.",
+      "It leverages Framer Motion and GSAP to create a seamless, app-like navigation experience.",
+      "The shopping cart and checkout flow are fully custom and optimized for conversion."
+    ],
+    "outro": "It's a great example of how he brings high-end brand aesthetics to life on the web."
+  },
+  "ciselle": {
+    "intro": "This is Ciselle, a beautiful interactive storytelling platform.",
+    "points": [
+      "Ciselle was built to help authors publish interactive, branching narratives.",
+      "The interface uses custom WebGL shaders to create immersive background transitions that react to the story.",
+      "It includes a rich text editor built from scratch with collaborative editing features."
+    ],
+    "outro": "The focus here was really on creating an emotional connection through design and technology."
+  }
+}

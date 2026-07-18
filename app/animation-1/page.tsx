@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { useAnimationFrame } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { useAnimationFrame, useInView, AnimatePresence } from "framer-motion";
 import { motion, useMotionValue, useTransform, useScroll, useSpring } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";

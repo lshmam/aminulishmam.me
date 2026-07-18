@@ -219,9 +219,9 @@ export default function LandingPage3() {
           >
             <div className="relative flex flex-col items-center group">
               <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/50 backdrop-blur-md shadow-lg border border-white/40 flex items-center justify-center overflow-hidden transition-colors group-hover:bg-white/80">
-                {item.image ? (
+                {'image' in item && item.image ? (
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover pointer-events-none" />
-                ) : item.icon ? (
+                ) : 'icon' in item && item.icon ? (
                   <item.icon className="w-8 h-8 text-gray-700 pointer-events-none" />
                 ) : null}
               </div>
