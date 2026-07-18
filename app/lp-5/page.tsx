@@ -2,15 +2,36 @@
 
 import React, { useState } from 'react';
 import VoiceAgent from '@/components/VoiceAgent';
+import { X } from 'lucide-react';
 
 export default function LandingPage5() {
   const [showTextInput, setShowTextInput] = useState(false);
   const [textMessage, setTextMessage] = useState("");
+  const [activeProject, setActiveProject] = useState<string | null>(null);
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-950 overflow-hidden relative py-12">
-      <div className="flex-1 flex flex-col items-center justify-center relative w-full z-20 -mt-8 md:-mt-16">
-        <VoiceAgent />
+      
+      {/* Embedded Project Iframe */}
+      {activeProject && (
+        <div className="absolute inset-0 z-50 bg-white animate-in slide-in-from-bottom-8 duration-500">
+          <button 
+            onClick={() => setActiveProject(null)}
+            className="absolute top-6 right-6 z-[60] bg-black/50 hover:bg-black text-white p-3 rounded-full backdrop-blur transition-colors shadow-lg"
+          >
+            <X size={24} />
+          </button>
+          <iframe 
+            src={`/work/${activeProject}`} 
+            className="w-full h-full border-0" 
+            title={`Project ${activeProject}`}
+          />
+        </div>
+      )}
+
+      {/* Main Agent UI */}
+      <div className={`flex-1 flex flex-col items-center justify-center relative w-full z-20 -mt-8 md:-mt-16 transition-all duration-700 ease-in-out ${activeProject ? 'scale-75 opacity-30 blur-sm pointer-events-none translate-y-[-10%]' : ''}`}>
+        <VoiceAgent onShowProject={setActiveProject} />
       </div>
 
       {/* Accessibility Fallback */}

@@ -24,9 +24,11 @@ registerProcessor('pcm-processor', PCMProcessor);
 export type AgentState = 'idle' | 'listening' | 'speaking';
 
 export interface GeminiLiveClientOptions {
+  turnstileToken: string;
   onStateChange: (state: AgentState) => void;
   onToolCall: (toolCall: any) => Promise<any>;
   onAudioLevel: (level: number) => void;
+  onText?: (text: string, isFinal?: boolean) => void;
   systemInstruction?: string;
 }
 
@@ -55,8 +57,8 @@ export class GeminiLiveClient {
       this.ws = new WebSocket('ws://localhost:8080');
 
       this.ws.onopen = () => {
-        console.log('Connected to local Voice Proxy');
-        // We wait for the 'proxy_connected' message before sending setup
+        console.log('Connected to local Voice Proxy, sending auth token...');
+        this.ws?.send(JSON.stringify({ type: 'auth', token: this.options.turnstileToken }));
       };
 
       this.ws.onmessage = async (event) => {
@@ -84,10 +86,16 @@ export class GeminiLiveClient {
                 // Decode base64 PCM and play it
                 this.playAudioChunk(part.inlineData.data);
               }
+              if (part.text && this.options.onText) {
+                this.options.onText(part.text, false);
+              }
             }
           }
           if (msg.serverContent.turnComplete) {
             this.options.onStateChange('listening');
+            if (this.options.onText) {
+              this.options.onText('', true); // signal end of turn
+            }
           }
         } else if (msg.toolCall) {
           // Model requested a tool
@@ -121,7 +129,7 @@ export class GeminiLiveClient {
                 parameters: {
                   type: 'OBJECT',
                   properties: {
-                    slug: { type: 'STRING', enum: ['neucler', 'faeth', 'ciselle'] }
+                    slug: { type: 'STRING', enum: ['arrive', 'faeth-studio', 'jim-coach', 'mytrials', 'neta-bridge', 'neucler'] }
                   },
                   required: ['slug']
                 }

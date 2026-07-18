@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Grainient from '@/components/Grainient';
 import BlurText from '@/components/BlurText';
+import TurnstileWidget from '@/components/TurnstileWidget';
 import Link from 'next/link';
 import { Download } from 'lucide-react';
 
@@ -11,6 +12,7 @@ export default function LandingPage4() {
   const [audioData, setAudioData] = useState(0);
   const [showTextInput, setShowTextInput] = useState(false);
   const [textMessage, setTextMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   // Deepgram Transcription State
   const [finalTranscription, setFinalTranscription] = useState("");
@@ -52,9 +54,30 @@ export default function LandingPage4() {
       setSentenceId(0);
       audioChunksRef.current = [];
 
-      // Open Deepgram WebSocket Connection
-      const apiKey = process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY;
-      console.log("Deepgram API Key loaded:", !!apiKey);
+      if (!turnstileToken) {
+        alert("Security check pending. Please wait a moment and try again.");
+        setIsRecording(false);
+        return;
+      }
+
+      // Fetch secure Deepgram API Key from the backend
+      const authRes = await fetch('/api/deepgram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: turnstileToken })
+      });
+      
+      const authData = await authRes.json();
+      
+      if (!authRes.ok || !authData.key) {
+        console.error("Bot protection blocked request:", authData.error);
+        alert("Security verification failed. Are you a bot?");
+        setIsRecording(false);
+        return;
+      }
+      
+      const apiKey = authData.key;
+      console.log("Secure Deepgram connection authorized");
       
       if (apiKey) {
         const socket = new WebSocket('wss://api.deepgram.com/v1/listen?model=nova-2&punctuate=true&interim_results=true', [
@@ -233,6 +256,35 @@ export default function LandingPage4() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100 overflow-hidden relative py-12">
+      <TurnstileWidget onVerify={setTurnstileToken} action="deepgram_connect" />
+      
+      <style>{`
+        @keyframes moveGrid {
+          0% { background-position: 0 0; }
+          100% { background-position: 0 40px; }
+        }
+      `}</style>
+
+      {/* 3D Animated Grid Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" style={{ perspective: '1000px' }}>
+        {/* Grid Floor */}
+        <div 
+          className="absolute inset-0 origin-bottom"
+          style={{
+            transform: 'rotateX(65deg) scale(3) translateY(15%)',
+            backgroundImage: `
+              linear-gradient(to right, rgba(168, 85, 247, 0.2) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(168, 85, 247, 0.2) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+            animation: 'moveGrid 1.5s linear infinite',
+          }}
+        />
+        {/* Horizon fade to blend into the background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-gray-100/95 to-transparent h-[70%]" />
+        {/* Bottom edge fade */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-100 to-transparent" />
+      </div>
 
       {/* SVG Definitions for Fading Mask */}
       <svg width="0" height="0" className="absolute pointer-events-none">
