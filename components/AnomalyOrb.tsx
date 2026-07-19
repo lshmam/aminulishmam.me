@@ -66,7 +66,9 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
     const outerMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        color: { value: new THREE.Color(0xff4e42) },
+        color1: { value: new THREE.Color(0xFF9FFC) },
+        color2: { value: new THREE.Color(0x5227FF) },
+        color3: { value: new THREE.Color(0xB497CF) },
         audioLevel: { value: 0 },
         distortion: { value: distortionAmount }
       },
@@ -76,6 +78,7 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
       uniform float distortion;
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying float vNoise;
       
       vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
       vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -149,6 +152,7 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
         vec3 pos = position;
         
         float noise = snoise(vec3(position.x * 0.5, position.y * 0.5, position.z * 0.5 + slowTime));
+        vNoise = noise;
         pos += normal * noise * 0.2 * distortion * (1.0 + audioLevel);
         
         vPosition = pos;
@@ -157,21 +161,30 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
       `,
       fragmentShader: `
       uniform float time;
-      uniform vec3 color;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      uniform vec3 color3;
       uniform float audioLevel;
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying float vNoise;
       
       void main() {
+        // Create the gradient effect using the noise from the vertex shader
+        vec3 mix1 = mix(color1, color2, smoothstep(-0.5, 0.5, vNoise));
+        float mixPattern = sin(vPosition.y * 1.5 + time) * 0.5 + 0.5;
+        vec3 baseColor = mix(mix1, color3, mixPattern);
+
         vec3 viewDirection = normalize(cameraPosition - vPosition);
         float fresnel = 1.0 - max(0.0, dot(viewDirection, vNormal));
         fresnel = pow(fresnel, 2.0 + audioLevel * 2.0);
         
         float pulse = 0.8 + 0.2 * sin(time * 2.0);
         
-        vec3 finalColor = color * fresnel * pulse * (1.0 + audioLevel * 0.8);
+        vec3 finalColor = baseColor * fresnel * pulse * (1.0 + audioLevel * 0.8);
         
-        float alpha = fresnel * (0.7 - audioLevel * 0.3);
+        // Make the wireframe slightly more solid so the colors pop
+        float alpha = fresnel * (0.85 - audioLevel * 0.15);
         
         gl_FragColor = vec4(finalColor, alpha);
       }
@@ -191,7 +204,9 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
     const glowMaterial = new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        color: { value: new THREE.Color(0xff4e42) },
+        color1: { value: new THREE.Color(0xFF9FFC) },
+        color2: { value: new THREE.Color(0x5227FF) },
+        color3: { value: new THREE.Color(0xB497CF) },
         audioLevel: { value: 0 }
       },
       vertexShader: `
@@ -208,11 +223,18 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
       fragmentShader: `
       varying vec3 vNormal;
       varying vec3 vPosition;
-      uniform vec3 color;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      uniform vec3 color3;
       uniform float time;
       uniform float audioLevel;
       
       void main() {
+        float mixPattern1 = sin(vPosition.x * 0.8 + time) * 0.5 + 0.5;
+        float mixPattern2 = cos(vPosition.y * 0.8 - time) * 0.5 + 0.5;
+        vec3 mix1 = mix(color1, color2, mixPattern1);
+        vec3 baseColor = mix(mix1, color3, mixPattern2);
+
         vec3 viewDirection = normalize(cameraPosition - vPosition);
         float fresnel = 1.0 - max(0.0, dot(viewDirection, vNormal));
         fresnel = pow(fresnel, 3.0 + audioLevel * 3.0);
@@ -220,9 +242,10 @@ export default function AnomalyOrb({ audioLevel }: AnomalyOrbProps) {
         float pulse = 0.5 + 0.5 * sin(time * 2.0);
         float audioFactor = 1.0 + audioLevel * 3.0;
         
-        vec3 finalColor = color * fresnel * (0.8 + 0.2 * pulse) * audioFactor;
+        vec3 finalColor = baseColor * fresnel * (0.8 + 0.2 * pulse) * audioFactor;
         
-        float alpha = fresnel * (0.3 * audioFactor) * (1.0 - audioLevel * 0.2);
+        // Boost glow alpha to show off the gradient
+        float alpha = fresnel * (0.6 * audioFactor) * (1.0 - audioLevel * 0.2);
         
         gl_FragColor = vec4(finalColor, alpha);
       }

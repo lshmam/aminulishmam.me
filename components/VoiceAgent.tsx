@@ -6,8 +6,19 @@ import TurnstileWidget from './TurnstileWidget';
 import BubbleMenu, { MenuItem } from './BubbleMenu';
 import { GeminiLiveClient, AgentState } from '@/lib/gemini-live-client';
 import projectNarration from '@/data/project-narration.json';
+import projectImages from '@/data/project-images.json';
 
-export default function VoiceAgent({ onShowProject }: { onShowProject?: (slug: string) => void }) {
+interface VoiceAgentProps {
+  onShowProject?: (slug: string | null) => void;
+  onShowImage?: (image: {path: string, description: string} | null) => void;
+  onShowDiagram?: (diagram: { mermaidCode: string, title: string } | null) => void;
+}
+
+export default function VoiceAgent({ 
+  onShowProject,
+  onShowImage,
+  onShowDiagram
+}: VoiceAgentProps) {
   const [isActive, setIsActive] = useState(false);
   const [agentState, setAgentState] = useState<AgentState>('idle');
   const [audioLevel, setAudioLevel] = useState(0);
@@ -16,9 +27,51 @@ export default function VoiceAgent({ onShowProject }: { onShowProject?: (slug: s
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
-  const isLongPress = useRef(false);
-
+  const isLongPress = useRef<boolean>(false);
   const clientRef = useRef<GeminiLiveClient | null>(null);
+
+  const fetchProjectContext = async (slug: string) => {
+    try {
+      const response = await fetch(`/work/${slug}`);
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      doc.querySelectorAll('script, style, noscript').forEach(s => s.remove());
+      const mainContent = doc.querySelector('article, main')?.textContent || doc.body.textContent || '';
+      const cleanText = mainContent.replace(/\s+/g, ' ').trim().substring(0, 3000);
+      const imagesList = (projectImages as any)[slug] || (projectImages as any)['default'];
+      const imagesContext = imagesList ? `\n\nAvailable Images for this project:\n` + imagesList.map((img: any, idx: number) => `Index ${idx}: ${img.description}`).join('\n') : '';
+
+      const presentationPrompt = `
+You are now in FULL PRESENTATION MODE. Give an actual, engaging pitch of this project as if you are presenting to a hiring manager. 
+CRITICAL: You MUST sequence your speech with visual tool calls to create a "wow factor" continuous walkthrough. 
+1. Intro: Hook the listener and immediately call show_image for the hero shot (usually Index 0).
+2. Body: Narrate the core problem/architecture while calling show_image for a relevant diagram/screenshot, or scroll_to_section if applicable.
+3. Outcome: Pitch the results and metrics, calling show_image for the final graphic.
+
+IMPORTANT: When you call show_image, the image will be displayed on screen AND a video frame of it will be instantly streamed to your vision. You MUST genuinely look at the image and react to what you actually see (colors, UI elements, structure) rather than just reading canned facts!
+Additionally, if the user asks how a complex pipeline or architecture works (e.g., "how does the call scoring pipeline work"), use the 'render_diagram' tool to dynamically draw it out for them on-screen using Mermaid syntax while you explain it!
+
+Project Page Content:
+${cleanText}${imagesContext}`;
+
+      return presentationPrompt;
+    } catch (err) {
+      console.error("Failed to fetch project context", err);
+      const fallback = (projectNarration as any)[slug] || { intro: "I don't have much info on this project." };
+      const imagesList = (projectImages as any)[slug] || (projectImages as any)['default'];
+      const imagesContext = imagesList ? `\n\nAvailable Images for this project (you can use the show_image tool to display them):\n` + imagesList.map((img: any, idx: number) => `Index ${idx}: ${img.description}`).join('\n') : '';
+      return (typeof fallback === 'string' ? fallback : JSON.stringify(fallback)) + imagesContext;
+    }
+  };
+
+  const handleUIProjectOpen = async (slug: string) => {
+    if (onShowProject) onShowProject(slug);
+    if (clientRef.current?.isConnected) {
+      const context = await fetchProjectContext(slug);
+      clientRef.current.sendText(`I just navigated to the project "${slug}". ${context}`);
+    }
+  };
 
   const startPress = () => {
     if (isMenuOpen) {
@@ -60,8 +113,8 @@ export default function VoiceAgent({ onShowProject }: { onShowProject?: (slug: s
         
         if (link) {
           const slug = link.getAttribute('data-slug');
-          if (slug && onShowProject) {
-            onShowProject(slug);
+          if (slug) {
+            handleUIProjectOpen(slug);
           }
         }
       }
@@ -86,8 +139,7 @@ export default function VoiceAgent({ onShowProject }: { onShowProject?: (slug: s
     hoverStyles: { bgColor: p.color, textColor: '#ffffff' },
     onClick: (e: React.MouseEvent) => {
       e.preventDefault();
-      setIsMenuOpen(false);
-      if (onShowProject) onShowProject(p.slug);
+      handleUIProjectOpen(p.slug);
     }
   }));
 
@@ -148,12 +200,64 @@ export default function VoiceAgent({ onShowProject }: { onShowProject?: (slug: s
             if (onShowProject) onShowProject(slug);
             
             // Return context for the model to narrate
-            const context = (projectNarration as any)[slug] || { intro: "I don't have much info on this project." };
+            const context = await fetchProjectContext(slug);
             return { 
               success: true, 
               page: slug,
               contextToNarrate: context 
             };
+          }
+          
+          if (toolCall.name === 'close_project') {
+            if (onShowProject) onShowProject(null);
+            if (onShowImage) onShowImage(null);
+            if (onShowDiagram) onShowDiagram(null);
+            return { success: true, page: 'home' };
+          }
+
+          if (toolCall.name === 'show_image') {
+            const { project, index } = toolCall.args as any;
+            console.log(`Showing image for ${project} at index ${index}`);
+            const images = (projectImages as any)[project] || (projectImages as any)['default'];
+            if (images && images[index]) {
+              const imgData = images[index];
+              if (onShowImage) onShowImage(imgData);
+              
+              // Stream the image to Gemini Live Vision
+              fetch(imgData.path)
+                .then(res => res.blob())
+                .then(blob => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    const base64 = (reader.result as string).split(',')[1];
+                    clientRef.current?.sendImage(base64, blob.type);
+                    console.log("Streamed image frame to Gemini Live Vision");
+                  };
+                  reader.readAsDataURL(blob);
+                }).catch(err => console.error("Failed to stream image to model", err));
+              
+              // Auto-dismiss the image after 10 seconds
+              setTimeout(() => {
+                if (onShowImage) onShowImage(null);
+              }, 10000);
+              
+              return { success: true, message: `Displayed image: ${imgData.description}` };
+            }
+            return { success: false, error: 'Image not found' };
+          }
+          
+          if (toolCall.name === 'render_diagram') {
+            const { mermaidCode, title } = toolCall.args as any;
+            console.log(`Rendering diagram: ${title}`);
+            if (onShowDiagram) {
+              onShowDiagram({ mermaidCode, title });
+              
+              // Auto dismiss after 15 seconds
+              setTimeout(() => {
+                if (onShowDiagram) onShowDiagram(null);
+              }, 15000);
+            }
+            return { success: true, message: `Displayed diagram: ${title}` };
           }
           
           if (toolCall.name === 'show_about') {

@@ -52,6 +52,10 @@ export class GeminiLiveClient {
     this.options = options;
   }
 
+  get isConnected(): boolean {
+    return this.ws !== null && this.ws.readyState === WebSocket.OPEN;
+  }
+
   async connect() {
     return new Promise<void>((resolve, reject) => {
       this.ws = new WebSocket('ws://localhost:8080');
@@ -140,6 +144,35 @@ export class GeminiLiveClient {
                 parameters: { type: 'OBJECT', properties: {} }
               },
               {
+                name: 'close_project',
+                description: 'Closes the current project and returns the user to the home page.',
+                parameters: { type: 'OBJECT', properties: {} }
+              },
+              {
+                name: 'show_image',
+                description: 'Displays a specific project image in a lightbox. Call this exactly when you want the user to look at the image.',
+                parameters: {
+                  type: 'OBJECT',
+                  properties: {
+                    project: { type: 'STRING' },
+                    index: { type: 'INTEGER' }
+                  },
+                  required: ['project', 'index']
+                }
+              },
+              {
+                name: 'render_diagram',
+                description: 'Generates and displays an architectural diagram on the user\'s screen. Use this when explaining complex pipelines, flows, or architectures.',
+                parameters: {
+                  type: 'OBJECT',
+                  properties: {
+                    mermaidCode: { type: 'STRING', description: 'Valid Mermaid.js flowchart syntax (e.g., "graph TD; A-->B;")' },
+                    title: { type: 'STRING' }
+                  },
+                  required: ['mermaidCode', 'title']
+                }
+              },
+              {
                 name: 'scroll_to_section',
                 description: 'Scrolls the current page to a specific section by CSS selector.',
                 parameters: {
@@ -168,6 +201,35 @@ export class GeminiLiveClient {
         turnComplete: true
       }
     }));
+  }
+
+  sendText(text: string) {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        clientContent: {
+          turns: [{
+            role: 'user',
+            parts: [{ text }]
+          }],
+          turnComplete: true
+        }
+      }));
+    }
+  }
+
+  sendImage(base64Data: string, mimeType: string = 'image/jpeg') {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        realtimeInput: {
+          mediaChunks: [
+            {
+              mimeType,
+              data: base64Data
+            }
+          ]
+        }
+      }));
+    }
   }
 
   private async handleToolCall(toolCallMsg: any) {

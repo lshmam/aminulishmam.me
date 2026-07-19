@@ -1,0 +1,16 @@
+{
+  "neucler": [
+    { "path": "/neucler-home-1.png", "description": "Neucler Home Dashboard" },
+    { "path": "/neucler-ai.png", "description": "AI Assistant Interface" },
+    { "path": "/neucler-dms.png", "description": "Document Management System" },
+    { "path": "/neucler-review-sc1.png", "description": "Review Screen 1" },
+    { "path": "/neucler-review-sc2.png", "description": "Review Screen 2" }
+  ],
+  "default": [
+    { "path": "/project-saas.png", "description": "SaaS Platform" },
+    { "path": "/project-mobile.png", "description": "Mobile Application" },
+    { "path": "/project-analytics.png", "description": "Analytics Dashboard" },
+    { "path": "/project-brand.png", "description": "Brand Identity" },
+    { "path": "/project-marketplace.png", "description": "Marketplace UI" }
+  ]
+}
