@@ -1,9 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import AnomalyOrb from './AnomalyOrb';
+import FluidGlassLens from './FluidGlassLens';
 import TurnstileWidget from './TurnstileWidget';
 import BubbleMenu, { MenuItem } from './BubbleMenu';
+import BlurText from './BlurText';
 import { GeminiLiveClient, AgentState } from '@/lib/gemini-live-client';
 import projectNarration from '@/data/project-narration.json';
 import projectImages from '@/data/project-images.json';
@@ -12,18 +15,26 @@ interface VoiceAgentProps {
   onShowProject?: (slug: string | null) => void;
   onShowImage?: (image: {path: string, description: string} | null) => void;
   onShowDiagram?: (diagram: { mermaidCode: string, title: string } | null) => void;
+  onAgentReady?: (agent: { sendText: (text: string) => void }) => void;
 }
 
 export default function VoiceAgent({ 
   onShowProject,
   onShowImage,
-  onShowDiagram
+  onShowDiagram,
+  onAgentReady
 }: VoiceAgentProps) {
   const [isActive, setIsActive] = useState(false);
   const [agentState, setAgentState] = useState<AgentState>('idle');
   const [audioLevel, setAudioLevel] = useState(0);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [transcript, setTranscript] = useState<string>('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>('localhost-dev-token'); // Turnstile bypassed
+  const [finalTranscript, setFinalTranscript] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
+  const [sentenceId, setSentenceId] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const clearTranscriptRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => { setMounted(true); }, []);
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -161,32 +172,63 @@ ${cleanText}${imagesContext}`;
       setIsActive(false);
       setAgentState('idle');
       setAudioLevel(0);
-      setTranscript('');
+      setFinalTranscript('');
+      setInterimTranscript('');
     } else {
       // Turn on
-      if (!turnstileToken) {
-        alert("Security check pending. Please wait a moment and try again.");
-        return;
-      }
-
       setIsActive(true);
       setAgentState('idle'); // Will change to listening when ready
-      setTranscript('');
+      setFinalTranscript('');
+      setInterimTranscript('');
+      setSentenceId(0);
+
+      // Fetch secure Deepgram API Key from the backend
+      let dgKey = null;
+      try {
+        const authRes = await fetch('/api/deepgram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: turnstileToken || 'localhost-dev-token' })
+        });
+        const authData = await authRes.json();
+        if (authRes.ok && authData.key) {
+          dgKey = authData.key;
+        } else {
+          console.warn("Deepgram key fetch failed:", authData);
+        }
+      } catch (err) {
+        console.error("Deepgram fetch error:", err);
+      }
       
       const client = new GeminiLiveClient({
         turnstileToken: turnstileToken,
+        deepgramKey: dgKey,
         systemInstruction: "You are the voice guide for Aminul's portfolio. Greet visitors, offer to show projects / talk about him / just chat. Use tools to navigate and narrate. Keep responses conversational and brief.",
         onStateChange: (state) => {
-          setAgentState((prev) => {
-            if (prev !== 'speaking' && state === 'speaking') {
-              setTranscript(''); // Clear old transcript when starting to speak
-            }
-            return state;
-          });
+          console.log('[VoiceAgent] State change:', state);
+          setAgentState(state);
         },
         onText: (text, isFinal) => {
-          if (!isFinal) {
-            setTranscript(prev => prev + text);
+          console.log('[VoiceAgent] onText:', JSON.stringify(text), 'isFinal:', isFinal);
+          if (text) {
+            if (isFinal) {
+              setFinalTranscript(text);
+              setInterimTranscript('');
+            } else {
+              setFinalTranscript(prev => {
+                if (prev !== '') setSentenceId(id => id + 1);
+                return '';
+              });
+              setInterimTranscript(text);
+            }
+          }
+          if (isFinal) {
+            // Auto-clear 4s after turn ends
+            if (clearTranscriptRef.current) clearTimeout(clearTranscriptRef.current);
+            clearTranscriptRef.current = setTimeout(() => {
+              setFinalTranscript('');
+              setInterimTranscript('');
+            }, 4000);
           }
         },
         onAudioLevel: (level) => {
@@ -285,6 +327,11 @@ ${cleanText}${imagesContext}`;
       try {
         await client.connect();
         await client.startRecording();
+        if (onAgentReady) {
+          onAgentReady({
+            sendText: (text) => client.sendText(text)
+          });
+        }
       } catch (err) {
         console.error('Failed to start Voice Agent:', err);
         setIsActive(false);
@@ -295,11 +342,33 @@ ${cleanText}${imagesContext}`;
 
   return (
     <div className="relative flex flex-col items-center justify-center -mb-24 md:-mb-40">
-      <TurnstileWidget onVerify={setTurnstileToken} action="voice_agent_connect" />
+      {/* TurnstileWidget disabled for dev <TurnstileWidget onVerify={setTurnstileToken} action="voice_agent_connect" /> */}
       
+      {/* Transcript Display - Portaled to body to escape transform context */}
+      {mounted && (finalTranscript || interimTranscript) && isActive && createPortal(
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 w-[90vw] max-w-2xl text-center z-[200] pointer-events-none flex justify-center items-center">
+          <div className="bg-white/70 px-8 py-4 rounded-[2rem] backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)] inline-flex items-center min-h-[4rem]">
+            <div className={`text-xl md:text-2xl font-medium tracking-tight flex flex-wrap justify-center gap-x-2 transition-all duration-300 ${finalTranscript ? 'text-gray-900' : 'text-gray-500 opacity-80'}`}>
+              <BlurText
+                key={sentenceId}
+                text={finalTranscript || interimTranscript}
+                delay={50}
+                animateBy="words"
+                direction="bottom"
+                className="inline-flex flex-wrap justify-center text-center"
+              />
+              {!interimTranscript && agentState === 'speaking' && (
+                <span className="animate-pulse inline-block text-gray-400">...</span>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+
       {/* Levitation Ground Shadow */}
       <div 
-        className="absolute w-[500px] h-[500px] md:w-[700px] md:h-[700px] top-0 left-0 bg-black/40 rounded-full blur-2xl pointer-events-none"
+        className="absolute w-[340px] h-[340px] md:w-[460px] md:h-[460px] top-0 left-0 bg-black/40 rounded-full blur-2xl pointer-events-none"
         style={{
           transform: `translateY(160px) scaleY(0.25) scaleX(${isActive ? 1.0 + audioLevel * 0.5 : 0.8})`,
           transition: isActive ? 'none' : 'transform 0.5s ease-out'
@@ -308,7 +377,7 @@ ${cleanText}${imagesContext}`;
 
       {/* Drop shadow wrapper for the masked orb */}
       <div 
-        className="relative w-[500px] h-[500px] md:w-[700px] md:h-[700px] transition-all duration-300 z-10"
+        className="relative w-[340px] h-[340px] md:w-[460px] md:h-[460px] transition-all duration-300 z-10"
         style={{
           filter: isActive 
             ? `drop-shadow(0 0 60px rgba(255, 78, 66, ${0.4 + audioLevel}))` 
@@ -330,14 +399,8 @@ ${cleanText}${imagesContext}`;
           }}
         >
           <AnomalyOrb audioLevel={audioLevel} />
-          
-          {/* Hover instruction overlay */}
-          <div className={`absolute inset-0 flex items-center justify-center bg-black/20 rounded-full backdrop-blur-[2px] transition-opacity duration-300 ${isActive ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'} pointer-events-none`}>
-            <span className="text-white font-bold tracking-widest uppercase text-sm drop-shadow-md text-center">
-              Click to {isActive ? 'Stop' : 'Start Voice Agent'}<br/>
-              <span className="text-xs text-white/70">(Hold for menu)</span>
-            </span>
-          </div>
+          {/* Glass overlay — same container, same size, moves together */}
+          <FluidGlassLens audioLevel={audioLevel} />
           
           {/* Agent State Indicator */}
           {isActive && (
@@ -348,16 +411,34 @@ ${cleanText}${imagesContext}`;
               </span>
             </div>
           )}
-
-          {/* Transcript Display */}
-          {transcript && isActive && (
-            <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 w-11/12 max-w-md text-center z-50 pointer-events-none">
-              <p className="text-white text-base md:text-lg font-medium shadow-xl drop-shadow-md bg-black/60 px-4 py-2 rounded-2xl backdrop-blur-md inline-block">
-                {transcript}
-              </p>
-            </div>
-          )}
         </button>
+
+        {/* Permanent Menu to the right of the orb */}
+        {isActive && (
+          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-16 flex flex-col gap-3 min-w-[160px] z-[150] animate-in fade-in slide-in-from-left-4 duration-500">
+            <h3 className="text-gray-500 text-xs font-bold tracking-widest uppercase mb-2 pl-2">Projects</h3>
+            {menuItems.map((item, i) => (
+              <button
+                key={i}
+                onClick={item.onClick}
+                className="group relative flex items-center px-5 py-2.5 bg-white/40 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/80 transition-all text-gray-700 font-medium tracking-wide shadow-sm hover:shadow-md text-sm text-left w-full"
+                style={{
+                  transitionDelay: `${i * 50}ms`
+                }}
+              >
+                <div 
+                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-10 transition-opacity" 
+                  style={{ backgroundColor: item.hoverStyles?.bgColor }} 
+                />
+                <div 
+                  className="w-2 h-2 rounded-full mr-3" 
+                  style={{ backgroundColor: item.hoverStyles?.bgColor }} 
+                />
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

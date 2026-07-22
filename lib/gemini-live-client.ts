@@ -25,6 +25,7 @@ export type AgentState = 'idle' | 'listening' | 'speaking';
 
 export interface GeminiLiveClientOptions {
   turnstileToken: string;
+  deepgramKey?: string | null;
   onStateChange: (state: AgentState) => void;
   onToolCall: (toolCall: any) => Promise<any>;
   onAudioLevel: (level: number) => void;
@@ -34,6 +35,7 @@ export interface GeminiLiveClientOptions {
 
 export class GeminiLiveClient {
   private ws: WebSocket | null = null;
+  private deepgramWs: WebSocket | null = null;
   private captureContext: AudioContext | null = null;
   private playbackContext: AudioContext | null = null;
   private mediaStream: MediaStream | null = null;
@@ -63,6 +65,22 @@ export class GeminiLiveClient {
       this.ws.onopen = () => {
         console.log('Connected to local Voice Proxy, sending auth token...');
         this.ws?.send(JSON.stringify({ type: 'auth', token: this.options.turnstileToken }));
+
+        // Connect Deepgram if key is provided
+        if (this.options.deepgramKey) {
+          const dgUrl = 'wss://api.deepgram.com/v1/listen?model=nova-2&punctuate=true&interim_results=true&encoding=linear16&sample_rate=24000&channels=1';
+          this.deepgramWs = new WebSocket(dgUrl, ['token', this.options.deepgramKey]);
+          this.deepgramWs.onopen = () => console.log("Deepgram WS connected for agent transcription");
+          this.deepgramWs.onmessage = (message) => {
+            const received = JSON.parse(message.data);
+            const transcript = received.channel?.alternatives[0]?.transcript;
+            if (transcript && this.options.onText) {
+              console.log('[Deepgram] transcription chunk:', JSON.stringify(transcript));
+              this.options.onText(transcript + ' ', received.is_final);
+            }
+          };
+          this.deepgramWs.onerror = (e) => console.error("Deepgram WS error:", e);
+        }
       };
 
       this.ws.onmessage = async (event) => {
@@ -87,12 +105,19 @@ export class GeminiLiveClient {
             const parts = msg.serverContent.modelTurn.parts;
             for (const part of parts) {
               if (part.inlineData && part.inlineData.data) {
-                // Decode base64 PCM and play it
                 this.playAudioChunk(part.inlineData.data);
               }
               if (part.text && this.options.onText) {
                 this.options.onText(part.text, false);
               }
+            }
+          }
+          // Handle output audio transcription (returned when outputAudioTranscription is set)
+          if (msg.serverContent.outputTranscription) {
+            const t = msg.serverContent.outputTranscription;
+            if (t.text && this.options.onText) {
+              console.log('[GeminiLive] transcription chunk:', JSON.stringify(t.text));
+              this.options.onText(t.text, t.finished ?? false);
             }
           }
           if (msg.serverContent.turnComplete) {
@@ -278,10 +303,8 @@ export class GeminiLiveClient {
       const source = this.captureContext.createMediaStreamSource(this.mediaStream);
       source.connect(this.captureAnalyser);
 
-      // Setup Worklet
-      const blob = new Blob([workletCode], { type: 'application/javascript' });
-      const workletUrl = URL.createObjectURL(blob);
-      await this.captureContext.audioWorklet.addModule(workletUrl);
+      // Setup Worklet — load from static public file (blob URLs blocked by Turbopack)
+      await this.captureContext.audioWorklet.addModule('/pcm-processor.js');
       
       this.workletNode = new AudioWorkletNode(this.captureContext, 'pcm-processor');
       
@@ -345,6 +368,11 @@ export class GeminiLiveClient {
       float32Array[i] = int16Array[i] / 32768.0;
     }
 
+    // Forward raw PCM bytes to Deepgram for transcription!
+    if (this.deepgramWs && this.deepgramWs.readyState === WebSocket.OPEN) {
+      this.deepgramWs.send(bytes.buffer);
+    }
+
     const audioBuffer = this.playbackContext.createBuffer(1, float32Array.length, 24000);
     audioBuffer.getChannelData(0).set(float32Array);
 
@@ -405,6 +433,13 @@ export class GeminiLiveClient {
     if (this.ws) {
       this.ws.close();
       this.ws = null;
+    }
+    if (this.deepgramWs) {
+      if (this.deepgramWs.readyState === WebSocket.OPEN) {
+        this.deepgramWs.send(JSON.stringify({ type: 'CloseStream' }));
+      }
+      this.deepgramWs.close();
+      this.deepgramWs = null;
     }
     if (this.mediaStream) {
       this.mediaStream.getTracks().forEach(t => t.stop());
