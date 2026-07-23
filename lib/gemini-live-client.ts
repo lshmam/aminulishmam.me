@@ -68,7 +68,7 @@ export class GeminiLiveClient {
 
         // Connect Deepgram if key is provided
         if (this.options.deepgramKey) {
-          const dgUrl = 'wss://api.deepgram.com/v1/listen?model=nova-2&punctuate=true&interim_results=true&encoding=linear16&sample_rate=24000&channels=1';
+          const dgUrl = 'wss://api.deepgram.com/v1/listen?model=nova-2&punctuate=true&interim_results=true&encoding=linear16&sample_rate=24000&channels=1&keywords=Aminul:2&keywords=Neucler:2&keywords=Faeth:2&keywords=NetaBridge:2';
           this.deepgramWs = new WebSocket(dgUrl, ['token', this.options.deepgramKey]);
           this.deepgramWs.onopen = () => console.log("Deepgram WS connected for agent transcription");
           this.deepgramWs.onmessage = (message) => {
@@ -121,10 +121,15 @@ export class GeminiLiveClient {
             }
           }
           if (msg.serverContent.turnComplete) {
-            this.options.onStateChange('listening');
-            if (this.options.onText) {
-              this.options.onText('', true); // signal end of turn
-            }
+            const currentTime = this.playbackContext ? this.playbackContext.currentTime : 0;
+            const delayMs = Math.max(0, (this.nextPlaybackTime - currentTime) * 1000);
+            
+            setTimeout(() => {
+              this.options.onStateChange('listening');
+              if (this.options.onText) {
+                this.options.onText('', true); // signal end of turn
+              }
+            }, delayMs);
           }
         } else if (msg.toolCall) {
           // Model requested a tool
@@ -147,7 +152,7 @@ export class GeminiLiveClient {
           responseModalities: ['AUDIO'],
         },
         systemInstruction: {
-          parts: [{ text: this.options.systemInstruction || "You are a helpful voice assistant." }]
+          parts: [{ text: this.options.systemInstruction || "You are Aminul's helpful voice assistant. Pronunciation guide: Aminul (Ah-mee-nool), Neucler (New-cler), Faeth (Faith) Studio, NetaBridge (Net-ah-bridge). CRITICAL RULE: YOU MUST BE EXTREMELY BRIEF. Keep all responses under 2 sentences. When narrating projects, you MUST stop talking after a brief 1-2 sentence summary, and then ask a short question to engage the user (e.g. 'Would you like to hear more?'). NEVER give a long monologue." }]
         },
         tools: [
           {
@@ -172,6 +177,17 @@ export class GeminiLiveClient {
                 name: 'close_project',
                 description: 'Closes the current project and returns the user to the home page.',
                 parameters: { type: 'OBJECT', properties: {} }
+              },
+              {
+                name: 'change_project_view',
+                description: 'Changes the active section and image index on the project page being viewed. Call this when you narrate a specific section (e.g. Research, Design) so the screen updates to match what you are talking about.',
+                parameters: {
+                  type: 'OBJECT',
+                  properties: {
+                    sectionIndex: { type: 'INTEGER', description: 'The index of the section to show (0-indexed).' },
+                    imageIndex: { type: 'INTEGER', description: 'The index of the image within the section to show (0-indexed).' }
+                  }
+                }
               },
               {
                 name: 'show_image',
@@ -235,6 +251,31 @@ export class GeminiLiveClient {
           turns: [{
             role: 'user',
             parts: [{ text }]
+          }],
+          turnComplete: true
+        }
+      }));
+    }
+  }
+
+  interrupt(message?: string) {
+    if (this.playbackContext) {
+      this.playbackContext.close();
+      this.playbackContext = null;
+      this.nextPlaybackTime = 0;
+    }
+    if (this.options.onText) {
+      this.options.onText('', true);
+    }
+    this.options.onStateChange('listening');
+    
+    // Send an interrupt signal to the model
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        clientContent: {
+          turns: [{
+            role: 'user',
+            parts: [{ text: message || "Interrupting current speech." }]
           }],
           turnComplete: true
         }
@@ -368,11 +409,6 @@ export class GeminiLiveClient {
       float32Array[i] = int16Array[i] / 32768.0;
     }
 
-    // Forward raw PCM bytes to Deepgram for transcription!
-    if (this.deepgramWs && this.deepgramWs.readyState === WebSocket.OPEN) {
-      this.deepgramWs.send(bytes.buffer);
-    }
-
     const audioBuffer = this.playbackContext.createBuffer(1, float32Array.length, 24000);
     audioBuffer.getChannelData(0).set(float32Array);
 
@@ -391,8 +427,18 @@ export class GeminiLiveClient {
     if (this.nextPlaybackTime < currentTime) {
       this.nextPlaybackTime = currentTime;
     }
+    
+    const scheduledStartTime = this.nextPlaybackTime;
+    
+    // Forward raw PCM bytes to Deepgram EXACTLY when this chunk starts playing
+    const delayMs = Math.max(0, (scheduledStartTime - currentTime) * 1000);
+    setTimeout(() => {
+      if (this.deepgramWs && this.deepgramWs.readyState === WebSocket.OPEN) {
+        this.deepgramWs.send(bytes.buffer);
+      }
+    }, delayMs);
 
-    source.start(this.nextPlaybackTime);
+    source.start(scheduledStartTime);
     this.nextPlaybackTime += audioBuffer.duration;
   }
 

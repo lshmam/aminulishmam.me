@@ -10,19 +10,22 @@ import BlurText from './BlurText';
 import { GeminiLiveClient, AgentState } from '@/lib/gemini-live-client';
 import projectNarration from '@/data/project-narration.json';
 import projectImages from '@/data/project-images.json';
+import { agentStore } from '@/lib/agent-store';
 
 interface VoiceAgentProps {
   onShowProject?: (slug: string | null) => void;
   onShowImage?: (image: {path: string, description: string} | null) => void;
   onShowDiagram?: (diagram: { mermaidCode: string, title: string } | null) => void;
-  onAgentReady?: (agent: { sendText: (text: string) => void }) => void;
+  onAgentReady?: (agent: { sendText: (text: string) => void; interrupt?: (text?: string) => void }) => void;
+  isProjectActive?: boolean;
 }
 
 export default function VoiceAgent({ 
   onShowProject,
   onShowImage,
   onShowDiagram,
-  onAgentReady
+  onAgentReady,
+  isProjectActive
 }: VoiceAgentProps) {
   const [isActive, setIsActive] = useState(false);
   const [agentState, setAgentState] = useState<AgentState>('idle');
@@ -33,8 +36,21 @@ export default function VoiceAgent({
   const [sentenceId, setSentenceId] = useState(0);
   const [mounted, setMounted] = useState(false);
   const clearTranscriptRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('agent-transcript', { 
+      detail: { finalTranscript, interimTranscript, agentState } 
+    }));
+  }, [finalTranscript, interimTranscript, agentState]);
 
   useEffect(() => { setMounted(true); }, []);
+  
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, [finalTranscript, interimTranscript]);
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -50,29 +66,22 @@ export default function VoiceAgent({
       doc.querySelectorAll('script, style, noscript').forEach(s => s.remove());
       const mainContent = doc.querySelector('article, main')?.textContent || doc.body.textContent || '';
       const cleanText = mainContent.replace(/\s+/g, ' ').trim().substring(0, 3000);
-      const imagesList = (projectImages as any)[slug] || (projectImages as any)['default'];
-      const imagesContext = imagesList ? `\n\nAvailable Images for this project:\n` + imagesList.map((img: any, idx: number) => `Index ${idx}: ${img.description}`).join('\n') : '';
+      
+      const fallback = (projectNarration as any)[slug];
+      const narrationScript = fallback ? `\nLoose script for reference:\n${typeof fallback === 'string' ? fallback : JSON.stringify(fallback)}` : '';
+      
+      // If we failed to extract meaningful text from the client component and have no script, stop hallucination.
+      if (cleanText.length < 100 && !narrationScript) {
+        return `CRITICAL RULE: The content for ${slug} is currently unavailable. You MUST say exactly: "I'm sorry, but I don't have the script or data for this project yet." Do not make anything up. Do not apologize profusely.`;
+      }
 
-      const presentationPrompt = `
-You are now in FULL PRESENTATION MODE. Give an actual, engaging pitch of this project as if you are presenting to a hiring manager. 
-CRITICAL: You MUST sequence your speech with visual tool calls to create a "wow factor" continuous walkthrough. 
-1. Intro: Hook the listener and immediately call show_image for the hero shot (usually Index 0).
-2. Body: Narrate the core problem/architecture while calling show_image for a relevant diagram/screenshot, or scroll_to_section if applicable.
-3. Outcome: Pitch the results and metrics, calling show_image for the final graphic.
-
-IMPORTANT: When you call show_image, the image will be displayed on screen AND a video frame of it will be instantly streamed to your vision. You MUST genuinely look at the image and react to what you actually see (colors, UI elements, structure) rather than just reading canned facts!
-Additionally, if the user asks how a complex pipeline or architecture works (e.g., "how does the call scoring pipeline work"), use the 'render_diagram' tool to dynamically draw it out for them on-screen using Mermaid syntax while you explain it!
-
-Project Page Content:
-${cleanText}${imagesContext}`;
-
-      return presentationPrompt;
+      return `
+Here is the accurate content for the project ${slug}:
+"${cleanText}"${narrationScript}
+CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or monologue. Read the content above and provide ONLY a 1-2 sentence hook, then ask if the user wants to hear more.`;
     } catch (err) {
       console.error("Failed to fetch project context", err);
-      const fallback = (projectNarration as any)[slug] || { intro: "I don't have much info on this project." };
-      const imagesList = (projectImages as any)[slug] || (projectImages as any)['default'];
-      const imagesContext = imagesList ? `\n\nAvailable Images for this project (you can use the show_image tool to display them):\n` + imagesList.map((img: any, idx: number) => `Index ${idx}: ${img.description}`).join('\n') : '';
-      return (typeof fallback === 'string' ? fallback : JSON.stringify(fallback)) + imagesContext;
+      return `CRITICAL RULE: Just say you don't have much info on ${slug} and ask what they want to do next. Keep it under 2 sentences.`;
     }
   };
 
@@ -80,7 +89,7 @@ ${cleanText}${imagesContext}`;
     if (onShowProject) onShowProject(slug);
     if (clientRef.current?.isConnected) {
       const context = await fetchProjectContext(slug);
-      clientRef.current.sendText(`I just navigated to the project "${slug}". ${context}`);
+      clientRef.current.interrupt(`I just opened the project page for ${slug}. ${context} Please provide a brief overview of it.`);
     }
   };
 
@@ -162,6 +171,22 @@ ${cleanText}${imagesContext}`;
     };
   }, []);
 
+  useEffect(() => {
+    const handleStop = () => {
+      if (isActive) {
+        // Toggle agent off if it's currently active
+        if (clientRef.current) {
+          clientRef.current.stop();
+          clientRef.current = null;
+        }
+        setIsActive(false);
+        setAgentState('idle');
+        setAudioLevel(0);
+      }
+    };
+    return agentStore.onStop(handleStop);
+  }, [isActive]);
+
   const toggleAgent = async () => {
     if (isActive) {
       // Turn off
@@ -172,8 +197,6 @@ ${cleanText}${imagesContext}`;
       setIsActive(false);
       setAgentState('idle');
       setAudioLevel(0);
-      setFinalTranscript('');
-      setInterimTranscript('');
     } else {
       // Turn on
       setIsActive(true);
@@ -201,34 +224,26 @@ ${cleanText}${imagesContext}`;
       }
       
       const client = new GeminiLiveClient({
-        turnstileToken: turnstileToken,
+        turnstileToken: turnstileToken || "",
         deepgramKey: dgKey,
         systemInstruction: "You are the voice guide for Aminul's portfolio. Greet visitors, offer to show projects / talk about him / just chat. Use tools to navigate and narrate. Keep responses conversational and brief.",
         onStateChange: (state) => {
           console.log('[VoiceAgent] State change:', state);
           setAgentState(state);
+          agentStore.setSpeaking(state === 'speaking');
         },
         onText: (text, isFinal) => {
           console.log('[VoiceAgent] onText:', JSON.stringify(text), 'isFinal:', isFinal);
           if (text) {
             if (isFinal) {
-              setFinalTranscript(text);
+              setFinalTranscript(prev => prev + (prev ? " " : "") + text);
               setInterimTranscript('');
             } else {
-              setFinalTranscript(prev => {
-                if (prev !== '') setSentenceId(id => id + 1);
-                return '';
-              });
               setInterimTranscript(text);
             }
           }
           if (isFinal) {
-            // Auto-clear 4s after turn ends
-            if (clearTranscriptRef.current) clearTimeout(clearTranscriptRef.current);
-            clearTranscriptRef.current = setTimeout(() => {
-              setFinalTranscript('');
-              setInterimTranscript('');
-            }, 4000);
+            // No auto-clear so the user can scroll through history
           }
         },
         onAudioLevel: (level) => {
@@ -251,13 +266,17 @@ ${cleanText}${imagesContext}`;
           }
           
           if (toolCall.name === 'close_project') {
+            console.log(`Closing project page`);
             if (onShowProject) onShowProject(null);
             if (onShowImage) onShowImage(null);
             if (onShowDiagram) onShowDiagram(null);
             return { success: true, page: 'home' };
-          }
-
-          if (toolCall.name === 'show_image') {
+          } else if (toolCall.name === 'change_project_view') {
+            const { sectionIndex, imageIndex } = toolCall.args as any;
+            console.log(`Changing project view to section ${sectionIndex}, image ${imageIndex}`);
+            window.dispatchEvent(new CustomEvent('project-action', { detail: { sectionIndex, imageIndex } }));
+            return { status: "Project view changed." };
+          } else if (toolCall.name === 'show_image') {
             const { project, index } = toolCall.args as any;
             console.log(`Showing image for ${project} at index ${index}`);
             const images = (projectImages as any)[project] || (projectImages as any)['default'];
@@ -329,7 +348,8 @@ ${cleanText}${imagesContext}`;
         await client.startRecording();
         if (onAgentReady) {
           onAgentReady({
-            sendText: (text) => client.sendText(text)
+            sendText: (text) => client.sendText(text),
+            interrupt: (text) => client.interrupt(text)
           });
         }
       } catch (err) {
@@ -345,21 +365,42 @@ ${cleanText}${imagesContext}`;
       {/* TurnstileWidget disabled for dev <TurnstileWidget onVerify={setTurnstileToken} action="voice_agent_connect" /> */}
       
       {/* Transcript Display - Portaled to body to escape transform context */}
-      {mounted && (finalTranscript || interimTranscript) && isActive && createPortal(
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 w-[90vw] max-w-2xl text-center z-[200] pointer-events-none flex justify-center items-center">
-          <div className="bg-white/70 px-8 py-4 rounded-[2rem] backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)] inline-flex items-center min-h-[4rem]">
-            <div className={`text-xl md:text-2xl font-medium tracking-tight flex flex-wrap justify-center gap-x-2 transition-all duration-300 ${finalTranscript ? 'text-gray-900' : 'text-gray-500 opacity-80'}`}>
-              <BlurText
-                key={sentenceId}
-                text={finalTranscript || interimTranscript}
-                delay={50}
-                animateBy="words"
-                direction="bottom"
-                className="inline-flex flex-wrap justify-center text-center"
-              />
+      {mounted && (finalTranscript || interimTranscript) && createPortal(
+        <div 
+          className={`fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 md:px-8 h-[140px] text-left z-[200] cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
+          onClick={toggleAgent}
+        >
+          <div 
+            className="bg-white/70 w-full h-full px-8 pt-4 pb-2 rounded-[1.5rem] backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+          >
+            <div 
+              className="w-full h-full overflow-y-auto overflow-x-hidden pr-2 pb-2"
+              style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)' }}
+            >
+            <div className={`text-xl md:text-2xl font-medium tracking-tight flex flex-col justify-start gap-y-2 transition-all duration-300 leading-snug text-left ${finalTranscript ? 'text-gray-900' : 'text-gray-500 opacity-80'}`}>
+              
+              {/* History */}
+              {finalTranscript && (
+                <div>{finalTranscript}</div>
+              )}
+
+              {/* Current animating text */}
+              {interimTranscript && (
+                <BlurText
+                  key={sentenceId}
+                  text={interimTranscript}
+                  delay={20}
+                  animateBy="words"
+                  direction="bottom"
+                  className="flex flex-wrap justify-start text-left text-gray-500"
+                />
+              )}
+              
               {!interimTranscript && agentState === 'speaking' && (
                 <span className="animate-pulse inline-block text-gray-400">...</span>
               )}
+              <div ref={scrollRef} />
+            </div>
             </div>
           </div>
         </div>,

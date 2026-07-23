@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2 } from 'lucide-react';
-import projectNarration from '@/data/project-narration.json';
-import projectImages from '@/data/project-images.json';
+"use client";
+import React, { useEffect, useState, useRef } from 'react';
+import { projects } from '@/lib/projects';
+import Image from 'next/image';
 
 interface ProjectCardViewerProps {
   slug: string;
@@ -10,94 +9,111 @@ interface ProjectCardViewerProps {
 }
 
 export default function ProjectCardViewer({ slug, onNarrationRequest }: ProjectCardViewerProps) {
-  const [slideIndex, setSlideIndex] = useState(0);
+  const project = projects.find(p => p.slug === slug);
+  const [sectionIndex, setSectionIndex] = useState(0);
+  const [imageIndex, setImageIndex] = useState(0);
 
-  // Extract content
-  const narrationData = (projectNarration as any)[slug] || { intro: "Overview", points: ["Details here."], outro: "Conclusion" };
-  const imagesData = (projectImages as any)[slug] || (projectImages as any)['default'];
-
-  // Build slides from narration data
-  const slides = [
-    { text: narrationData.intro, image: imagesData[0]?.path },
-    ...(narrationData.points || []).map((pt: string, i: number) => ({ text: pt, image: imagesData[i+1]?.path || imagesData[0]?.path })),
-    { text: narrationData.outro, image: imagesData[imagesData.length - 1]?.path }
-  ].filter(s => s.text); // remove empty slides
+  const narratedProjectRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // Narrate first slide automatically when opened
-    if (slides[0]) {
-      onNarrationRequest(`I am now looking at a slide that says: "${slides[0].text}". Please narrate it to me as if you are presenting it.`);
+    if (project && narratedProjectRef.current !== project.slug) {
+      narratedProjectRef.current = project.slug;
+      onNarrationRequest(`I am now looking at the project ${project.title}. It has ${project.sections.length} sections. Please read the sections data and use change_project_view to navigate through the sections one by one as you narrate the project.`);
     }
-  }, [slug]);
+  }, [slug, project, onNarrationRequest]);
 
-  const handleNext = () => {
-    const nextIndex = Math.min(slideIndex + 1, slides.length - 1);
-    setSlideIndex(nextIndex);
-    if (slides[nextIndex]) {
-      onNarrationRequest(`I am now looking at a slide that says: "${slides[nextIndex].text}". Please briefly narrate it.`);
-    }
-  };
+  useEffect(() => {
+    const handleProjectAction = (e: any) => {
+      if (e.detail) {
+        if (typeof e.detail.sectionIndex === 'number') {
+          setSectionIndex(Math.max(0, Math.min(e.detail.sectionIndex, (project?.sections.length || 1) - 1)));
+          setImageIndex(0);
+        }
+        if (typeof e.detail.imageIndex === 'number') {
+          const sec = project?.sections[sectionIndex];
+          if (sec) {
+            setImageIndex(Math.max(0, Math.min(e.detail.imageIndex, (sec.images?.length || 1) - 1)));
+          }
+        }
+      }
+    };
+    window.addEventListener('project-action', handleProjectAction);
+    return () => window.removeEventListener('project-action', handleProjectAction);
+  }, [project, sectionIndex]);
+
+  if (!project) return null;
+
+  const currentSection = project.sections[sectionIndex];
+  // Fallback to project image if section has no images
+  const currentImage = (currentSection?.images && currentSection.images.length > 0) 
+    ? currentSection.images[imageIndex] 
+    : project.image;
 
   return (
-    <div className="relative w-[750px] xl:w-[850px] h-[550px]">
-      <h2 className="text-center font-medium text-3xl tracking-wide uppercase text-gray-900 mb-8 px-8 py-3 rounded-full">
-        {slug.replace('-', ' ')}
-      </h2>
+    <div className="relative w-screen h-screen flex flex-col items-center justify-start pointer-events-none p-4 md:p-8 pt-24 pb-48 font-sans">
+      
+      {/* Wrapper to keep gaps perfectly consistent */}
+      <div className="w-full max-w-7xl flex flex-col gap-8">
+        
+        {/* Top Pill Navigation */}
+        <div className="pointer-events-auto shrink-0 flex w-full bg-white/70 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-[1.5rem] p-2 overflow-x-auto hide-scrollbar">
+        {project.sections.map((sec, idx) => (
+          <button
+            key={idx}
+            onClick={() => { setSectionIndex(idx); setImageIndex(0); }}
+            className={`px-5 py-2 rounded-full font-medium transition-colors text-sm whitespace-nowrap
+              ${idx === sectionIndex ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'}`}
+          >
+            {idx === 0 && <span className="font-bold mr-2 text-black capitalize">{project.slug.replace('-', ' ')}</span>}
+            {sec.label.toLowerCase()}
+          </button>
+        ))}
+        </div>
+  
+        {/* Main Content Area */}
+        <div className="w-full flex-1 max-h-[60vh] flex flex-col lg:flex-row gap-6 items-stretch pointer-events-auto min-h-0">
+        
+        {/* Left Side: Main Image */}
+        <div className="flex-[2] relative rounded-3xl overflow-hidden bg-white shadow-2xl border border-gray-200 min-h-0">
+          {currentImage && (
+            <Image 
+              src={currentImage} 
+              alt={currentSection?.label || project.title}
+              fill
+              className="object-cover md:object-contain bg-gray-50"
+              unoptimized
+            />
+          )}
+          
+          {/* Manual Image Navigation */}
+          {currentSection?.images && currentSection.images.length > 1 && (
+            <div className="absolute bottom-6 right-6 flex gap-2">
+               <button 
+                  onClick={() => setImageIndex(i => Math.max(0, i - 1))} 
+                  className="bg-black/60 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black transition-colors shadow-lg"
+               >
+                  &lt;
+               </button>
+               <button 
+                  onClick={() => setImageIndex(i => Math.min(currentSection.images.length - 1, i + 1))} 
+                  className="bg-black/60 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-black transition-colors shadow-lg"
+               >
+                  &gt;
+               </button>
+            </div>
+          )}
+        </div>
 
-      <div className="relative w-full h-[460px]">
-        {/* Render stacked cards */}
-        <AnimatePresence>
-          {slides.map((slide, i) => {
-            if (i < slideIndex) return null; // past slides
-            
-            const isFront = i === slideIndex;
-            const offset = (i - slideIndex) * 16; // 0, 16, 32...
-
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                animate={{ 
-                  opacity: 1 - (i - slideIndex) * 0.15, 
-                  y: offset, 
-                  scale: 1 - (i - slideIndex) * 0.05,
-                  zIndex: 10 - i
-                }}
-                exit={{ opacity: 0, x: -100, rotate: -5 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                className="absolute top-0 left-0 w-full h-full bg-[#a3a3a3] rounded-[1.5rem] shadow-2xl p-6 flex flex-col"
-              >
-                <div className="flex flex-1 gap-8 h-[300px]">
-                  {/* Left: Image Box */}
-                  <div className="w-1/2 bg-white rounded-xl shadow-inner overflow-hidden flex items-center justify-center">
-                    {slide.image ? (
-                      <img src={slide.image} alt="Project visual" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 animate-pulse" />
-                    )}
-                  </div>
-                  {/* Right: Text Content */}
-                  <div className="w-1/2 text-gray-900 font-medium text-[17px] leading-relaxed pr-2 overflow-y-auto pt-2">
-                    {slide.text}
-                  </div>
-                </div>
-
-                {/* Bottom NEXT Button */}
-                {isFront && i < slides.length - 1 && (
-                  <div className="mt-auto flex justify-end pb-2">
-                    <button 
-                      onClick={handleNext}
-                      className="bg-[#1c1c1c] text-white flex items-center gap-3 px-8 py-3 rounded-full font-semibold hover:bg-black transition-colors shadow-md active:scale-95 tracking-widest text-sm"
-                    >
-                      <Volume2 size={18} />
-                      NEXT
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+        {/* Right Side: Static Description Box */}
+        <div className="flex-1 bg-white p-8 rounded-3xl shadow-2xl border border-gray-200 overflow-y-auto min-h-0">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 tracking-tight">{currentSection?.heading || project.title}</h3>
+          <div className="w-12 h-1 bg-black mb-6"></div>
+          <p className="text-base md:text-lg leading-relaxed text-gray-600">
+            {currentSection?.body || project.description}
+          </p>
+          </div>
+  
+        </div>
       </div>
     </div>
   );
