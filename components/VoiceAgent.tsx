@@ -200,6 +200,12 @@ CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or mo
     } else {
       // Turn on
       setIsActive(true);
+      
+      // Play bell FX
+      const fx = new Audio('/soundreality-bell-fx-410608.mp3');
+      fx.volume = 0.6;
+      fx.play().catch(err => console.log('Bell fx failed', err));
+
       setAgentState('idle'); // Will change to listening when ready
       setFinalTranscript('');
       setInterimTranscript('');
@@ -226,7 +232,7 @@ CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or mo
       const client = new GeminiLiveClient({
         turnstileToken: turnstileToken || "",
         deepgramKey: dgKey,
-        systemInstruction: "You are the voice guide for Aminul's portfolio. Greet visitors, offer to show projects / talk about him / just chat. Use tools to navigate and narrate. Keep responses conversational and brief.",
+        systemInstruction: "You are the voice guide for Aminul's portfolio. You MUST maintain a serious, professional, and formal tone at all times. Greet visitors, offer to show projects / talk about him / just chat. Use tools to navigate and narrate. Keep responses concise, composed, and highly professional.",
         onStateChange: (state) => {
           console.log('[VoiceAgent] State change:', state);
           setAgentState(state);

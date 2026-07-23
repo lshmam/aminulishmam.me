@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import VoiceAgent from '@/components/VoiceAgent';
 import MovingGrid from '@/components/MovingGrid';
 import MermaidDiagram from '@/components/MermaidDiagram';
@@ -12,6 +13,7 @@ import ProjectCardViewer from '@/components/ProjectCardViewer';
 import BorderGlow from '@/components/BorderGlow';
 import { agentStore } from '@/lib/agent-store';
 import { useSyncExternalStore } from 'react';
+import GradualBlur from '@/components/GradualBlur';
 
 export default function LandingPage5() {
   const [showTextInput, setShowTextInput] = useState(false);
@@ -35,10 +37,28 @@ export default function LandingPage5() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white overflow-hidden relative">
 
+      {/* Edge Blurs */}
+      <GradualBlur position="top" height="8rem" zIndex={10} target="parent" curve="ease-in-out" />
+      <GradualBlur position="bottom" height="8rem" zIndex={10} target="parent" curve="ease-in-out" />
+      <GradualBlur position="left" width="8rem" zIndex={10} target="parent" curve="ease-in-out" />
+      <GradualBlur position="right" width="8rem" zIndex={10} target="parent" curve="ease-in-out" />
+
       {/* Background grid */}
       <div className={`absolute inset-0 transition-all duration-[1800ms] ease-out opacity-100 scale-100`}>
         <MovingGrid />
       </div>
+
+      {/* Top Navbar */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-8 bg-white/50 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.04)] rounded-full px-8 py-3"
+      >
+        <Link href="/" className="text-sm font-semibold tracking-wide text-gray-800 hover:text-black transition-colors">Home</Link>
+        <Link href="/work" className="text-sm font-medium tracking-wide text-gray-500 hover:text-black transition-colors">Work</Link>
+        <Link href="/about" className="text-sm font-medium tracking-wide text-gray-500 hover:text-black transition-colors">About Me</Link>
+      </motion.div>
 
       {/* Hero text — visible only before start */}
       <AnimatePresence>
@@ -80,6 +100,7 @@ export default function LandingPage5() {
 
       {/* ─── THE ORB (same one, always rendered) ──────────────────────────── */}
       <motion.div
+          key="main-orb-agent"
           drag={!isStarted ? 'y' : true}
           dragMomentum={false}
           dragSnapToOrigin={true}
@@ -92,10 +113,8 @@ export default function LandingPage5() {
           }}
           initial={{ y: 200, scale: 1.8, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 50, damping: 20, delay: 0.1 }}
-          className={`z-20 flex items-center justify-center ${
-            isStarted
-              ? 'flex-1 relative w-full -mt-16 md:-mt-32 cursor-grab active:cursor-grabbing'
-              : 'fixed bottom-12 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing'
+          className={`z-20 absolute left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing ${
+            isStarted ? 'top-1/2 -translate-y-1/2 mt-[-50px]' : 'bottom-20'
           } ${activeProject ? 'pointer-events-none' : ''}`}
           style={{ touchAction: 'none' }}
           whileDrag={{ scale: isStarted ? 1.02 : 1.04 }}
