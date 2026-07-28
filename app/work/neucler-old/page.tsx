@@ -1,0 +1,1072 @@
+"use client";
+
+import { motion, useInView } from "framer-motion";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import BottomDock from "@/components/BottomDock";
+import Image from "next/image";
+
+function FadeIn({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-60px 0px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 28 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ── Data ──────────────────────────────────────────────────────────────────────
+
+const outcomes = [
+  { value: "15+", label: "Pilot Clients", sub: "Med spa & clinic owners" },
+  { value: "3x", label: "Lead Velocity", sub: "vs. manual tracking" },
+  { value: "40%", label: "Upsell Rate ↑", sub: "after copilot adoption" },
+  { value: "0→1", label: "Built Solo", sub: "Product, design & dev" },
+];
+
+const painPoints = [
+  { label: "Leads not followed up", pct: 88, color: "bg-foreground/40" },
+  { label: "No visibility into call quality", pct: 82, color: "bg-foreground/30" },
+  { label: "Missed upsell opportunities", pct: 76, color: "bg-foreground/20" },
+  { label: "Manual CRM entry burden", pct: 70, color: "bg-foreground/15" },
+];
+
+const pivotTimeline = [
+  { step: "V0", label: "AI Receptionist", status: "pivoted", note: "Built in a weekend. Toured auto shops. People said: 'I want to talk to a person.'" },
+  { step: "V1", label: "Receptionist Copilot", status: "pivoted", note: "Saw a reel about receptionists as salespeople. Pivoted to augmenting humans, not replacing them." },
+  { step: "V2", label: "Med Spa Sales Copilot", status: "active", note: "Talked to med spa owners via LinkedIn & in person. Found the gap. Built the platform. Found product-market fit." },
+];
+
+const techStack = [
+  { name: "Next.js", category: "Framework" },
+  { name: "React", category: "Framework" },
+  { name: "Python / FastAPI", category: "Backend" },
+  { name: "OpenAI Whisper", category: "AI" },
+  { name: "GPT-4", category: "AI" },
+  { name: "PostgreSQL", category: "Database" },
+  { name: "Figma", category: "Design" },
+  { name: "TypeScript", category: "Language" },
+];
+
+const categoryColors: Record<string, string> = {
+  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Backend: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  AI: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Database: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
+  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
+};
+
+const pmSkills = [
+  { label: "Customer Discovery", icon: "◎", desc: "Structured discovery calls, in-person interviews, pattern synthesis", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+  { label: "Market Research & Pivoting", icon: "↺", desc: "Two full pivots driven by direct market feedback", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+  { label: "Product Strategy", icon: "◈", desc: "0→1 product ownership — vision, roadmap, and execution", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+  { label: "UI/UX Design", icon: "▣", desc: "End-to-end design in Figma, brand identity, logo", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+  { label: "B2B Sales & Outreach", icon: "↗", desc: "Cold email, LinkedIn DMs, door-to-door, discovery calls", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+  { label: "Full-Stack Development", icon: "⟨/⟩", desc: "Next.js, FastAPI, PostgreSQL, OpenAI — built solo", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+];
+
+// ── Dashboard Mock for UI/UX Tab ────────────────────────────────────────────
+
+function DashboardMock() {
+  return (
+    <div className="w-full bg-black border border-foreground/15 rounded-xl overflow-hidden font-mono uppercase tracking-wider text-[11px] text-left">
+      {/* Mock Title Bar */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/15 bg-neutral-900/50">
+        <div className="flex items-center gap-3">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
+          <span className="font-bold text-white">LIVE CALL FEED — INBOUND</span>
+        </div>
+        <div className="text-foreground/50">
+          ID: #994-A2 // DURATION: 02:41
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/10">
+        {/* Left Pane - Transcript */}
+        <div className="bg-neutral-950 p-6 space-y-6">
+          <div className="text-[10px] text-foreground/45 border-b border-foreground/5 pb-2">
+            [ REAL-TIME TRANSCRIPT (OPENAI WHISPER) ]
+          </div>
+          
+          <div className="space-y-4 font-sans tracking-normal normal-case">
+            <div className="flex gap-2">
+              <span className="font-mono text-[10px] text-foreground/40 mt-1 uppercase shrink-0">Caller:</span>
+              <p className="text-[13px] text-foreground/80 bg-neutral-900/40 rounded-lg p-3">
+                &quot;Hi, I was looking to book a consultation for a lip filler next Tuesday. Also, do you guys do Botox treatments?&quot;
+              </p>
+            </div>
+            
+            <div className="flex gap-2">
+              <span className="font-mono text-[10px] text-emerald-400 mt-1 uppercase shrink-0">Agent:</span>
+              <p className="text-[13px] text-white bg-neutral-900/80 rounded-lg p-3 border border-foreground/10">
+                &quot;Yes, we do! We actually have a Botox promo running next week if you book them together. Would you like to add that?&quot;
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Pane - AI Insights */}
+        <div className="bg-neutral-950 p-6 space-y-6">
+          <div className="text-[10px] text-foreground/45 border-b border-foreground/5 pb-2 flex justify-between items-center">
+            <span>[ COPILOT SUGGESTIONS ]</span>
+            <span className="text-emerald-400 animate-pulse">● ACTIVE</span>
+          </div>
+
+          <div className="space-y-4">
+            {/* Suggestion 1 */}
+            <div className="border border-emerald-500/30 bg-emerald-500/5 rounded p-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-emerald-400 font-bold">[ UPSELL SUGGESTION ]</span>
+                <span className="text-[9px] text-emerald-400 border border-emerald-400/30 px-1.5 py-0.5 rounded">94% CONFIDENCE</span>
+              </div>
+              <p className="text-[12px] normal-case tracking-normal font-sans text-white/90">
+                Patient is asking about Botox. Recommend the &quot;Botox &amp; Filler Combo&quot; package to save $75.
+              </p>
+              <div className="flex gap-2 pt-1">
+                <button className="bg-emerald-500 hover:bg-emerald-400 text-black px-3 py-1.5 font-bold transition-all rounded-[3px] text-[10px]">
+                  [ LOG TO CRM ]
+                </button>
+                <button className="bg-foreground/5 hover:bg-foreground/10 text-foreground border border-foreground/10 px-3 py-1.5 transition-all rounded-[3px] text-[10px]">
+                  [ DISMISS ]
+                </button>
+              </div>
+            </div>
+
+            {/* Entity extraction */}
+            <div className="border border-foreground/10 p-4 space-y-3 bg-neutral-900/20">
+              <div className="text-foreground/45 text-[10px]">
+                [ EXTRACTED ENTITIES ]
+              </div>
+              <div className="flex flex-wrap gap-2 text-[10px]">
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[treatment: lip-filler]</span>
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[treatment: botox]</span>
+                <span className="px-2 py-1 bg-foreground/5 border border-foreground/15 rounded text-white/80">[intent: book-consultation]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+
+export default function NeuclerPage() {
+  const [activeTab, setActiveTab] = useState("product");
+  const maxPain = Math.max(...painPoints.map((p) => p.pct));
+
+  return (
+    <>
+      <article className="min-h-screen">
+
+        {/* Back Header */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
+          <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+            Back to Home
+          </Link>
+          <Link href="/work/neta-bridge" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
+            Neta Bridge
+            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
+
+        {/* ── UNIFIED HERO ── */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-5xl"
+          >
+            <div className="flex flex-wrap gap-2 mb-6">
+              {["UI/UX", "Product Design", "Sales", "SaaS", "AI", "CRM"].map((tag) => (
+                <span key={tag} className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
+              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Neucler.</span>{" "}
+              <span className="text-foreground">The sales copilot that turns every receptionist into a top closer.</span>
+            </h1>
+
+            <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
+              What started as an AI receptionist became something far more valuable: a CRM and coaching platform built
+              specifically for the med spa and clinic industry — automating the busywork so receptionists can focus on
+              what actually drives revenue.
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-8">
+              <Link
+                href="https://neucler.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+              >
+                neucler.com <ArrowUpRight size={14} />
+              </Link>
+            </div>
+
+            {/* Hero Meta Strip */}
+            <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
+              {[
+                { label: "My Role", value: "Founder" },
+                { label: "Industry", value: "Med Spa / Health Clinics" },
+                { label: "Stage", value: "Active — 2025–Present" },
+                { label: "Built", value: "Solo (0 to 1)" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
+                  <span className="text-[15px] font-medium text-foreground">{value}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Tab Switcher */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-12">
+          <div className="flex w-full font-mono text-[12px] sm:text-[14px] tracking-widest uppercase border-b-2 border-foreground/10">
+            <button
+              onClick={() => setActiveTab("product")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "product" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 01 / PRODUCT ]
+              {activeTab === "product" && (
+                <motion.div
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("ui-ux")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "ui-ux" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 02 / UI UX ]
+              {activeTab === "ui-ux" && (
+                <motion.div
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("engineering")}
+              className={`flex-1 relative py-5 text-center transition-all ${
+                activeTab === "engineering" ? "text-foreground font-bold" : "text-foreground/60 font-medium hover:text-foreground"
+              }`}
+            >
+              [ 03 / ENGINEERING ]
+              {activeTab === "engineering" && (
+                <motion.div
+                  layoutId="activeTabUnderline"
+                  className="absolute bottom-[-2px] left-0 right-0 h-[3px] bg-foreground"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {activeTab === "product" ? (
+          <>
+
+
+            {/* ── KEY STATS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
+              <FadeIn>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
+                  {outcomes.map((o, i) => (
+                    <motion.div
+                      key={o.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08 }}
+                      className="bg-background px-8 py-10 text-center"
+                    >
+                      <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
+                      <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
+                      <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 01: THE PIVOT STORY ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Pivot</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Three versions. Two pivots. One clear signal.
+                  </h2>
+
+                  <div className="mt-10 space-y-0">
+                    {pivotTimeline.map((item, i) => (
+                      <motion.div
+                        key={item.step}
+                        initial={{ opacity: 0, x: -12 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.12 }}
+                        className={`relative flex gap-6 pb-10 ${i < pivotTimeline.length - 1 ? "border-l border-foreground/10 ml-5" : "ml-5"}`}
+                      >
+                        {/* Dot */}
+                        <div className={`absolute -left-[9px] w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${item.status === "active" ? "border-foreground bg-foreground" : "border-foreground/20 bg-background"}`} />
+
+                        <div className="pl-8">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-[10px] font-mono text-foreground/30">{item.step}</span>
+                            <span className={`text-[16px] font-medium ${item.status === "active" ? "text-foreground" : "text-foreground/50"}`}>{item.label}</span>
+                            {item.status === "pivoted" && (
+                              <span className="text-[9px] px-2 py-0.5 border border-foreground/10 rounded-full text-foreground/30 uppercase tracking-wider">pivoted</span>
+                            )}
+                            {item.status === "active" && (
+                              <span className="text-[9px] px-2 py-0.5 border border-foreground/30 rounded-full text-foreground/70 uppercase tracking-wider bg-foreground/5">active</span>
+                            )}
+                          </div>
+                          <p className="text-[14px] leading-[1.75] text-foreground/50 max-w-2xl">{item.note}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 02: THE PROBLEM ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Med spa receptionists are the first touchpoint — and the most underserved
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        After talking to med spa owners in person and through LinkedIn, the same picture emerged every time.
+                        Receptionists were handling inbound interest, fielding questions, booking consultations — and consistently
+                        leaving money on the table. Not from lack of effort, but from lack of tools.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        There was no system for following up with leads. No visibility into what was said on calls. No coaching
+                        on how to upsell treatments that patients were genuinely interested in. The CRM they used, if any,
+                        was a spreadsheet.
+                      </p>
+                    </div>
+                    {/* Pain points chart */}
+                    <div className="space-y-4">
+                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
+                        Top pain points — med spa discovery calls
+                      </p>
+                      {painPoints.map((p, i) => (
+                        <div key={p.label} className="flex items-center gap-4">
+                          <span className="text-[12px] text-foreground/50 w-52 shrink-0 text-right pr-2">{p.label}</span>
+                          <div className="flex-1 flex items-center gap-3">
+                            <motion.div
+                              className={`h-6 rounded-sm ${p.color}`}
+                              style={{ width: 0 }}
+                              whileInView={{ width: `${(p.pct / maxPain) * 100}%` }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                            />
+                            <span className="text-[13px] font-light text-foreground/60 tabular-nums">{p.pct}%</span>
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[11px] text-foreground/30 mt-4">* % of owners who cited this as a primary bottleneck</p>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 03: THE NAME ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Brand & Naming</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Neucler: less headache, more signal
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The name&apos;s a play on &quot;nuclear&quot; — the idea of concentrated, powerful energy that clarifies
+                        rather than complicates. Receptionists were already under pressure. The product needed to feel like it
+                        removed weight, not added it.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        I designed the logo myself — a wordmark that balances authority with approachability. The &quot;eu&quot;
+                        suffix nods to clarity and good UX. The visual language throughout the product follows the same principle:
+                        clean, purposeful, low-friction.
+                      </p>
+                      <div className="flex flex-wrap gap-3 pt-4">
+                        {["Automation", "Note-taking", "Lead tracking", "Sales insights"].map((p) => (
+                          <span key={p} className="text-[12px] px-3 py-1.5 border border-foreground/10 rounded-full text-foreground/60 bg-foreground/[0.02]">
+                            {p}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Logo display */}
+                    <div className="flex items-center justify-center border border-foreground/5 bg-black rounded-sm aspect-square max-w-xs mx-auto w-full">
+                      <Image
+                        src="/Frame 79.png"
+                        alt="Neucler Logo"
+                        width={180}
+                        height={180}
+                        className="object-contain opacity-90"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 04: SALES & OUTREACH ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Sales & Market Validation</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every channel. Every door. Until the market answered.
+                  </h2>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        Validating Neucler wasn&apos;t a survey or a landing page — it was a full-contact sales campaign.
+                        I went out and talked to real business owners across every channel available:
+                        cold emails, Instagram DMs, LinkedIn outreach, cold calls, and showing up door-to-door
+                        at clinics and med spas in person.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The goal wasn&apos;t just to sell — it was to listen. Every rejection was a data point.
+                        Every question they asked told me something the product needed to answer. This grind gave me
+                        a ground-level understanding of the market that no amount of research could have replaced.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        The owners who were most receptive weren&apos;t looking for technology — they were looking for
+                        relief. That reframe shaped everything: the pitch, the onboarding, the UI. Neucler couldn&apos;t
+                        feel like software. It had to feel like help arrived.
+                      </p>
+                    </div>
+                    {/* Outreach channel breakdown */}
+                    <div className="space-y-3">
+                      <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
+                        Outreach channels used for validation
+                      </p>
+                      {[
+                        { channel: "LinkedIn DMs", icon: "↗", note: "Targeted med spa & clinic owners directly", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Cold Email", icon: "✉", note: "Personalised sequences to practice managers", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Instagram DMs", icon: "◈", note: "Reached owners through clinic social profiles", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Door-to-Door", icon: "→", note: "Walked into clinics and pitched face-to-face", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { channel: "Cold Calls", icon: "◎", note: "Dialled local med spas from public listings", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                      ].map((item, i) => (
+                        <motion.div
+                          key={item.channel}
+                          initial={{ opacity: 0, x: 10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 }}
+                          className={`flex items-start gap-4 p-4 border rounded-sm ${item.color}`}
+                        >
+                          <span className="text-[18px] mt-0.5 shrink-0">{item.icon}</span>
+                          <div>
+                            <p className="text-[14px] font-medium mb-0.5">{item.channel}</p>
+                            <p className="text-[12px] opacity-70">{item.note}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                      <div className="mt-6 p-5 border border-foreground/5 bg-foreground/[0.02] rounded-sm">
+                        <p className="text-[13px] text-foreground/50 leading-[1.75]">
+                          <strong className="text-foreground/70 font-medium">Key lesson:</strong>{" "}
+                          The owners who responded best weren&apos;t always the most &apos;digitally savvy&apos; —
+                          they were the ones whose revenue problem was most acute. Pain level predicted conversion.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 05: CURRENT STATUS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Current Status</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    In the build — close to market
+                  </h2>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <div className="space-y-5">
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        Neucler is currently being developed in close collaboration with an active med spa and its front desk team.
+                        The focus is on getting the sales and CRM workflows exactly right — watching how the receptionist actually
+                        uses the product day-to-day and iterating fast.
+                      </p>
+                      <p className="text-[16px] leading-[1.85] text-foreground/60">
+                        This isn&apos;t a beta — it&apos;s structured co-development. Every friction point they surface becomes a product decision.
+                        The goal is to validate the core loop before scaling distribution.
+                      </p>
+                    </div>
+                    <div className="space-y-4">
+                      {[
+                        { label: "Co-development Partner", value: "Med Spa + Receptionist", icon: "◎", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { label: "Current Focus", value: "Sales & CRM Workflow Refinement", icon: "◈", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                        { label: "Predicted Launch", value: "Q2 2026", icon: "→", color: "border-foreground/10 bg-foreground/5 text-foreground/70" },
+                      ].map((item, i) => (
+                        <motion.div
+                          key={item.label}
+                          initial={{ opacity: 0, x: 10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.1 }}
+                          className={`flex items-center gap-4 p-5 border rounded-sm ${item.color}`}
+                        >
+                          <span className="text-[20px] shrink-0">{item.icon}</span>
+                          <div>
+                            <p className="text-[11px] uppercase tracking-wider opacity-60 mb-0.5">{item.label}</p>
+                            <p className="text-[15px] font-medium">{item.value}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 06: PM SKILLS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Skills Applied</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    End-to-end product ownership
+                  </h2>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pmSkills.map((skill, i) => (
+                      <motion.div
+                        key={skill.label}
+                        initial={{ opacity: 0, y: 12 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.08 }}
+                        className={`p-5 border rounded-sm ${skill.color}`}
+                      >
+                        <span className="text-[22px] mb-3 block">{skill.icon}</span>
+                        <p className="text-[14px] font-semibold mb-2">{skill.label}</p>
+                        <p className="text-[12px] leading-[1.6] opacity-70">{skill.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 07: TECH STACK ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Tech Stack</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    Tools that built Neucler
+                  </h2>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {techStack.map((tech, i) => (
+                      <motion.div
+                        key={tech.name}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.06 }}
+                        className={`p-4 border rounded-sm ${categoryColors[tech.category] || "bg-foreground/5 border-foreground/10 text-foreground/60"}`}
+                      >
+                        <p className="text-[9px] uppercase tracking-[0.1em] opacity-60 mb-1.5">{tech.category}</p>
+                        <p className="text-[15px] font-medium">{tech.name}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 08: NEXT STEPS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">08 — What's Next</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
+                    Closing the loop: real-time call coaching
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
+                    The next phase of Neucler moves from passive analytics to active coaching. The platform will listen to live
+                    sales calls and provide receptionists with real-time prompts, objection-handling suggestions, and post-call
+                    breakdowns — turning every interaction into a learning opportunity.
+                  </p>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
+                    The goal is simple: close the feedback loop between what&apos;s being said on calls and what&apos;s driving
+                    revenue. Most clinics have no idea where they&apos;re losing clients in the sales conversation. Neucler will
+                    make that blindspot visible — and then fix it.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5">
+                    {[
+                      { label: "Live Call Coaching", value: "In Dev", desc: "Real-time prompts during calls" },
+                      { label: "Revenue Attribution", value: "Q3 2025", desc: "Tie call quality to bookings" },
+                      { label: "Multi-location", value: "Roadmap", desc: "Scale across clinic franchises" },
+                    ].map((item, i) => (
+                      <motion.div
+                        key={item.label}
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className="bg-background p-8"
+                      >
+                        <p className="text-[32px] font-light text-foreground leading-none mb-2">{item.value}</p>
+                        <p className="text-[13px] font-medium text-foreground/65 mb-1">{item.label}</p>
+                        <p className="text-[11px] text-foreground/35 uppercase tracking-wider">{item.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── 09: LESSONS LEARNED ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">09 — Lessons Learned</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    What building Neucler actually taught me
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    {[
+                      {
+                        title: "Pivoting based on feedback",
+                        body: "The market is always right. I built two versions that didn't stick — and each pivot came from listening, not guessing. The ability to kill your own idea fast is a superpower.",
+                        icon: "↺",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                      {
+                        title: "B2B sales is a craft",
+                        body: "Cold emails, DMs, door-to-door — I learned that selling to businesses is about earning trust, not pitching features. The best conversations started with their problems, not my product.",
+                        icon: "↗",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                      {
+                        title: "Backend architecture matters early",
+                        body: "Scaling the AI pipeline and CRM logic while maintaining product velocity taught me to think in systems. Good architecture isn't premature optimisation — it's the thing that lets you move fast later.",
+                        icon: "⟨/⟩",
+                        color: "border-foreground/10 bg-foreground/5 text-foreground/70",
+                      },
+                    ].map((lesson, i) => (
+                      <motion.div
+                        key={lesson.title}
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.1 }}
+                        className={`p-6 border rounded-sm ${lesson.color}`}
+                      >
+                        <span className="text-[24px] mb-4 block">{lesson.icon}</span>
+                        <h3 className="text-[15px] font-semibold mb-3">{lesson.title}</h3>
+                        <p className="text-[13px] leading-[1.75] opacity-70">{lesson.body}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+          </>
+        ) : activeTab === "ui-ux" ? (
+          <>
+
+            {/* ── SCREEN 1: HOME DASHBOARD ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Daily Dashboard</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Everything a receptionist needs, at a glance
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The home dashboard greets you with a personalized snapshot — calls handled today, bookings made, revenue earned, and live conversion rate. Below the KPIs, a Priority Calls queue surfaces "Hot" leads that need immediate human follow-up, so nothing slips through.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-home-1.png"
+                      alt="Neucler home dashboard showing daily KPI cards and priority calls queue"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "Calls Today", detail: "A real-time counter against a daily target — the receptionist always knows where they stand without pulling a report." },
+                      { label: "Priority Queue", detail: "\"Hot\" badge leads are surfaced automatically, ranked by recency. Human attention goes where the revenue is." },
+                      { label: "Conversion Rate", detail: "Live conversion rate tells the owner at a glance whether today is trending up or down — no spreadsheet needed." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── SCREEN 2: COACHING REVIEW ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — AI Call Review</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every call scored, reviewed, and improved
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The Coaching → Review screen turns every call into structured feedback. Each call is automatically summarized by AI — capturing the topic, sentiment, and duration — then scored on a 0–100 scale. The color-coded scores (red for low, green for strong) let managers identify coaching gaps without listening to every recording.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-review-sc1.png"
+                      alt="Neucler coaching review screen showing AI-scored call log with sentiment and score columns"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10">
+                    {[
+                      { label: "AI-Generated Summaries", detail: "Every call gets a plain-language topic summary so managers understand what happened without listening to recordings." },
+                      { label: "Sentiment + Score", detail: "Two-axis evaluation: sentiment tells you the call's emotional tone; the score measures conversion quality. Together they pinpoint where receptionists need coaching." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── SCREEN 3: PLAYBOOKS ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Sales Playbooks</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Proven call frameworks, built for med spas
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    The Playbooks library is where Neucler codifies what works. Each playbook is a step-by-step call framework — from "Botox Consultation" to "Handling Laser Pricing Concerns" to "Membership Upsell Mastery" — with color-coded category tags, completion rates, and an AI Suggestion strip at the bottom that highlights which playbook to prioritize that week.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-review-sc2.png"
+                      alt="Neucler playbooks screen showing structured sales frameworks with completion rates and AI suggestions"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "Category Tags", detail: "Consultation, Retention, Objections, Process — each playbook is tagged so teams know exactly what situation it covers." },
+                      { label: "Completion Progress", detail: "A per-playbook completion bar shows how far teams have worked through each framework — gamifying the learning process." },
+                      { label: "AI Suggestion Strip", detail: "The bottom banner surfaces the single most impactful playbook to focus on this week, backed by real conversion data across all calls." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── UX DESIGN PRINCIPLES ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Design Principles</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
+                    Every screen optimized for the clinic floor
+                  </h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      {
+                        title: "Glanceable Information",
+                        desc: "When a customer is talking, a receptionist cannot scan paragraphs. Large KPI numbers, color-coded badges, and progressive disclosure keep critical info instantly readable.",
+                        icon: "◎",
+                      },
+                      {
+                        title: "Zero-Keyboard Input",
+                        desc: "The AI listens, parses treatments mentioned, and tags the caller automatically. The receptionist just confirms with a single click — no manual note-taking required.",
+                        icon: "▣",
+                      },
+                      {
+                        title: "Calm, High-Contrast UI",
+                        desc: "Long shifts lead to eye strain. A clean light interface with strong typographic hierarchy reduces cognitive load so receptionists can focus on the conversation.",
+                        icon: "◈",
+                      },
+                    ].map((item) => (
+                      <div key={item.title} className="p-6 border border-foreground/10 bg-foreground/[0.02] text-foreground/70 rounded-lg">
+                        <span className="text-[24px] mb-4 block">{item.icon}</span>
+                        <h3 className="text-[15px] font-semibold mb-3 text-foreground">{item.title}</h3>
+                        <p className="text-[13px] leading-[1.75] opacity-70">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+          </>
+        ) : activeTab === "engineering" ? (
+          <>
+
+            {/* ── TECH STACK ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — Tech Stack</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Built on a modern, real-time stack
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-12">
+                    Neucler is built on Next.js with Supabase as the database and auth layer. Twilio handles phone call routing and SMS. Deepgram powers live audio transcription with sub-second latency, and Gemini drives the analysis, scoring, and AI intelligence layer across the product.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { name: "Next.js", category: "Frontend", desc: "Full-stack React framework — pages, API routes, and server components in one." },
+                      { name: "Supabase", category: "Database & Auth", desc: "Postgres-backed database with real-time subscriptions and row-level security for multi-tenant clinic data." },
+                      { name: "Twilio", category: "Communications", desc: "Call routing, phone number provisioning, and SMS delivery across the inbox." },
+                      { name: "Deepgram", category: "Audio AI", desc: "Real-time speech-to-text with speaker diarization — processes live call audio with sub-second latency." },
+                      { name: "Gemini", category: "AI / Analysis", desc: "Powers call scoring, sentiment analysis, business intelligence queries, and playbook suggestions." },
+                      { name: "ManyChat", category: "DM Automation", desc: "Connected to med spa Instagram and Facebook pages — automates DM responses and routes qualified leads into the inbox." },
+                    ].map((item) => (
+                      <div key={item.name} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <div className="flex items-start justify-between gap-2 mb-3">
+                          <p className="text-[15px] font-semibold text-foreground">{item.name}</p>
+                          <span className="text-[10px] font-medium text-foreground/40 border border-foreground/10 px-2 py-0.5 rounded-full shrink-0 mt-0.5">{item.category}</span>
+                        </div>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── PIPELINE DIAGRAM ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — Call Pipeline</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    From inbound call to structured insight
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    When a call comes in via Twilio, audio is streamed in real-time to Deepgram for live transcription. The transcript is continuously fed into Gemini for entity extraction, sentiment scoring, and upsell detection — broadcasting structured updates back to the receptionist's dashboard instantly.
+                  </p>
+
+                  <div className="bg-foreground/5 border border-foreground/10 p-6 sm:p-10 font-mono text-[12px] sm:text-[14px] text-foreground/80 leading-[1.8] rounded-lg overflow-x-auto whitespace-pre">
+                    {`[ Inbound Call: Twilio ]
+  │
+  ├─ Audio Stream (WebRTC)
+  │    ▼
+[ Deepgram: Real-Time STT ]
+  │
+  ├─ Live transcript (< 300ms latency)
+  │    ▼
+[ Gemini: Analysis Layer ]
+  │
+  ├─ Entity extraction (names, treatments, intent)
+  ├─ Sentiment scoring & call quality
+  ├─ Upsell opportunity detection
+  │    ▼
+[ Next.js Client ]
+  │
+  └─ Live dashboard update → receptionist sees suggestions instantly`}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── NEUCLER AI ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — Neucler AI</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Ask anything about your business
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    Neucler AI is a dedicated Gemini-powered business intelligence layer. Owners and managers can ask natural language questions — "Who is my top performer?", "Where are we losing revenue?", "Give me a full business review" — and Neucler AI pulls live data from Supabase, analyzes it, and responds with actionable insights in plain English. It also accepts uploaded PDFs (scripts, playbooks, SOPs) and screen context for deeper analysis.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-ai.png"
+                      alt="Neucler AI interface — a Gemini-powered business intelligence chat that answers questions about call performance and revenue"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-10">
+                    {[
+                      { label: "Live Data Queries", detail: "Gemini queries Supabase in real time — answers are grounded in today's actual call data, not static reports." },
+                      { label: "PDF & Screen Context", detail: "Owners can upload PDFs or share their screen — Neucler AI reads them as context to answer more specific questions about their own SOPs and scripts." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* ── INBOX / DM AUTOMATION ── */}
+            <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
+              <FadeIn>
+                <div className="border border-foreground/5 p-8 sm:p-12">
+                  <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Omnichannel Inbox</p>
+                  <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
+                    Every lead, every channel — one place
+                  </h2>
+                  <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-10">
+                    Neucler's Inbox aggregates every touchpoint — Instagram DMs, Facebook messages, WhatsApp, SMS, and inbound phone calls — into a single unified view. ManyChat handles automated DM replies on behalf of the clinic, qualifying leads before they hit the inbox. Every conversation gets an AI Summary so the receptionist knows exactly what happened without reading the whole thread.
+                  </p>
+
+                  <div className="rounded-xl overflow-hidden border border-foreground/10 shadow-2xl">
+                    <Image
+                      src="/neucler-dms.png"
+                      alt="Neucler unified inbox showing Instagram, Facebook, WhatsApp, SMS, and call threads with AI summaries and ManyChat DM automation"
+                      width={1536}
+                      height={768}
+                      className="w-full h-auto"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
+                    {[
+                      { label: "ManyChat Integration", detail: "Instagram and Facebook DMs are handled automatically by ManyChat flows, capturing lead info and booking intent before a human takes over." },
+                      { label: "AI Summaries", detail: "Every call and conversation is auto-summarized by Gemini — the receptionist sees the context at a glance rather than scrolling through a full transcript." },
+                      { label: "Unified Channels", detail: "Instagram, Facebook, WhatsApp, SMS, and Calls all surface in one inbox — no more context switching between five different apps." },
+                    ].map((item) => (
+                      <div key={item.label} className="p-5 border border-foreground/10 bg-foreground/[0.02] rounded-lg">
+                        <p className="text-[13px] font-semibold text-foreground mb-2">{item.label}</p>
+                        <p className="text-[13px] leading-[1.7] text-foreground/55">{item.detail}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </FadeIn>
+            </div>
+
+          </>
+        ) : null}
+
+        {/* ── VISIT CTA ── */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-16">
+          <FadeIn>
+            <div className="border border-foreground/5 p-10 sm:p-14 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.1em] text-foreground/35 font-medium mb-2">The product is live</p>
+                <h2 className="text-[24px] sm:text-[30px] font-normal tracking-[-0.01em] text-foreground leading-[1.2]">
+                  Visit Neucler and see it for yourself.
+                </h2>
+              </div>
+              <Link
+                href="https://neucler.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-7 py-4 bg-foreground text-background text-[14px] font-medium rounded-[4px] hover:bg-foreground/85 transition-all active:scale-[0.97] tracking-tight shrink-0"
+              >
+                Visit Neucler <ArrowUpRight size={15} />
+              </Link>
+            </div>
+          </FadeIn>
+        </div>
+
+        {/* ── FOOTER ── */}
+        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
+          <FadeIn>
+            <div className="flex items-center justify-between pt-8 border-t border-foreground/10 pb-24">
+              <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">
+                ← All Projects
+              </Link>
+              <div className="flex flex-col items-end gap-1">
+                <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">Neucler Inc.</p>
+                <Link
+                  href="https://neucler.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] text-foreground/40 hover:text-foreground transition-colors font-mono"
+                >
+                  neucler.com
+                </Link>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+
+      </article>
+      <BottomDock />
+    </>
+  );
+}
