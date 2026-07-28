@@ -19,7 +19,9 @@ export default function ProjectCardViewer({ slug, onNarrationRequest, onClose }:
   useEffect(() => {
     if (project && narratedProjectRef.current !== project.slug) {
       narratedProjectRef.current = project.slug;
-      onNarrationRequest(`I am now looking at the project ${project.title}. It has ${project.sections.length} sections. Please read the sections data and use change_project_view to navigate through the sections one by one as you narrate the project.`);
+      if (onNarrationRequest) {
+        onNarrationRequest(`I am now looking at the project ${project.title}. It has ${project.sections.length} sections. Please read the sections data and use change_project_view to navigate through the sections one by one as you narrate the project.`);
+      }
     }
   }, [slug, project, onNarrationRequest]);
 
