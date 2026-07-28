@@ -66,27 +66,33 @@ export const projects: Project[] = [
     },
     sections: [
       {
-        label: "A Story in Market Research",
-        heading: "Understanding that AI Receptionists aren't always the answer",
-        body: "Like a lot I got pulled into the AI receptionist hype.  I built one over the weekend, bought a domain, made a website had brochures printed out and got down to the field. I went to auto shops because it each of their calls could lead to high Average Order Value. After talking to a few auto body shops around the area I quickly realised that 'people wanna talk to people'. Ok time for a pivot, how about we make receptionists better instead of replacing them? I saw a reel that expressed the need for receptonists for being good sales people and realised that could be the next move. A platform for receptionists to turn into better salespeople. A sales copilot for receptionists. Updated the platform. Talked to some medspa owners in person and through Linkedin. Pitched to them and then found that this area was actually missing. There was a gap here and then gave up on the project.",
+        label: "Understanding the problem",
+        heading: "Finding the right problem to solve",
+        body: "Like a lot I got pulled into the AI receptionist hype. I went to auto shops, medspas, and dental clinics. I quickly realized that 'people wanna talk to people'. The actual gap was not replacing them, but giving them a sales copilot to make them better at closing deals and managing follow-ups.",
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
-        label: "Developing the idea",
-        heading: "Sales Copilot for Receptionists",
-        body: "The UI was designed to minimize cognitive load during live calls. I built a real-time sidebar that surfaces contextual recommendations without requiring the receptionist to navigate away from their workflow. The brand identity was crafted to feel clinical yet approachable — establishing trust with healthcare decision-makers.",
+        label: "Design process",
+        heading: "Crafting a frictionless UI",
+        body: "The UI was designed to minimize cognitive load during live calls. I built a real-time sidebar that surfaces contextual recommendations without requiring the receptionist to navigate away from their workflow.",
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
-        label: "Building",
-        heading: "Building the MVP to validate the hypothesis",
-        body: "I chose Next.js for the frontend and Python/FastAPI for the AI backend to prioritize speed-to-market. The architecture was designed for real-time audio processing with sub-200ms latency. I made the deliberate trade-off of building a monolithic MVP first, knowing we could decompose into microservices once product-market fit was validated.",
+        label: "Development process",
+        heading: "Building for sub-200ms latency",
+        body: "I chose Next.js for the frontend and Python/FastAPI for the AI backend. The architecture was specifically designed for real-time audio processing to keep the AI's suggestions perfectly in sync with the live conversation.",
         images: ["/project-saas.png", "/project-saas.png"]
       },
       {
-        label: "Go-to-Market",
-        heading: "From 0 to 15 pilot clinics in 12 weeks",
-        body: "I executed a targeted outreach strategy: cold emails to dental office managers (12% reply rate), followed by personalized demo videos. The first 10 customers came from direct outreach, and the remaining 5 from referrals. Post-launch, I iterated on the onboarding flow based on user feedback, reducing time-to-first-value from 45 minutes to under 10.",
+        label: "Sales",
+        heading: "Go-to-market and pilot onboarding",
+        body: "I executed a targeted outreach strategy with cold emails to dental office managers, yielding a 12% reply rate. I followed up with personalized demo videos and successfully onboarded the first 10 customers directly.",
+        images: ["/project-saas.png", "/project-saas.png"]
+      },
+      {
+        label: "Customer success",
+        heading: "Ensuring retention and growth",
+        body: "Post-launch, I closely monitored how receptionists used the tool and iterated the onboarding flow. This hands-on customer success approach reduced time-to-first-value from 45 minutes to under 10 minutes, securing long-term retention.",
         images: ["/project-saas.png", "/project-saas.png"]
       }
     ],

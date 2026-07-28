@@ -2,6 +2,7 @@
 
 import { projects } from "@/lib/projects";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function VerticalProjectList() {
   const listProjects = projects.slice(0, 4);
@@ -11,9 +12,14 @@ export default function VerticalProjectList() {
       <div className="max-w-[1200px] mx-auto px-6 flex flex-col gap-32">
         {listProjects.map((project, index) => {
           return (
-            <div 
+            <motion.div 
               key={project.id} 
-              className="w-full flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12"
+              id={`project-${index}`}
+              className="w-full flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 scroll-mt-32"
+              initial={{ opacity: 0, y: 80 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Left Title */}
               <div className="w-full md:w-[200px] flex justify-start md:justify-end">
@@ -43,7 +49,7 @@ export default function VerticalProjectList() {
                   some text
                 </p>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

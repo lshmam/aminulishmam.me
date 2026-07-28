@@ -24,26 +24,33 @@ const socialLinks = [
   { icon: Mail, href: "mailto:ishmam.aminul@gmail.com", label: "Email" },
 ];
 
-export default function Header() {
+export default function Header({ 
+  theme = 'light',
+  className = ''
+}: { 
+  theme?: 'light' | 'dark',
+  className?: string
+}) {
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="flex items-center justify-between py-5 sm:py-6"
+    <header
+      className={`flex items-center justify-between py-5 sm:py-6 overflow-hidden max-w-full ${className}`}
     >
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        <img src="/aminul-logo.svg" alt="Aminul Logo" className="w-9 h-9 sm:w-12 sm:h-12" />
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        <img 
+          src="/aminul-logo.svg" 
+          alt="Aminul Logo" 
+          className={`w-9 h-9 sm:w-12 sm:h-12 ${theme === 'dark' ? 'invert' : ''}`} 
+        />
         <div>
-          <p className="text-[12px] sm:text-[13px] font-medium text-foreground leading-tight">
+          <p className={`text-[12px] sm:text-[13px] font-medium leading-tight ${theme === 'dark' ? 'text-white' : 'text-foreground'}`}>
             Aminul Islam Ishmam
           </p>
-          <p className="text-[11px] sm:text-[12px] text-muted leading-tight mt-0.5">
+          <p className={`text-[11px] sm:text-[12px] leading-tight mt-0.5 ${theme === 'dark' ? 'text-white/60' : 'text-foreground/60'}`}>
             Founder · Designer · Engineer
           </p>
         </div>
       </div>
-      <div className="flex items-center gap-3 sm:gap-3.5">
+      <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
         {socialLinks.map(({ icon: Icon, href, label }) => (
           <Link
             key={label}
@@ -51,12 +58,12 @@ export default function Header() {
             aria-label={label}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground/40 hover:text-foreground transition-colors duration-200 p-1"
+            className={`transition-colors duration-200 p-1 ${theme === 'dark' ? 'text-white hover:text-white/80' : 'text-foreground/60 hover:text-foreground'}`}
           >
             <Icon size={15} />
           </Link>
         ))}
       </div>
-    </motion.header>
+    </header>
   );
 }

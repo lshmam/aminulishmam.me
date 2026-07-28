@@ -9,8 +9,58 @@ import { ArrowUpRight, Phone, X } from "lucide-react";
 import { projects } from "@/lib/projects";
 import ObjectBurst from "@/components/animations/PrismaticBurst";
 import { ParticlesBackground } from "@/components/animations/particles-background";
-import VerticalProjectList from "@/components/VerticalProjectList";
-import AboutSection from "@/components/AboutSection";
+// import VoiceAgent from "@/components/VoiceAgent";
+import ProjectCardViewer from "@/components/ProjectCardViewer";
+import MermaidDiagram from "@/components/MermaidDiagram";
+import LandingFooter from "@/components/LandingFooter";
+
+// ── About Card Stack Component ──
+function AboutCardStack() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"]
+  });
+
+  // Card 1: Static base card
+  
+  // Card 2: Slides down from top and rotates slightly
+  const card2Y = useTransform(scrollYProgress, [0, 0.4], [-200, 0]);
+  const card2Opacity = useTransform(scrollYProgress, [0, 0.1, 0.4], [0, 1, 1]);
+  const card2Rotate = useTransform(scrollYProgress, [0, 0.4], [-15, -4]);
+
+  // Card 3: Slides down from top and rotates opposite way
+  const card3Y = useTransform(scrollYProgress, [0.4, 0.8], [-200, 0]);
+  const card3Opacity = useTransform(scrollYProgress, [0.3, 0.5, 0.8], [0, 1, 1]);
+  const card3Rotate = useTransform(scrollYProgress, [0.4, 0.8], [15, 4]);
+
+  return (
+    <div ref={containerRef} className="w-full aspect-square md:aspect-[4/5] relative flex items-center justify-center">
+      {/* Base Card */}
+      <motion.div 
+        className="absolute inset-0 w-full h-full bg-zinc-900 rounded-[24px] overflow-hidden shadow-2xl origin-bottom"
+      >
+        <Image src="/project-brand.png" alt="Portrait 1" fill className="object-cover opacity-60" />
+      </motion.div>
+
+      {/* Card 2 */}
+      <motion.div 
+        style={{ y: card2Y, opacity: card2Opacity, rotate: card2Rotate }}
+        className="absolute inset-0 w-full h-full bg-zinc-800 rounded-[24px] overflow-hidden shadow-2xl origin-bottom"
+      >
+        <Image src="/project-app.png" alt="Portrait 2" fill className="object-cover opacity-70" />
+      </motion.div>
+
+      {/* Card 3 */}
+      <motion.div 
+        style={{ y: card3Y, opacity: card3Opacity, rotate: card3Rotate }}
+        className="absolute inset-0 w-full h-full bg-zinc-700 rounded-[24px] overflow-hidden shadow-2xl origin-bottom"
+      >
+        <Image src="/project-saas.png" alt="Portrait 3" fill className="object-cover opacity-80" />
+      </motion.div>
+    </div>
+  );
+}
 
 // ── Call Widget Component ──
 function CallWidget() {
@@ -145,6 +195,10 @@ function CardMedia({ project }: { project: (typeof projects)[number] }) {
 }
 
 export default function Animation1Page() {
+  const [activeProject, setActiveProject] = useState<string | null>(null);
+  const [activeDiagram, setActiveDiagram] = useState<{mermaidCode: string, title: string} | null>(null);
+  const [agentClient, setAgentClient] = useState<{ sendText: (text: string) => void, interrupt?: (text?: string) => void } | null>(null);
+
   // ── CAROUSEL ROTATION ──
   const baseRotation = useMotionValue(0);
 
@@ -172,7 +226,7 @@ export default function Animation1Page() {
         ref={sectionRef}
         style={{
           position: "relative",
-          backgroundColor: "#FAFAFA",
+          backgroundColor: "#000000",
         }}
       >
         {/* ani-3 background fading to white at the bottom */}
@@ -182,7 +236,7 @@ export default function Animation1Page() {
             top: 0,
             left: 0,
             right: 0,
-            height: "260vh",
+            height: "100vh",
             backgroundImage: "url('/ani-3.png')",
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -194,8 +248,16 @@ export default function Animation1Page() {
           }}
         />
 
-        {/* Name + Tagline */}
-        <div className="relative z-20 flex flex-col items-center text-center pt-32 mb-20 pointer-events-none px-4">
+        {/* ── Section 1: Hero (100vh) ── */}
+        <div className="w-full min-h-screen flex flex-col items-center justify-center relative z-20 pb-20">
+          {/* Name + Tagline */}
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col items-center text-center pointer-events-none px-4 mb-16"
+          >
           <h1
             className="text-white leading-none tracking-tight"
             style={{
@@ -205,7 +267,7 @@ export default function Animation1Page() {
               letterSpacing: "-0.03em",
             }}
           >
-            Aminul Islam Ishmam
+            I'm Aminul, a product<br />designer who engineers.
           </h1>
           <p
             className="text-white/60 mt-3 tracking-widest uppercase text-[12px] md:text-[13px]"
@@ -213,10 +275,16 @@ export default function Animation1Page() {
           >
             Designer&nbsp;&nbsp;&middot;&nbsp;&nbsp;Founder&nbsp;&nbsp;&middot;&nbsp;&nbsp;Engineer
           </p>
-        </div>
+        </motion.div>
 
         {/* 3D Carousel — static, no sticky, overflow clipped */}
-        <div style={{ overflow: "hidden", width: "100%", padding: "120px 0" }} className="mb-10">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          style={{ overflow: "hidden", width: "100%", padding: "40px 0" }} 
+        >
         <div
           className="relative z-10"
           style={{ width: 360, height: 240, perspective: 3000, margin: "0 auto", overflow: "visible" }}
@@ -267,15 +335,131 @@ export default function Animation1Page() {
             })}
           </motion.div>
         </div>
-        </div>{/* end carousel overflow wrapper */}
+        </motion.div>{/* end carousel overflow wrapper */}
+        </div>{/* end Hero Section */}
 
+        {/* ── Section 2: About Me (100vh) ── */}
+        <div className="w-full min-h-screen flex items-center justify-center border-t border-white/10">
+          <div className="w-full max-w-[1200px] mx-auto px-6 py-24 flex flex-col md:flex-row gap-12 items-center">
+            <div className="w-full md:w-1/2 flex justify-center items-center h-[500px]">
+              <AboutCardStack />
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col justify-center">
+              <h2 className="text-[32px] md:text-[40px] font-bold text-white mb-6 tracking-tight">
+                Hi I'm Aminul
+              </h2>
+              <div className="text-white/70 space-y-4 text-[14px] md:text-[16px] leading-[1.6]">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <p>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Vertical Projects List — same container, seamless */}
-        <VerticalProjectList />
+        {/* ── Section 3: Featured Project (100vh) ── */}
+        <div className="w-full min-h-screen flex flex-col justify-center border-t border-white/10" id="project-0">
+          <div className="w-full max-w-[1200px] mx-auto px-6 py-24">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-white mb-12 text-center tracking-tight">
+              The project I'm most proud of
+            </h2>
+            <div className="w-full aspect-[21/9] bg-zinc-900 rounded-[32px] overflow-hidden relative mb-8 shadow-2xl">
+              <Image
+                src="/project-saas.png"
+                alt="Neucler"
+                fill
+                className="object-cover opacity-80 hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+                onClick={() => setActiveProject('neucler')}
+              />
+            </div>
+            <h3 className="text-[24px] md:text-[28px] font-bold text-white mb-4">Neucler</h3>
+            <p className="text-[14px] md:text-[16px] text-white/70 leading-[1.6] max-w-4xl">
+              Taking a B2B SaaS from 0 to 1 by automating sales workflows for dental clinics, resulting in 300% increase in daily active usage within 3 months.
+            </p>
+          </div>
+        </div>
+
+        {/* ── Section 4: Other Projects Grid (100vh) ── */}
+        <div className="w-full min-h-screen flex flex-col justify-center border-t border-white/10">
+          <div className="w-full max-w-[1200px] mx-auto px-6 py-24">
+            <h2 className="text-[32px] md:text-[40px] font-bold text-white mb-12 tracking-tight">
+              If you wanna check out my other work
+            </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {projects.slice(1, 5).map((project, index) => (
+              <div 
+                key={project.id} 
+                id={`project-${index + 1}`}
+                className="w-full aspect-[4/3] bg-zinc-900 rounded-[24px] overflow-hidden relative cursor-pointer group"
+                style={{ scrollMarginTop: "100px" }}
+                onClick={() => setActiveProject(project.slug)}
+              >
+                {project.image ? (
+                  <Image 
+                    src={project.image} 
+                    alt={project.title} 
+                    fill 
+                    className="object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-900" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute bottom-6 left-6 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-y-4 group-hover:translate-y-0">
+                  <h3 className="text-white font-bold text-xl">{project.title}</h3>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="w-full flex justify-end mt-8">
+            <Link href="#" className="text-white font-bold text-[16px] md:text-[18px] hover:underline underline-offset-4">
+              View All
+            </Link>
+          </div>
+        </div>
+        </div>
       </section>
+      {/* ── Footer ── */}
+      <div className="bg-black">
+        <LandingFooter />
+      </div>
+      
+      {/* Voice Agent UI */}
+      {/* <div className="fixed inset-0 pointer-events-none z-50">
+        <VoiceAgent 
+          onShowProject={setActiveProject}
+          onShowDiagram={setActiveDiagram}
+          onAgentReady={setAgentClient}
+          isProjectActive={!!activeProject}
+          initialGreetingPrompt="Greet the visitor briefly. Then IMMEDIATELY use the scroll_to_section tool with selector '#project-0' to scroll down to the first project. Open the project using the show_project tool. Narrate its sections by calling change_project_view for each step. When finished, call close_project and move on to '#project-1'. Continue this pattern for all projects." 
+        />
+      </div> */}
 
-      {/* ── About Bio Section (Includes Footer) ── */}
-      <AboutSection />
+      {/* Project Card Viewer */}
+      {activeProject && (
+        <div className="fixed inset-0 flex items-center justify-center z-[80] animate-in fade-in zoom-in-95 duration-700 pointer-events-none">
+           <ProjectCardViewer 
+             slug={activeProject} 
+             onNarrationRequest={(t) => agentClient?.sendText(t)}
+             onClose={() => {
+               setActiveProject(null);
+               agentClient?.interrupt?.("The user closed the project page and returned to the home screen. Acknowledge this briefly.");
+             }}
+           />
+        </div>
+      )}
+
+      {/* Diagram Overlay */}
+      <div className={`fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center transition-all duration-700 pointer-events-none ${activeDiagram ? 'opacity-100' : 'opacity-0'}`}>
+        {activeDiagram && (
+          <div className="w-full max-w-5xl px-8 pointer-events-auto">
+            <MermaidDiagram chart={activeDiagram.mermaidCode} title={activeDiagram.title} />
+          </div>
+        )}
+      </div>
     </>
   );
 }

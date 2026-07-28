@@ -12,6 +12,17 @@ export default function LandingFooter() {
       transition={{ duration: 0.7, ease: "easeOut" }}
       className="w-full bg-transparent pb-0 overflow-hidden relative z-10"
     >
+      {/* Background Gradient Image rotated 180 */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[800px] -z-10 pointer-events-none opacity-100"
+        style={{
+          backgroundImage: "url('/bg-gradient.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "top center",
+          backgroundRepeat: "no-repeat",
+          transform: "rotate(180deg)"
+        }}
+      />
       {/* Info grid & Name */}
       <div
         className="w-full px-4 sm:px-8 md:px-12 flex flex-col items-center text-white"

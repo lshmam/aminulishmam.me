@@ -26,6 +26,7 @@ export type AgentState = 'idle' | 'listening' | 'speaking';
 export interface GeminiLiveClientOptions {
   turnstileToken: string;
   deepgramKey?: string | null;
+  initialGreetingPrompt?: string;
   onStateChange: (state: AgentState) => void;
   onToolCall: (toolCall: any) => Promise<any>;
   onAudioLevel: (level: number) => void;
@@ -237,7 +238,7 @@ export class GeminiLiveClient {
       clientContent: {
         turns: [{
           role: 'user',
-          parts: [{ text: 'Greet the visitor and briefly introduce the portfolio.' }]
+          parts: [{ text: this.options.initialGreetingPrompt || 'Greet the visitor and briefly introduce the portfolio.' }]
         }],
         turnComplete: true
       }

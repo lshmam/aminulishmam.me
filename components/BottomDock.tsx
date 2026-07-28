@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { agentStore } from "@/lib/agent-store";
-import BorderGlow from "./BorderGlow";
 
 const navItems = [
   { label: "Work", href: "/" },
@@ -24,20 +23,8 @@ export default function BottomDock() {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full cursor-pointer" onClick={() => agentStore.triggerStop()}>
-      <BorderGlow
-        alwaysGlow={isAgentSpeaking}
-        backgroundColor="rgba(35, 35, 35, 0.8)"
-        borderRadius={9999}
-        glowColor="40 80 80"
-        glowRadius={20}
-        coneSpread={25}
-        edgeSensitivity={0}
-      >
-        <motion.nav
-          initial={{ opacity: 0, y: 16, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex items-center gap-1 px-4 py-3 rounded-full shadow-xl"
+        <nav
+          className="flex items-center gap-1 px-4 py-3 rounded-full shadow-xl bg-[#232323]/80"
           style={{
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
@@ -71,8 +58,7 @@ export default function BottomDock() {
             </Link>
           );
         })}
-        </motion.nav>
-      </BorderGlow>
+        </nav>
     </div>
   );
 }

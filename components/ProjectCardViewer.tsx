@@ -5,10 +5,11 @@ import Image from 'next/image';
 
 interface ProjectCardViewerProps {
   slug: string;
-  onNarrationRequest: (text: string) => void;
+  onNarrationRequest?: (text: string) => void;
+  onClose?: () => void;
 }
 
-export default function ProjectCardViewer({ slug, onNarrationRequest }: ProjectCardViewerProps) {
+export default function ProjectCardViewer({ slug, onNarrationRequest, onClose }: ProjectCardViewerProps) {
   const project = projects.find(p => p.slug === slug);
   const [sectionIndex, setSectionIndex] = useState(0);
   const [imageIndex, setImageIndex] = useState(0);
@@ -50,10 +51,21 @@ export default function ProjectCardViewer({ slug, onNarrationRequest }: ProjectC
     : project.image;
 
   return (
-    <div className="relative w-screen h-screen flex flex-col items-center justify-start pointer-events-none p-4 md:p-8 pt-24 pb-48 font-sans">
+    <div className="fixed inset-0 bg-[#f8f9fa] z-[80] flex flex-col items-center justify-start pointer-events-auto p-4 md:p-8 pt-24 pb-32 overflow-y-auto font-sans">
       
+      {/* Back button overlay */}
+      <button 
+        onClick={() => {
+          if (onClose) onClose();
+          else window.dispatchEvent(new CustomEvent('project-action', { detail: { action: 'close' } }));
+        }}
+        className="absolute top-6 left-6 md:left-12 px-4 py-2 bg-white rounded-full shadow-sm border border-black/5 hover:bg-gray-50 text-sm font-medium z-[100] transition-colors pointer-events-auto"
+      >
+        ← Back
+      </button>
+
       {/* Wrapper to keep gaps perfectly consistent */}
-      <div className="w-full max-w-7xl flex flex-col gap-8">
+      <div className="w-full max-w-[1440px] flex flex-col gap-8 h-full min-h-0">
         
         {/* Top Pill Navigation */}
         <div className="pointer-events-auto shrink-0 flex w-full bg-white/70 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)] rounded-[1.5rem] p-2 overflow-x-auto hide-scrollbar">
@@ -71,7 +83,7 @@ export default function ProjectCardViewer({ slug, onNarrationRequest }: ProjectC
         </div>
   
         {/* Main Content Area */}
-        <div className="w-full flex-1 max-h-[60vh] flex flex-col lg:flex-row gap-6 items-stretch pointer-events-auto min-h-0">
+        <div className="w-full flex-1 flex flex-col lg:flex-row gap-6 items-stretch pointer-events-auto min-h-0">
         
         {/* Left Side: Main Image */}
         <div className="flex-[2] relative rounded-3xl overflow-hidden bg-white shadow-2xl border border-gray-200 min-h-0">

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #f0eeea;
+  --color-background: #ffffff;
   --color-foreground: #1c1c1e;
   --color-muted: #8a8a8e;
   --color-border: #d8d6d0;
@@ -15,6 +15,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.mask-image-left {
+  mask-image: linear-gradient(to right, transparent 0%, black 15%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%);
 }
 
 ::selection {

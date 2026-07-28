@@ -18,6 +18,7 @@ interface VoiceAgentProps {
   onShowDiagram?: (diagram: { mermaidCode: string, title: string } | null) => void;
   onAgentReady?: (agent: { sendText: (text: string) => void; interrupt?: (text?: string) => void }) => void;
   isProjectActive?: boolean;
+  initialGreetingPrompt?: string;
 }
 
 export default function VoiceAgent({ 
@@ -25,7 +26,8 @@ export default function VoiceAgent({
   onShowImage,
   onShowDiagram,
   onAgentReady,
-  isProjectActive
+  isProjectActive,
+  initialGreetingPrompt
 }: VoiceAgentProps) {
   const [isActive, setIsActive] = useState(false);
   const [agentState, setAgentState] = useState<AgentState>('idle');
@@ -53,6 +55,7 @@ export default function VoiceAgent({
   }, [finalTranscript, interimTranscript]);
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [textInput, setTextInput] = useState('');
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
   const isLongPress = useRef<boolean>(false);
   const clientRef = useRef<GeminiLiveClient | null>(null);
@@ -201,10 +204,10 @@ CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or mo
       // Turn on
       setIsActive(true);
       
-      // Play bell FX
-      const fx = new Audio('/soundreality-bell-fx-410608.mp3');
+      // Play chime FX
+      const fx = new Audio('/soundshelfstudio-ui-chime-confirm-567486.mp3');
       fx.volume = 0.6;
-      fx.play().catch(err => console.log('Bell fx failed', err));
+      fx.play().catch(err => console.log('Chime fx failed', err));
 
       setAgentState('idle'); // Will change to listening when ready
       setFinalTranscript('');
@@ -232,6 +235,7 @@ CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or mo
       const client = new GeminiLiveClient({
         turnstileToken: turnstileToken || "",
         deepgramKey: dgKey,
+        initialGreetingPrompt: initialGreetingPrompt,
         systemInstruction: "You are the voice guide for Aminul's portfolio. You MUST maintain a serious, professional, and formal tone at all times. Greet visitors, offer to show projects / talk about him / just chat. Use tools to navigate and narrate. Keep responses concise, composed, and highly professional.",
         onStateChange: (state) => {
           console.log('[VoiceAgent] State change:', state);
@@ -370,123 +374,87 @@ CRITICAL RULE: Do NOT make up information. Do NOT give a full presentation or mo
     <div className="relative flex flex-col items-center justify-center -mb-24 md:-mb-40">
       {/* TurnstileWidget disabled for dev <TurnstileWidget onVerify={setTurnstileToken} action="voice_agent_connect" /> */}
       
-      {/* Transcript Display - Portaled to body to escape transform context */}
-      {mounted && (finalTranscript || interimTranscript) && createPortal(
-        <div 
-          className={`fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-7xl px-4 md:px-8 h-[140px] text-left z-[200] cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60 hover:opacity-100'}`}
-          onClick={toggleAgent}
-        >
-          <div 
-            className="bg-white/70 w-full h-full px-8 pt-4 pb-2 rounded-[1.5rem] backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
-          >
-            <div 
-              className="w-full h-full overflow-y-auto overflow-x-hidden pr-2 pb-2"
-              style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%)' }}
-            >
-            <div className={`text-xl md:text-2xl font-medium tracking-tight flex flex-col justify-start gap-y-2 transition-all duration-300 leading-snug text-left ${finalTranscript ? 'text-gray-900' : 'text-gray-500 opacity-80'}`}>
-              
-              {/* History */}
-              {finalTranscript && (
-                <div>{finalTranscript}</div>
-              )}
+      {/* Removed large portal transcript */}
 
-              {/* Current animating text */}
-              {interimTranscript && (
-                <BlurText
-                  key={sentenceId}
-                  text={interimTranscript}
-                  delay={20}
-                  animateBy="words"
-                  direction="bottom"
-                  className="flex flex-wrap justify-start text-left text-gray-500"
-                />
-              )}
-              
-              {!interimTranscript && agentState === 'speaking' && (
-                <span className="animate-pulse inline-block text-gray-400">...</span>
-              )}
-              <div ref={scrollRef} />
-            </div>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
-
-      {/* Levitation Ground Shadow */}
-      <div 
-        className="absolute w-[340px] h-[340px] md:w-[460px] md:h-[460px] top-0 left-0 bg-black/40 rounded-full blur-2xl pointer-events-none"
-        style={{
-          transform: `translateY(160px) scaleY(0.25) scaleX(${isActive ? 1.0 + audioLevel * 0.5 : 0.8})`,
-          transition: isActive ? 'none' : 'transform 0.5s ease-out'
-        }}
-      />
-
-      {/* Drop shadow wrapper for the masked orb */}
-      <div 
-        className="relative w-[340px] h-[340px] md:w-[460px] md:h-[460px] transition-all duration-300 z-10"
-        style={{
-          filter: isActive 
-            ? `drop-shadow(0 0 60px rgba(255, 78, 66, ${0.4 + audioLevel}))` 
-            : 'drop-shadow(0 20px 25px rgba(0, 0, 0, 0.3))'
-        }}
-      >
-        <BubbleMenu open={isMenuOpen} items={menuItems} />
-
-        <button 
-          onMouseDown={startPress}
-          onMouseUp={endPress}
-          onMouseLeave={cancelPress}
-          onTouchStart={startPress}
-          onTouchEnd={endPress}
-          className="w-full h-full group focus:outline-none hover:opacity-90 transition-opacity absolute inset-0 z-[100]"
-          style={{
-            transform: isActive ? `scale(${1.0 + audioLevel * 0.2})` : 'scale(0.8)',
-            transition: isActive ? 'none' : 'transform 0.5s ease-out'
-          }}
-        >
-          <AnomalyOrb audioLevel={audioLevel} />
-          {/* Glass overlay — same container, same size, moves together */}
-          <FluidGlassLens audioLevel={audioLevel} />
+      {/* Mic Input Bar */}
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[150] w-full max-w-md px-6 pointer-events-auto">
+        <div className="bg-white/90 backdrop-blur-md rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-white/60 p-2 flex items-center justify-between transition-transform duration-300 hover:scale-[1.02]">
           
-          {/* Agent State Indicator */}
-          {isActive && (
-            <div className="absolute top-[20%] left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 z-50">
-              <div className={`w-2 h-2 rounded-full ${agentState === 'speaking' ? 'bg-[#ff4e42] animate-pulse' : 'bg-green-400'}`} />
-              <span className="text-white text-xs font-bold tracking-widest uppercase">
-                {agentState === 'speaking' ? 'Agent Speaking' : 'Listening...'}
-              </span>
-            </div>
-          )}
-        </button>
-
-        {/* Permanent Menu to the right of the orb */}
-        {isActive && (
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-16 flex flex-col gap-3 min-w-[160px] z-[150] animate-in fade-in slide-in-from-left-4 duration-500">
-            <h3 className="text-gray-500 text-xs font-bold tracking-widest uppercase mb-2 pl-2">Projects</h3>
-            {menuItems.map((item, i) => (
-              <button
-                key={i}
-                onClick={item.onClick}
-                className="group relative flex items-center px-5 py-2.5 bg-white/40 backdrop-blur-md border border-white/40 rounded-full hover:bg-white/80 transition-all text-gray-700 font-medium tracking-wide shadow-sm hover:shadow-md text-sm text-left w-full"
-                style={{
-                  transitionDelay: `${i * 50}ms`
-                }}
-              >
-                <div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-10 transition-opacity" 
-                  style={{ backgroundColor: item.hoverStyles?.bgColor }} 
-                />
-                <div 
-                  className="w-2 h-2 rounded-full mr-3" 
-                  style={{ backgroundColor: item.hoverStyles?.bgColor }} 
-                />
-                {item.label}
-              </button>
-            ))}
+          <div className="relative flex-1 h-full flex items-center overflow-hidden">
+            {/* Transcript Overlay */}
+            {!textInput && (interimTranscript || finalTranscript) && (
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-end overflow-hidden pl-4 pr-3 mask-image-left">
+                 <span className="whitespace-nowrap text-gray-800 font-medium text-right">
+                   {interimTranscript || finalTranscript}
+                 </span>
+              </div>
+            )}
+            
+            <input 
+              type="text"
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              onKeyDown={async (e) => {
+                if (e.key === 'Enter' && textInput.trim()) {
+                  const text = textInput.trim();
+                  setTextInput(''); // Clear immediately for snappy UI
+                  if (!isActive) {
+                    await toggleAgent();
+                    setTimeout(() => {
+                      clientRef.current?.sendText(text);
+                    }, 1000);
+                  } else {
+                    clientRef.current?.sendText(text);
+                  }
+                }
+              }}
+              placeholder={isActive ? (agentState === 'speaking' ? 'Agent is speaking...' : 'Listening... or type here') : 'Got Questions...'}
+              className={`bg-transparent border-none outline-none text-gray-700 pl-4 pr-2 font-medium flex-1 w-full truncate placeholder:text-gray-400 ${
+                !textInput && (interimTranscript || finalTranscript) ? 'text-transparent placeholder:text-transparent' : ''
+              }`}
+            />
           </div>
-        )}
+
+          <button 
+            onClick={toggleAgent}
+            className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+              isActive 
+                ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg animate-pulse' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md'
+            }`}
+          >
+            {isActive ? (
+              <div className="w-4 h-4 rounded-sm bg-white" />
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" x2="12" y1="19" y2="22" />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
+      
+      {/* Permanent Menu to the right (if active) */}
+      {isActive && (
+        <div className="fixed bottom-28 left-1/2 -translate-x-1/2 flex gap-3 min-w-[300px] z-[150] animate-in fade-in slide-in-from-bottom-4 duration-500 flex-wrap justify-center pointer-events-auto">
+          {menuItems.map((item, i) => (
+            <button
+              key={i}
+              onClick={item.onClick}
+              className="group relative flex items-center px-4 py-2 bg-white/80 backdrop-blur-md border border-white/40 rounded-full hover:bg-white transition-all text-gray-700 font-medium tracking-wide shadow-sm hover:shadow-md text-sm"
+              style={{ transitionDelay: `${i * 50}ms` }}
+            >
+              <div 
+                className="w-2 h-2 rounded-full mr-2" 
+                style={{ backgroundColor: item.hoverStyles?.bgColor }} 
+              />
+              {item.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
