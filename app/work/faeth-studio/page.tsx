@@ -1,413 +1,425 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Star } from "lucide-react";
-import BottomDock from "@/components/BottomDock";
+import { useRef } from "react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
-const reviews = [
-  {
-    name: "乔英凯",
-    stars: 5,
-    timeAgo: "11 weeks ago",
-    body: "Aminul is fast responding and professional. I only gave the general ideas and Aminul is able to create my company website in the cleanest and most professional way within 2 days! Highly recommend! Thank you again Aminul!",
-  },
-  {
-    name: "Sayem Nazmuz",
-    stars: 5,
-    timeAgo: "24 weeks ago",
-    body: "Amazing work! They made my personal portfolio page in less than two days and it was phenomenal! Aminul was also very professional and responded quickly to my requests. Highly recommend to anyone making custom portfolios, websites or brand pages.",
-  },
-];
+function FadeIn({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px 0px" });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 36 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-const processSteps = [
-  { step: "01", label: "Outreach", desc: "Identifying the right clients and initiating contact with precision." },
-  { step: "02", label: "Sales", desc: "Understanding the founder's vision, scope, and goals in detail." },
-  { step: "03", label: "Discuss", desc: "Deep-diving into brand, audience, and technical requirements." },
-  { step: "04", label: "Develop", desc: "Building the product with speed, craft, and clarity of intent." },
-  { step: "05", label: "Reiterate", desc: "Rapid feedback loops until every detail is exactly right." },
-  { step: "06", label: "Handoff", desc: "Clean delivery with documentation, access, and ownership transferred." },
-];
-
-import { useState } from "react";
+const SERIF = { fontFamily: "var(--font-tiempos), Georgia, serif" };
+const SANS  = { fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" };
 
 export default function FaethStudioPage() {
-  const [activeTab, setActiveTab] = useState<'product' | 'ui-ux' | 'engineering'>('product');
-
   return (
-    <>
-      <article className="min-h-screen">
+    <article className="min-h-screen" style={SANS}>
 
-        {/* Back Button */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-          <Link href="/work/neucler" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
-            Neucler
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
+      {/* ── NAV ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-6 pb-5 flex items-center justify-between border-b border-foreground/8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[13px] text-foreground/50 hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
+          All projects
+        </Link>
+        <Link
+          href="https://faeth.studio"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-[13px] text-foreground/50 hover:text-foreground transition-colors"
+        >
+          faeth.studio <ArrowUpRight size={13} />
+        </Link>
+      </div>
 
-        {/* Hero */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-5xl"
+      {/* ── HERO ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-10 sm:pt-16 pb-20 sm:pb-28">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-7">
+            Web Design / UI UX — 2024
+          </p>
+          <h1
+            className="text-[44px] sm:text-[64px] md:text-[80px] leading-[1.04] tracking-[-0.03em] text-foreground mb-8 max-w-4xl"
+            style={SERIF}
           >
-            <div className="flex flex-wrap gap-2 mb-6">
-              {["Agency", "Design", "Products"].map((tag) => (
-                <span key={tag} className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">Faeth Studio.</span>{" "}
-              <span className="text-foreground">A website by itself is a self-contained product.</span>
-            </h1>
-            <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
-              Faeth Studio is a direct-to-founder design agency. We don&apos;t just make things look good — we build
-              digital tools that sell, communicate, and grow your business from day one.
-            </p>
+            Design that sells before a single word is read.
+          </h1>
+          <p className="text-[18px] sm:text-[20px] leading-[1.75] text-foreground/55 max-w-2xl">
+            Faeth Studio is a direct-to-founder web design practice. The belief driving every project:
+            a great website doesn&apos;t describe your product — it <em>is</em> your product.
+            It communicates trust, clarity, and credibility within the first three seconds,
+            or it loses the visitor forever.
+          </p>
 
-            {/* CTA Links */}
-            <div className="flex flex-wrap gap-3 mt-8">
+          {/* Meta Strip */}
+          <div className="flex flex-wrap gap-x-10 gap-y-5 mt-12 pt-10 border-t border-foreground/8">
+            {[
+              { label: "My Role", value: "Founder & Design Lead" },
+              { label: "Industry", value: "Web Design & UI UX" },
+              { label: "Year", value: "2024 — Present" },
+              { label: "Team", value: "Solo" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col gap-1.5">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/30 font-medium">{label}</span>
+                <span className="text-[15px] font-medium text-foreground">{value}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ── HERO IMAGE ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
+            <Image
+              src="/project-brand.png"
+              alt="Faeth Studio — web design work"
+              width={2400}
+              height={1200}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 1: THE PHILOSOPHY ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            01 — Design Philosophy
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            A website is the first UX your customer ever has with your brand.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            Most early-stage founders treat their website like a business card — something to point at when someone asks for a link.
+            I treat it like a product. It has users. It has a job to do. It succeeds or fails at that job every single time
+            someone lands on it. The job is always the same: establish credibility, communicate value, and make the next
+            action obvious — in that order, in under three seconds.
+          </p>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-brand.png"
+              alt="Faeth Studio design philosophy"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── PULL QUOTE ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <blockquote
+            className="text-[26px] sm:text-[34px] leading-[1.4] tracking-[-0.015em] text-foreground/70 border-l-[3px] border-foreground/20 pl-8 max-w-3xl"
+            style={SERIF}
+          >
+            &ldquo;The best-designed sites don&apos;t feel designed at all.
+            They just feel obvious.&rdquo;
+          </blockquote>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 2: THE DESIGN PROCESS ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            02 — The Design Process
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            Typography first. Everything else follows.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            Every Faeth project starts with a type system — not a color palette, not a logo, not a layout.
+            Typography is the most expressive tool in web design and the most commonly ignored. The font you choose
+            is the first thing a visitor feels, even before they consciously register it. Serif says authority.
+            Geometric sans says precision. Extended tracking says luxury. I pick typefaces based on what the founder
+            needs the visitor to <em>feel</em>, not what looks trendy. From there, a spatial scale, a color system
+            built from a single hue, and a component library that never needs to be explained — it just works.
+          </p>
+        </FadeIn>
+      </div>
+
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-foreground/8">
+            {[
+              {
+                num: "I",
+                title: "Type as tone",
+                body: "The typeface does 60% of the emotional work before a single word is read. I select and pair fonts before opening a single layout frame.",
+              },
+              {
+                num: "II",
+                title: "Space as hierarchy",
+                body: "Whitespace isn't empty — it's a signal. Tight spacing = energy. Generous spacing = confidence. I use spatial relationships to direct the eye without a single arrow.",
+              },
+              {
+                num: "III",
+                title: "Color as context",
+                body: "I start every project with one primary color and derive the full palette from it. Monochromatic systems are harder to get wrong and easier to get right.",
+              },
+            ].map((p) => (
+              <div key={p.num} className="py-10 px-0 sm:px-10 first:pl-0 last:pr-0">
+                <span className="text-[10px] font-mono text-foreground/25 uppercase tracking-widest block mb-5">
+                  {p.num}
+                </span>
+                <h3 className="text-[19px] font-medium text-foreground leading-snug mb-3">{p.title}</h3>
+                <p className="text-[14px] leading-[1.8] text-foreground/55">{p.body}</p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24 pt-14">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-brand.png"
+              alt="Faeth Studio type system"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 3: UI UX CRAFT ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            03 — UI / UX Craft
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            Micro-interactions are where trust is built or lost.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            The difference between a site that feels premium and one that feels cheap is almost never the visual design —
+            it&apos;s the interaction design. How a button responds to hover. Whether a scroll-triggered animation feels
+            fluid or mechanical. Whether the mobile navigation opens with snap or lag. I spend as much time on the 100ms
+            transitions as I do on the hero layout, because visitors feel those details even when they can&apos;t name them.
+            Every Faeth site ships with custom scroll animations, optimized Core Web Vitals, and zero layout shift — because
+            perceived performance is part of the design.
+          </p>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-brand.png"
+              alt="Faeth Studio interaction design"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 4: CLIENT VOICE ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            04 — Client Voice
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            What founders say when the design actually works.
+          </h2>
+        </FadeIn>
+      </div>
+
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+        <FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[
+              {
+                quote: "Aminul is fast responding and professional. I only gave the general ideas and Aminul is able to create my company website in the cleanest and most professional way within 2 days! Highly recommend!",
+                name: "乔英凯",
+                context: "Company website — delivered in 2 days",
+              },
+              {
+                quote: "Amazing work! They made my personal portfolio page in less than two days and it was phenomenal! Aminul was also very professional and responded quickly to my requests. Highly recommend to anyone making custom portfolios, websites or brand pages.",
+                name: "Sayem Nazmuz",
+                context: "Personal portfolio — full build in 48 hours",
+              },
+            ].map((r) => (
+              <div key={r.name} className="border border-foreground/8 rounded-2xl p-8 bg-foreground/[0.01]">
+                <p
+                  className="text-[18px] sm:text-[20px] leading-[1.65] text-foreground/70 mb-8"
+                  style={SERIF}
+                >
+                  &ldquo;{r.quote}&rdquo;
+                </p>
+                <div className="border-t border-foreground/8 pt-6 flex items-end justify-between">
+                  <div>
+                    <p className="text-[14px] font-medium text-foreground">{r.name}</p>
+                    <p className="text-[12px] text-foreground/35 mt-0.5 font-mono">{r.context}</p>
+                  </div>
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span key={i} className="text-foreground/40 text-[12px]">★</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+
+      {/* ── WHAT I LEARNED ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            05 — What this project taught me
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-14 max-w-3xl"
+            style={SERIF}
+          >
+            Speed and quality are not a trade-off. They&apos;re the same discipline.
+          </h2>
+        </FadeIn>
+      </div>
+
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+        <FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+            {[
+              {
+                n: "01",
+                title: "The brief is never the full story",
+                body: "Founders say 'clean and professional' when they mean 'I want investors to take me seriously.' Learning to hear the real need underneath the brief — and design for that — is what separates a good website from one that actually moves the needle.",
+              },
+              {
+                n: "02",
+                title: "Constraints make better design",
+                body: "The projects with the tightest timelines produced some of my sharpest work. Unlimited time leads to unlimited options, which leads to decision paralysis. A 48-hour deadline forces you to trust your instincts, kill your darlings, and ship what actually matters.",
+              },
+              {
+                n: "03",
+                title: "Mobile-first is not a checkbox",
+                body: "Over 65% of visitors on every site I've built arrive on a phone. Designing desktop-first and adapting down to mobile produces sites that work on both but feel native to neither. I now sketch every layout on a 390px canvas before touching a desktop frame.",
+              },
+              {
+                n: "04",
+                title: "Performance is a design decision",
+                body: "A site that scores 60 on Lighthouse is not a 60% design — it's a failed design. Core Web Vitals directly impact how a site feels to real users. Every font load, every image format, every animation timing decision is a design decision with a performance cost. I track both.",
+              },
+            ].map((item) => (
+              <div key={item.n}>
+                <span className="text-[10px] font-mono text-foreground/25 uppercase tracking-widest block mb-4">{item.n}</span>
+                <h3 className="text-[19px] font-medium text-foreground mb-3 leading-snug">{item.title}</h3>
+                <p className="text-[15px] leading-[1.85] text-foreground/55">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+      </div>
+
+      {/* ── FINAL CTA ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+          <div className="border-t border-foreground/10 pt-14 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-3">
+                10+ startups served — 5 stars on Google
+              </p>
+              <h2
+                className="text-[28px] sm:text-[36px] leading-[1.2] tracking-[-0.02em] text-foreground max-w-lg"
+                style={SERIF}
+              >
+                See Faeth Studio in the wild.
+              </h2>
+            </div>
+            <div className="flex flex-wrap gap-4 shrink-0">
               <Link
                 href="https://faeth.studio"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-foreground text-background text-[13px] font-medium rounded-[5px] hover:bg-foreground/85 active:scale-[0.97] transition-all tracking-tight"
               >
-                faeth.studio <ArrowUpRight size={14} />
+                Visit faeth.studio <ArrowUpRight size={14} />
               </Link>
               <Link
                 href="https://share.google/33RMwEtz7IXJYXFjv"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 border border-foreground/20 text-foreground text-[13px] font-medium rounded-[4px] hover:bg-foreground/5 transition-all active:scale-[0.98] tracking-tight"
+                className="inline-flex items-center gap-2 px-6 py-3.5 border border-foreground/20 text-foreground hover:bg-foreground/5 text-[13px] font-medium rounded-[5px] active:scale-[0.97] transition-all tracking-tight"
               >
                 See Reviews <ArrowUpRight size={14} />
               </Link>
             </div>
-
-            {/* Hero Meta Strip */}
-            <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
-              {[
-                { label: "My Role", value: "Founder & Design Lead" },
-                { label: "Industry", value: "Design Agency" },
-                { label: "Stage", value: "2024 – Present" },
-                { label: "Team Size", value: "Solo" },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
-                  <span className="text-[15px] font-medium text-foreground">{value}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Divider */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="h-px bg-foreground/5 w-full" />
-        </div>
-
-        {/* ── TAB SWITCHER (BELOW HERO) ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 mt-12 mb-8">
-          <div className="flex w-full overflow-hidden border-b border-foreground/10">
-            {(['product', 'ui-ux', 'engineering'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 relative px-6 py-4 text-[13px] tracking-[0.06em] uppercase font-medium transition-colors ${
-                  activeTab === tab
-                    ? "text-foreground font-bold"
-                    : "text-foreground/40 hover:text-foreground/70"
-                }`}
-              >
-                {tab === 'product' ? 'Product' : tab === 'ui-ux' ? 'UI UX' : 'Engineering'}
-                {activeTab === tab && (
-                  <motion.div
-                    layoutId="activeTabFaeth"
-                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
           </div>
         </div>
+      </FadeIn>
 
-        {/* ── CONDITIONAL CONTENT BELOW ── */}
-        <div className="min-h-[50vh]">
-          {activeTab === 'product' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-
-        {/* Process Steps */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-12">
-              The Process
-            </p>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5">
-            {processSteps.map((s, i) => (
-              <motion.div
-                key={s.step}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-                className="bg-background p-8"
-              >
-                <p className="text-[11px] font-mono text-foreground/30 mb-4">{s.step}</p>
-                <h3 className="text-[20px] font-medium tracking-tight text-foreground mb-3">{s.label}</h3>
-                <p className="text-[14px] leading-[1.7] text-foreground/55">{s.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+      {/* ── BOTTOM NAV ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-20 flex items-center justify-between border-t border-foreground/8 pt-8">
+          <Link href="/" className="text-[13px] text-foreground/45 hover:text-foreground transition-colors">
+            ← All projects
+          </Link>
+          <Link href="/work/neucler" className="group flex flex-col items-end gap-1">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/30 font-medium">Back to first</span>
+            <span className="text-[14px] font-medium text-foreground/60 group-hover:text-foreground transition-colors">Neucler →</span>
+          </Link>
         </div>
+      </FadeIn>
 
-        {/* Divider */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="h-px bg-foreground/5 w-full" />
-        </div>
-
-        {/* PM Analogy Section */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl mb-16"
-          >
-            <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
-              Agency Work as Product Management
-            </p>
-            <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.02em] leading-[1.2] text-foreground mb-6">
-              Running an agency is just product management with a different name.
-            </h2>
-            <p className="text-[16px] leading-[1.8] text-foreground/60">
-              Every engagement at Faeth Studio mirrors the end-to-end ownership a product manager exercises over a full product lifecycle — from identifying the right customer to shipping, iterating, and handing off. A website <em>is</em> a product. The client <em>is</em> the user. The problem space is the market.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-foreground/5 border border-foreground/5">
-            {[
-              {
-                agencyPhase: "Finding Customers",
-                pmEquivalent: "Customer Discovery",
-                agencyDesc: "Identifying founders who need design help — cold outreach, referrals, social proof. Knowing which segment to target and why.",
-                pmDesc: "A PM identifies the right user segment, validates their pain, and builds a pipeline of feedback before writing a single spec.",
-              },
-              {
-                agencyPhase: "Sales & Negotiation",
-                pmEquivalent: "Stakeholder Alignment & Scoping",
-                agencyDesc: "Pitching design value, pricing the scope, managing objections, and closing without over-promising.",
-                pmDesc: "A PM aligns executives, engineering, and design on what to build, negotiates trade-offs, and defines the MVP scope before committing resources.",
-              },
-              {
-                agencyPhase: "Understanding Requirements",
-                pmEquivalent: "User Research & PRD",
-                agencyDesc: "Deep discovery: understanding the brand, audience, competitors, and what success looks like for the client.",
-                pmDesc: "A PM runs user interviews, defines personas, maps jobs-to-be-done, and writes a PRD to anchor the team.",
-              },
-              {
-                agencyPhase: "Develop",
-                pmEquivalent: "Sprint Execution",
-                agencyDesc: "Designing, building, and shipping with speed and craft — making decisions and unblocking progress daily.",
-                pmDesc: "A PM works alongside engineers in sprints, writes tickets, unblocks blockers, and keeps the team shipping toward a clear goal.",
-              },
-              {
-                agencyPhase: "Feedback & Reiterate",
-                pmEquivalent: "Iteration Cycles",
-                agencyDesc: "Presenting work, collecting structured feedback, revising rapidly, and repeating until the client signs off.",
-                pmDesc: "A PM runs usability tests, interprets signals, prioritizes fixes, and ships incremental improvements on a tight loop.",
-              },
-              {
-                agencyPhase: "Constant Communication",
-                pmEquivalent: "Stakeholder Management",
-                agencyDesc: "Proactive updates at every stage. No client should ever wonder what's happening — trust is built through transparency.",
-                pmDesc: "A PM sends weekly syncs and executive readouts that keep leadership informed and aligned without slowing the team.",
-              },
-              {
-                agencyPhase: "Handoff",
-                pmEquivalent: "Launch & Knowledge Transfer",
-                agencyDesc: "Clean delivery of all assets, credentials, and documentation. The client owns the product fully and can operate it independently.",
-                pmDesc: "A PM coordinates a launch checklist, writes runbooks, and transfers institutional knowledge so the org can maintain what was built.",
-              },
-              {
-                agencyPhase: "Self-Contained Product",
-                pmEquivalent: "End-to-End Ownership",
-                agencyDesc: "Every website is a complete business asset — it handles outreach, sales, trust-building, and conversion on its own, 24/7.",
-                pmDesc: "A great PM treats every feature as a mini-product with its own user, outcome, and metric. Ownership never ends at ship.",
-              },
-            ].map((row, i) => (
-              <motion.div
-                key={row.agencyPhase}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.05 }}
-                className="bg-background p-8"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-start gap-5 mb-5">
-                  <div className="flex-1">
-                    <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/30 font-medium mb-1">Agency</p>
-                    <p className="text-[16px] font-semibold text-foreground tracking-tight">{row.agencyPhase}</p>
-                  </div>
-                  <div className="hidden sm:block w-px self-stretch bg-foreground/8" />
-                  <div className="flex-1">
-                    <p className="text-[10px] tracking-[0.1em] uppercase text-foreground/30 font-medium mb-1">PM Equivalent</p>
-                    <p className="text-[16px] font-semibold text-foreground/60 tracking-tight">{row.pmEquivalent}</p>
-                  </div>
-                </div>
-                <div className="h-px bg-foreground/5 mb-5" />
-                <div className="flex flex-col sm:flex-row gap-5">
-                  <p className="flex-1 text-[13px] leading-[1.7] text-foreground/55">{row.agencyDesc}</p>
-                  <p className="flex-1 text-[13px] leading-[1.7] text-foreground/35 italic">{row.pmDesc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="h-px bg-foreground/5 w-full" />
-        </div>
-
-        {/* Reviews */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-12">
-              Client Reviews — Google Business Profile
-            </p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {reviews.map((r, i) => (
-              <motion.div
-                key={r.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="border border-foreground/8 rounded-[4px] p-8 bg-foreground/[0.02]"
-              >
-                <div className="flex items-center gap-1 mb-4">
-                  {Array.from({ length: r.stars }).map((_, si) => (
-                    <Star key={si} size={14} className="fill-foreground/40 text-foreground/40" />
-                  ))}
-                </div>
-                <p className="text-[15px] leading-[1.8] text-foreground/70 mb-6 italic">
-                  &ldquo;{r.body}&rdquo;
-                </p>
-                <div className="flex items-center justify-between">
-                  <p className="text-[13px] font-medium text-foreground">{r.name}</p>
-                  <p className="text-[12px] text-foreground/35">{r.timeAgo}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-            </motion.div>
-          )}
-
-          {activeTab === 'ui-ux' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="flex flex-col items-center justify-center py-32 text-center border border-foreground/5 bg-foreground/[0.02] mx-4 sm:mx-8">
-                <p className="text-[13px] font-medium text-foreground/50 uppercase tracking-[0.1em]">Coming Soon</p>
-                <p className="text-[15px] leading-[1.8] text-foreground/40 mt-4 max-w-md">Detailed UI/UX case studies and design systems for Faeth Studio projects are currently being documented.</p>
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'engineering' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="flex flex-col items-center justify-center py-32 text-center border border-foreground/5 bg-foreground/[0.02] mx-4 sm:mx-8">
-                <p className="text-[13px] font-medium text-foreground/50 uppercase tracking-[0.1em]">Coming Soon</p>
-                <p className="text-[15px] leading-[1.8] text-foreground/40 mt-4 max-w-md">Engineering deep dives, performance metrics, and technical architectures are currently being documented.</p>
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Bottom Quote */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-40">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto text-center pt-20 border-t border-foreground/5"
-          >
-            <p className="text-[32px] sm:text-[42px] font-normal leading-[1.25] tracking-[-0.02em] text-foreground italic">
-              &ldquo;Consistent communication, rapid iteration, and a clean handoff — every time.&rdquo;
-            </p>
-            <div className="mt-12 flex justify-center gap-4 flex-wrap">
-              <Link
-                href="https://faeth.studio"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-foreground text-background text-[14px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
-              >
-                Visit faeth.studio <ArrowUpRight size={16} />
-              </Link>
-              <Link
-                href="https://share.google/33RMwEtz7IXJYXFjv"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 border border-foreground/20 text-foreground text-[14px] font-medium rounded-[4px] hover:bg-foreground/5 transition-all active:scale-[0.98] tracking-tight"
-              >
-                See Reviews <ArrowUpRight size={16} />
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Footer Nav */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-          <div className="flex items-center justify-between pt-8 border-t border-foreground/10 pb-24">
-            <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">
-              ← All Projects
-            </Link>
-            <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">
-              Faeth Studio
-            </p>
-          </div>
-        </div>
-
-      </article>
-      <BottomDock />
-    </>
+    </article>
   );
 }

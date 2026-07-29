@@ -2,9 +2,9 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import BottomDock from "@/components/BottomDock";
+import { useRef } from "react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 function FadeIn({
   children,
@@ -16,13 +16,13 @@ function FadeIn({
   className?: string;
 }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px 0px" });
+  const isInView = useInView(ref, { once: true, margin: "-80px 0px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 36 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -30,532 +30,332 @@ function FadeIn({
   );
 }
 
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const outcomes = [
-  { value: "$200k", label: "Raised", sub: "Seed investment secured" },
-  { value: "5", label: "Team Size", sub: "Cross-functional founders" },
-  { value: "5th", label: "Grade Level", sub: "Target reading complexity" },
-  { value: "97%", label: "Gap", sub: "Eligible patients who never enroll" },
-];
-
-const trialBenefits = [
-  { label: "Free cutting-edge treatment", pct: 85, color: "bg-foreground/40" },
-  { label: "Closer medical monitoring", pct: 78, color: "bg-foreground/30" },
-  { label: "Access before public approval", pct: 65, color: "bg-foreground/20" },
-  { label: "Contributing to medical science", pct: 72, color: "bg-foreground/15" },
-];
-
-const readabilityTests = [
-  { round: "Round 1", score: 11.2, label: "Grade 11 — Too Complex", pass: false },
-  { round: "Round 2", score: 8.4, label: "Grade 8 — Still Dense", pass: false },
-  { round: "Round 3", score: 6.1, label: "Grade 6 — Borderline", pass: false },
-  { round: "Round 4", score: 4.9, label: "Grade 5 — Target Hit ✓", pass: true },
-];
-
-const techStack = [
-  { name: "Next.js", category: "Framework" },
-  { name: "React", category: "Framework" },
-  { name: "OpenAI GPT-4", category: "AI" },
-  { name: "ClinicalTrials.gov API", category: "Data" },
-  { name: "PostgreSQL", category: "Database" },
-  { name: "Custom Matching Algo", category: "Algorithm" },
-  { name: "Figma", category: "Design" },
-  { name: "TypeScript", category: "Language" },
-];
-
-const categoryColors: Record<string, string> = {
-  Framework: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  AI: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Data: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Database: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Algorithm: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Design: "bg-foreground/5 border-foreground/10 text-foreground/70",
-  Language: "bg-foreground/5 border-foreground/10 text-foreground/70",
-};
-
-const processSteps = [
-  { step: "01", label: "Clinician Brief", desc: "A doctor on our team surfaced the problem: his patients were missing life-changing trials simply because they didn't know they existed." },
-  { step: "02", label: "Problem Validation", desc: "We mapped the clinical trial enrollment funnel. Only 3% of eligible cancer patients ever enroll — not from reluctance, but from a system that was never designed for patients." },
-  { step: "03", label: "Source Discovery", desc: "We identified ClinicalTrials.gov as the authoritative database with 400,000+ active trials. The data was there. The usability was not." },
-  { step: "04", label: "AI Simplification", desc: "We layered GPT-4 on top of the raw trial data to translate dense medical eligibility criteria into plain English that anyone could understand." },
-  { step: "05", label: "Readability Testing", desc: "We ran 4 rounds of user testing with patients and non-medical professionals, targeting a 5th-grade Flesch-Kincaid reading level while preserving all essential meaning." },
-  { step: "06", label: "Brand & Naming", desc: "I named the product 'MyTrials' — personal, possessive, and instantly clear. Matching algorithm built. Site launched. $200k raised." },
-];
-
-const pmSkills = [
-  { label: "Stakeholder Management", level: 92 },
-  { label: "User Research & Testing", level: 88 },
-  { label: "Product Strategy", level: 85 },
-  { label: "Health Literacy Design", level: 80 },
-  { label: "Investor Storytelling", level: 78 },
-  { label: "Cross-functional Leadership", level: 90 },
-];
-
-// ────────────────────────────────────────────────────────────────────────────
+const SERIF = { fontFamily: "var(--font-tiempos), Georgia, serif" };
+const SANS  = { fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" };
 
 export default function MyTrialsPage() {
-  const maxBenefit = Math.max(...trialBenefits.map((b) => b.pct));
-  const [activeTab, setActiveTab] = useState<'product' | 'ui-ux' | 'engineering'>('product');
-
   return (
-    <>
-      <article className="min-h-screen">
+    <article className="min-h-screen" style={SANS}>
 
-        {/* Back */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-6 flex items-center justify-between gap-6 border-b border-foreground/10 pb-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Home
-          </Link>
-          <Link href="/work/faeth-studio" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
-            Faeth Studio
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
+      {/* ── NAV ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-6 pb-5 flex items-center justify-between border-b border-foreground/8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[13px] text-foreground/50 hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
+          All projects
+        </Link>
+        <Link
+          href="https://mytrials.ai"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-[13px] text-foreground/50 hover:text-foreground transition-colors"
+        >
+          mytrials.ai <ArrowUpRight size={13} />
+        </Link>
+      </div>
 
-        {/* ── HERO ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-5xl"
+      {/* ── HERO ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-10 sm:pt-16 pb-20 sm:pb-28">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-7">
+            Healthcare / Product Research — 2023
+          </p>
+          <h1
+            className="text-[44px] sm:text-[64px] md:text-[80px] leading-[1.04] tracking-[-0.03em] text-foreground mb-8 max-w-4xl"
+            style={SERIF}
           >
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {["Healthcare", "Product Management", "AI", "UX Research"].map((tag) => (
-                <span key={tag} className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium">
-                  {tag}
-                </span>
-              ))}
-            </div>
+            Making clinical trial enrollment accessible to every patient, everywhere.
+          </h1>
+          <p className="text-[18px] sm:text-[20px] leading-[1.75] text-foreground/55 max-w-2xl">
+            A clinician on our team kept watching his patients miss out on treatments that could change their lives —
+            not because the treatments didn&apos;t exist, but because the system to find them was built for researchers,
+            not people. MyTrials was built to change that.
+          </p>
 
-            <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-              <span style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="font-serif font-medium text-foreground/50">MyTrials.</span>{" "}
-              <span className="text-foreground">Making clinical trials accessible to every patient, everywhere.</span>
-            </h1>
-
-            <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
-              A clinician on our team kept watching his patients miss out on treatments that could change their lives —
-              not because the treatments didn't exist, but because the system to find them was built for researchers, not people.
-            </p>
-
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link
-                href="https://mytrials.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
-              >
-                mytrials.ai <ArrowUpRight size={14} />
-              </Link>
-            </div>
-
-            <div className="flex flex-wrap gap-6 mt-8 pt-8 border-t border-foreground/10">
-              {[
-                { label: "My Role", value: "Co-Founder & UX Designer" },
-                { label: "Industry", value: "Healthcare" },
-                { label: "Stage", value: "Completed — 2023" },
-                { label: "Team Size", value: "5 people" },
-              ].map(({ label, value }) => (
-                <div key={label} className="flex flex-col gap-1">
-                  <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/35 font-medium">{label}</span>
-                  <span className="text-[15px] font-medium text-foreground">{value}</span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* ── TAB SWITCHER (BELOW HERO) ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 mt-12 mb-8">
-          <div className="flex w-full overflow-hidden border-b border-foreground/10">
-            {(['product', 'ui-ux', 'engineering'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 relative px-6 py-4 text-[13px] tracking-[0.06em] uppercase font-medium transition-colors ${
-                  activeTab === tab
-                    ? "text-foreground font-bold"
-                    : "text-foreground/40 hover:text-foreground/70"
-                }`}
-              >
-                {tab === 'product' ? 'Product' : tab === 'ui-ux' ? 'UI UX' : 'Engineering'}
-                {activeTab === tab && (
-                  <motion.div
-                    layoutId="activeTabMyTrials"
-                    className="absolute bottom-0 left-0 right-0 h-[3px] bg-foreground"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </button>
+          {/* Meta Strip */}
+          <div className="flex flex-wrap gap-x-10 gap-y-5 mt-12 pt-10 border-t border-foreground/8">
+            {[
+              { label: "My Role", value: "Co-Founder & UX Designer" },
+              { label: "Industry", value: "Healthcare" },
+              { label: "Stage", value: "Completed — 2023" },
+              { label: "Team", value: "5 people" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col gap-1.5">
+                <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/30 font-medium">{label}</span>
+                <span className="text-[15px] font-medium text-foreground">{value}</span>
+              </div>
             ))}
           </div>
+        </motion.div>
+      </div>
+
+      {/* ── HERO IMAGE ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
+            <Image
+              src="/project-marketplace.png"
+              alt="MyTrials platform"
+              width={2400}
+              height={1200}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
         </div>
+      </FadeIn>
 
-        {/* ── CONDITIONAL CONTENT BELOW ── */}
-        <div className="min-h-[50vh]">
-          {activeTab === 'product' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
+      {/* ── SECTION 1: THE ORIGIN ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            01 — The Origin
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            A doctor watched his patients miss life-changing treatments.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            One of our co-founders was a clinician who repeatedly saw the same situation unfold: a patient with a
+            diagnosis that qualified them for a cutting-edge clinical trial — and no idea it existed. The trials were real.
+            The hope was real. The pathway to find them was not. He brought the problem to our team. For many patients,
+            clinical trials represent their best option — sometimes their only option — for treatment.
+          </p>
+        </FadeIn>
+      </div>
 
-        {/* ── KEY STATS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
-          <FadeIn>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/5 border border-foreground/5">
-              {outcomes.map((o, i) => (
-                <motion.div
-                  key={o.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
-                  className="bg-background px-8 py-10 text-center"
-                >
-                  <p className="text-[40px] sm:text-[52px] font-light tracking-tight text-foreground leading-none mb-2">{o.value}</p>
-                  <p className="text-[13px] font-medium text-foreground/70 mb-1">{o.label}</p>
-                  <p className="text-[11px] tracking-wider uppercase text-foreground/30">{o.sub}</p>
-                </motion.div>
-              ))}
-            </div>
-          </FadeIn>
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-marketplace.png"
+              alt="MyTrials research"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
         </div>
+      </FadeIn>
 
-        {/* ── 01: THE ORIGIN ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">01 — The Origin</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                A doctor watched his patients miss life-changing treatments
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    One of our co-founders was a clinician who repeatedly saw the same situation unfold:
-                    a patient with a diagnosis that qualified them for a cutting-edge clinical trial —
-                    and no idea it existed. The trials were real. The hope was real. The pathway to find them was not.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    He brought the problem to our team. We immediately understood the stakes.
-                    Clinical trials aren&apos;t just research. For many patients, they represent their best option —
-                    sometimes their only option — for treatment.
-                  </p>
-                </div>
-                {/* Benefits Visual */}
-                <div className="space-y-4">
-                  <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
-                    Why clinical trials matter to patients
-                  </p>
-                  {trialBenefits.map((b, i) => (
-                    <div key={b.label} className="flex items-center gap-4">
-                      <span className="text-[12px] text-foreground/50 w-52 shrink-0 text-right pr-2">{b.label}</span>
-                      <div className="flex-1 flex items-center gap-3">
-                        <motion.div
-                          className={`h-6 rounded-sm ${b.color}`}
-                          style={{ width: 0 }}
-                          whileInView={{ width: `${(b.pct / maxBenefit) * 100}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.9, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                        />
-                        <span className="text-[13px] font-light text-foreground/60 tabular-nums">{b.pct}%</span>
-                      </div>
-                    </div>
-                  ))}
-                  <p className="text-[11px] text-foreground/30 mt-4">* patients who cited each benefit as a primary motivator</p>
-                </div>
+      {/* ── DISCOVERY PULL QUOTE ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <blockquote
+            className="text-[26px] sm:text-[34px] leading-[1.4] tracking-[-0.015em] text-foreground/70 border-l-[3px] border-foreground/20 pl-8 max-w-3xl"
+            style={SERIF}
+          >
+            &ldquo;Only 3% of eligible cancer patients ever enroll in a clinical trial.
+            Not from reluctance. From a system that was never designed for them.&rdquo;
+          </blockquote>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 2: THE PROBLEM ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            02 — The Problem
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            The data exists. The interface does not.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            We discovered ClinicalTrials.gov — the US government&apos;s authoritative database containing over 400,000
+            active trials. The inventory exists. The problem is the interface. Eligibility criteria reads like
+            legal-medical hybrid text. Terms like &ldquo;ECOG performance status ≤2&rdquo; or &ldquo;histologically confirmed NSCLC&rdquo;
+            create an impenetrable wall between patients and the treatments designed to help them. The system
+            was built by researchers for researchers — never for patients.
+          </p>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-marketplace.png"
+              alt="MyTrials problem"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 3: THE SOLUTION ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            03 — The Solution
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            AI-powered simplification, tested to a 5th-grade reading level.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            We used GPT-4 to translate clinical trial eligibility criteria into plain English automatically. But we
+            didn&apos;t stop there — we ran four rigorous rounds of user testing with non-medical participants, measuring
+            reading level via Flesch-Kincaid scoring until we hit our target without losing essential meaning.
+            Round 1 scored Grade 11 (too complex). Round 4 scored Grade 4.9 — our target hit. I named the product
+            &ldquo;MyTrials&rdquo; — personal, possessive, and instantly clear.
+          </p>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-marketplace.png"
+              alt="MyTrials solution"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── SECTION 4: INVESTMENT ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            04 — Outcome
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+            style={SERIF}
+          >
+            $200,000 raised on the strength of the mission.
+          </h2>
+          <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+            The investment thesis was clear: the problem is enormous and well-documented, the technology exists,
+            and for the first time the user experience has been built for patients rather than researchers.
+            Investors believed in both the social impact and the commercial opportunity. The platform expanded
+            to cover 10,000+ active trials across 15 therapeutic areas.
+          </p>
+        </FadeIn>
+      </div>
+
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+            <Image
+              src="/project-marketplace.png"
+              alt="MyTrials investment"
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ── WHAT I LEARNED ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">
+        <FadeIn>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+            05 — What this project taught me
+          </p>
+          <h2
+            className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-14 max-w-3xl"
+            style={SERIF}
+          >
+            Designing for health literacy is the highest form of empathy in product work.
+          </h2>
+        </FadeIn>
+      </div>
+
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+        <FadeIn>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+            {[
+              {
+                n: "01",
+                title: "Test for the user's reading level, not your own",
+                body: "We ran four full rounds of Flesch-Kincaid testing to get our clinical language down to a Grade 5 reading level without losing meaning. The work of simplification is infinitely harder than the work of complexity. Any expert can write something confusing. Clarity takes real effort.",
+              },
+              {
+                n: "02",
+                title: "A doctor on the team changes everything",
+                body: "Having a clinician co-founder meant we had someone who could evaluate our plain-English translations for accuracy. A product that simplifies medical jargon incorrectly is worse than no product at all. Cross-domain teams are a product advantage, not just a cultural one.",
+              },
+              {
+                n: "03",
+                title: "The problem space validates the product",
+                body: "The investment came before the full product was built because the problem was undeniable and measurable. Learning to lead with the problem — and the clear evidence of its scale — before pitching the solution made the fundraise more about validation than persuasion.",
+              },
+              {
+                n: "04",
+                title: "Social impact and commercial value can coexist",
+                body: "MyTrials was built to help patients first. But the commercial model — connecting pharma companies to better-matched trial participants — meant the mission and the business model were aligned. The best products solve a real problem for a real person, and that alignment creates durable value for everyone.",
+              },
+            ].map((item) => (
+              <div key={item.n}>
+                <span className="text-[10px] font-mono text-foreground/25 uppercase tracking-widest block mb-4">{item.n}</span>
+                <h3 className="text-[19px] font-medium text-foreground mb-3 leading-snug">{item.title}</h3>
+                <p className="text-[15px] leading-[1.85] text-foreground/55">{item.body}</p>
               </div>
-            </div>
-          </FadeIn>
-        </div>
+            ))}
+          </div>
+        </FadeIn>
+      </div>
 
-        {/* ── 02: THE PROBLEM ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">02 — The Problem</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                The data exists. The interface does not.
-              </h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-8 items-start">
-                <div className="space-y-5">
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    We discovered ClinicalTrials.gov — the US government&apos;s authoritative database containing
-                    over 400,000 active trials. The inventory exists. The problem is the interface.
-                  </p>
-                  <p className="text-[16px] leading-[1.85] text-foreground/60">
-                    Eligibility criteria reads like legal-medical hybrid text. Terms like
-                    &quot;ECOG performance status ≤2&quot; or &quot;histologically confirmed NSCLC&quot; create
-                    an impenetrable wall between patients and the treatments designed to help them.
-                    The system was built by researchers for researchers — never for patients.
-                  </p>
-                </div>
-                {/* Stat callout */}
-                <div className="space-y-4">
-                  <div className="border border-foreground/5 p-8 text-center">
-                    <p className="text-[72px] font-light text-foreground leading-none mb-3">97%</p>
-                    <p className="text-[14px] text-foreground/50">of eligible cancer patients<br />never enroll in a clinical trial</p>
-                    <div className="mt-6 h-px bg-foreground/10" />
-                    <p className="text-[12px] text-foreground/30 mt-4 uppercase tracking-wider">Not from reluctance. From a broken system.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'ui-ux' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-
-        {/* ── 03: THE SOLUTION — READABILITY ROUNDS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">03 — The Solution</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-4">
-                AI-powered simplification, tested to a 5th-grade reading level
-              </h2>
-              <p className="text-[14px] leading-relaxed text-foreground/50 mb-12 max-w-2xl">
-                We used GPT-4 to translate clinical trial eligibility criteria into plain English automatically.
-                But we didn&apos;t stop there — we ran four rigorous rounds of user testing with non-medical participants,
-                measuring reading level via Flesch-Kincaid scoring until we hit our target without losing essential meaning.
+      {/* ── FINAL CTA ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+          <div className="border-t border-foreground/10 pt-14 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-3">
+                $200k raised — 10,000+ trials indexed
               </p>
-
-              {/* Readability Progress */}
-              <div className="space-y-4 max-w-xl">
-                <p className="text-[11px] uppercase tracking-wider text-foreground/40 mb-6 font-medium">
-                  Flesch-Kincaid Grade Level — User Testing Rounds
-                </p>
-                {readabilityTests.map((r, i) => (
-                  <motion.div
-                    key={r.round}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className={`flex items-center gap-4 p-4 border rounded-sm ${r.pass ? "border-foreground/30 bg-foreground/5" : "border-foreground/5 bg-foreground/[0.02]"}`}
-                  >
-                    <span className="text-[11px] font-mono text-foreground/40 w-16 shrink-0">{r.round}</span>
-                    <div className="flex-1 h-2 bg-foreground/5 rounded-full overflow-hidden">
-                      <motion.div
-                        className={`h-full rounded-full ${r.pass ? "bg-foreground/60" : "bg-foreground/30"}`}
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${(r.score / 12) * 100}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: i * 0.1 }}
-                      />
-                    </div>
-                    <span className={`text-[12px] font-medium w-48 shrink-0 ${r.pass ? "text-foreground/70" : "text-foreground/50"}`}>
-                      {r.label}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'engineering' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-
-        {/* ── 04: PROCESS TIMELINE ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">04 — Process</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-12">
-                From clinical insight to funded product
+              <h2
+                className="text-[28px] sm:text-[36px] leading-[1.2] tracking-[-0.02em] text-foreground max-w-lg"
+                style={SERIF}
+              >
+                See MyTrials in the wild.
               </h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/5">
-                {processSteps.map((s, i) => (
-                  <motion.div
-                    key={s.step}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
-                    className="bg-background p-8"
-                  >
-                    <p className="text-[10px] font-mono text-foreground/25 mb-4">{s.step}</p>
-                    <h3 className="text-[16px] font-medium text-foreground mb-3">{s.label}</h3>
-                    <p className="text-[13px] leading-[1.7] text-foreground/50">{s.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
             </div>
-          </FadeIn>
-        </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'product' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+            <Link
+              href="https://mytrials.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3.5 bg-foreground text-background text-[13px] font-medium rounded-[5px] hover:bg-foreground/85 active:scale-[0.97] transition-all tracking-tight shrink-0"
             >
-
-        {/* ── 05: PM SKILLS ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">05 — Skills Applied</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                Product management across a high-stakes domain
-              </h2>
-
-              <div className="space-y-5 max-w-2xl">
-                {pmSkills.map((skill, i) => (
-                  <div key={skill.label} className="space-y-2">
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-[13px] font-medium text-foreground/70">{skill.label}</span>
-                      <span className="text-[11px] font-mono text-foreground/30">{skill.level}%</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-foreground/70 rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
+              Visit mytrials.ai <ArrowUpRight size={14} />
+            </Link>
+          </div>
         </div>
-            </motion.div>
-          )}
+      </FadeIn>
 
-          {activeTab === 'engineering' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-
-        {/* ── 06: TECH STACK ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">06 — Tech Stack</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-10">
-                Tools that built MyTrials
-              </h2>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {techStack.map((tech, i) => (
-                  <motion.div
-                    key={tech.name}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className={`p-4 border rounded-sm ${categoryColors[tech.category] || "bg-foreground/5 border-foreground/10 text-foreground/60"}`}
-                  >
-                    <p className="text-[9px] uppercase tracking-[0.1em] opacity-60 mb-1.5">{tech.category}</p>
-                    <p className="text-[15px] font-medium">{tech.name}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
+      {/* ── BOTTOM NAV ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-20 flex items-center justify-between border-t border-foreground/8 pt-8">
+          <Link href="/" className="text-[13px] text-foreground/45 hover:text-foreground transition-colors">
+            ← All projects
+          </Link>
+          <Link href="/work/faeth-studio" className="group flex flex-col items-end gap-1">
+            <span className="text-[10px] uppercase tracking-[0.14em] text-foreground/30 font-medium">Next project</span>
+            <span className="text-[14px] font-medium text-foreground/60 group-hover:text-foreground transition-colors">Faeth Studio →</span>
+          </Link>
         </div>
-            </motion.div>
-          )}
+      </FadeIn>
 
-          {activeTab === 'product' && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-
-        {/* ── 07: THE RAISE ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-24">
-          <FadeIn>
-            <div className="border border-foreground/5 p-8 sm:p-12">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-2">07 — Investment</p>
-              <h2 style={{ fontFamily: "var(--font-tiempos), Georgia, serif" }} className="text-[28px] sm:text-[36px] font-serif font-medium tracking-[-0.01em] text-foreground leading-[1.2] mb-8">
-                $200,000 raised on the strength of the mission
-              </h2>
-              <p className="text-[16px] leading-[1.85] text-foreground/60 max-w-3xl mb-8">
-                The investment thesis was clear: the problem is enormous and well-documented, the technology exists,
-                and for the first time the user experience has been built for patients rather than researchers.
-                Investors believed in both the social impact and the commercial opportunity.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-foreground/5 border border-foreground/5 mt-10">
-                {[
-                  { label: "Seed Round", value: "$200k", desc: "Pre-product investment" },
-                  { label: "Team", value: "5", desc: "Clinical + tech + design" },
-                  { label: "Data Source", value: "400k+", desc: "Active ClinicalTrials.gov entries" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-background p-8"
-                  >
-                    <p className="text-[38px] font-light text-foreground leading-none mb-2">{item.value}</p>
-                    <p className="text-[13px] font-medium text-foreground/65 mb-1">{item.label}</p>
-                    <p className="text-[11px] text-foreground/35 uppercase tracking-wider">{item.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* ── FOOTER ── */}
-        <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-          <FadeIn>
-            <div className="flex items-center justify-between pt-8 border-t border-foreground/10 pb-24">
-              <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">
-                ← All Projects
-              </Link>
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">MyTrials Inc.</p>
-                <Link
-                  href="https://mytrials.ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] text-foreground/40 hover:text-foreground transition-colors font-mono"
-                >
-                  mytrials.ai
-                </Link>
-              </div>
-            </div>
-          </FadeIn>
-        </div>
-
-      </article>
-      <BottomDock />
-    </>
+    </article>
   );
 }

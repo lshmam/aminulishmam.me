@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import BottomDock from "@/components/BottomDock";
+
 
 import Link from "next/link";
 import Image from "next/image";
@@ -61,7 +61,7 @@ export default function AboutPage() {
 
 
       </section>
-      <BottomDock />
+
     </main>
   );
 }

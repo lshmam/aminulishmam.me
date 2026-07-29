@@ -23,9 +23,9 @@ function FadeIn({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 36 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -33,6 +33,8 @@ function FadeIn({
   );
 }
 
+const SERIF = { fontFamily: "var(--font-tiempos), Georgia, serif" };
+const SANS  = { fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" };
 
 export default function ProjectCaseStudy({ 
   project, 
@@ -42,221 +44,198 @@ export default function ProjectCaseStudy({
   hideHeroImage?: boolean;
 }) {
   return (
-    <article className="min-h-screen">
-
-      {/* Back Button */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-foreground/50 hover:text-foreground transition-colors group">
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          Back to Home
+    <article className="min-h-screen pb-20" style={SANS}>
+      
+      {/* ── NAV ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-6 pb-5 flex items-center justify-between border-b border-foreground/8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-[13px] text-foreground/50 hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft size={15} className="group-hover:-translate-x-1 transition-transform" />
+          All projects
         </Link>
+        {project.websiteUrl && (
+          <Link
+            href={project.websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[13px] text-foreground/50 hover:text-foreground transition-colors"
+          >
+            {project.websiteLabel || project.title} <ArrowUpRight size={13} />
+          </Link>
+        )}
       </div>
 
-      {/* ───────────────────────── HERO TEXT ───────────────────────── */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pt-10 pb-16">
+      {/* ── HERO ── */}
+      <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pt-10 sm:pt-16 pb-20 sm:pb-28">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-5xl"
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[11px] tracking-[0.06em] uppercase px-3 py-1.5 rounded-full border border-foreground/15 text-foreground/50 font-medium"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Title + Tagline */}
-          <h1 className="text-[36px] sm:text-[48px] md:text-[56px] font-normal tracking-[-0.02em] leading-[1.1]">
-            <span className="text-foreground/50">{project.title}.</span>{" "}
-            <span className="text-foreground">{project.tagline}</span>
+          <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-7">
+            {project.tags.slice(0, 2).join(" / ")} — {project.year}
+          </p>
+          <h1
+            className="text-[44px] sm:text-[64px] md:text-[80px] leading-[1.04] tracking-[-0.03em] text-foreground mb-8 max-w-4xl"
+            style={SERIF}
+          >
+            {project.tagline || project.title}
           </h1>
-
-          {/* Overview */}
-          <p className="mt-6 text-[16px] sm:text-[18px] leading-[1.8] text-foreground/60 max-w-2xl">
+          <p className="text-[18px] sm:text-[20px] leading-[1.75] text-foreground/55 max-w-2xl">
             {project.overview}
           </p>
+        </motion.div>
+      </div>
 
-          {/* Website Link */}
-          {project.websiteUrl && (
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Link
-                href={project.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 bg-foreground text-background text-[13px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
+      {/* ── HERO IMAGE ── */}
+      {!hideHeroImage && project.images?.[0] && (
+        <FadeIn>
+          <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+            <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
+              <Image
+                src={project.images[0]}
+                alt={`${project.title} hero`}
+                width={2400}
+                height={1200}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+          </div>
+        </FadeIn>
+      )}
+
+      {/* ── DYNAMIC SECTIONS ── */}
+      {project.sections.map((section, idx) => (
+        <div key={idx}>
+          {/* Section Text */}
+          <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
+            <FadeIn>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+                0{idx + 1} — {section.label}
+              </p>
+              <h2
+                className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
+                style={SERIF}
               >
-                {project.websiteLabel || "Visit Website"} <ArrowUpRight size={14} />
-              </Link>
+                {section.heading}
+              </h2>
+              <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
+                {section.body}
+              </p>
+            </FadeIn>
+          </div>
+
+          {/* Section Images */}
+          {section.images?.map((img, imgIdx) => (
+            <FadeIn key={imgIdx}>
+              <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+                <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+                  <Image
+                    src={img}
+                    alt={`${section.label} image ${imgIdx + 1}`}
+                    width={2400}
+                    height={1400}
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      ))}
+
+      {/* ── HIGHLIGHTS GRID ── */}
+      {project.accordion && (
+        <>
+          <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">
+            <FadeIn>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
+                Summary — Project Details
+              </p>
+              <h2
+                className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-14 max-w-3xl"
+                style={SERIF}
+              >
+                Key details from {project.title}.
+              </h2>
+            </FadeIn>
+          </div>
+
+          <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+            <FadeIn>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                {[
+                  { n: "01", title: "The Problem", body: project.accordion.problem },
+                  { n: "02", title: "The Solution", body: project.accordion.solution },
+                  { n: "03", title: "My Role", body: project.accordion.myRole },
+                  { n: "04", title: "Business Impact", body: project.accordion.businessImpact },
+                ].map((item) => (
+                  <div key={item.n}>
+                    <span className="text-[10px] font-mono text-foreground/25 uppercase tracking-widest block mb-4">{item.n}</span>
+                    <h3 className="text-[19px] font-medium text-foreground mb-3 leading-snug">{item.title}</h3>
+                    <p className="text-[15px] leading-[1.85] text-foreground/55">{item.body}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+        </>
+      )}
+
+      {/* ── FINAL CTA ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-28">
+          <div className="border-t border-foreground/10 pt-14 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-8">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-3">
+                Project Outcome
+              </p>
+              <h2
+                className="text-[28px] sm:text-[36px] leading-[1.2] tracking-[-0.02em] text-foreground max-w-xl"
+                style={SERIF}
+              >
+                &ldquo;{project.outcome}&rdquo;
+              </h2>
+            </div>
+            
+            <div className="flex flex-wrap gap-4 shrink-0">
+              {project.websiteUrl && (
+                <Link
+                  href={project.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 bg-foreground text-background text-[13px] font-medium rounded-[5px] hover:bg-foreground/85 active:scale-[0.97] transition-all tracking-tight"
+                >
+                  Visit {project.websiteLabel || project.title} <ArrowUpRight size={14} />
+                </Link>
+              )}
               {project.gbpUrl && (
                 <Link
                   href={project.gbpUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3 border border-foreground/20 text-foreground text-[13px] font-medium rounded-[4px] hover:bg-foreground/5 transition-all active:scale-[0.98] tracking-tight"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 border border-foreground/20 text-foreground bg-transparent hover:bg-foreground/5 text-[13px] font-medium rounded-[5px] active:scale-[0.97] transition-all tracking-tight"
                 >
-                  Google Business Profile <ArrowUpRight size={14} />
+                  View Profile <ArrowUpRight size={14} />
                 </Link>
               )}
             </div>
-          )}
-        </motion.div>
-      </div>
-
-      {/* ───────────────────────── INFO CARDS ───────────────────────── */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-foreground/5 border border-foreground/5 mb-20">
-          {[
-            { label: "The Problem", content: project.accordion.problem },
-            { label: "The Solution", content: project.accordion.solution },
-            { label: "My Role", content: project.accordion.myRole },
-            { label: "Business Impact", content: project.accordion.businessImpact },
-          ].map((item, i) => (
-            <motion.div
-              key={item.label}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.07 }}
-              className="bg-background p-8"
-            >
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/35 font-medium mb-4">
-                {String(i + 1).padStart(2, "0")}
-              </p>
-              <h3 className="text-[17px] font-medium tracking-tight text-foreground mb-3">{item.label}</h3>
-              <p className="text-[14px] leading-[1.75] text-foreground/55">{item.content}</p>
-            </motion.div>
-          ))}
+          </div>
         </div>
-      </div>
+      </FadeIn>
 
-      {/* ───────────────────────── SCROLL-SYNCED SECTIONS ───────────────────────── */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 space-y-40 pb-40">
-        
-        {/* Primary Hero Image */}
-        {!hideHeroImage && (
-          <FadeIn delay={0.2} className="w-full">
-            <div className="w-full overflow-hidden relative border border-foreground/10" style={{ aspectRatio: "16/11" }}>
-              <Image
-                src={project.images[0]}
-                alt={project.title}
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-            </div>
-          </FadeIn>
-        )}
+      {/* ── BOTTOM NAV ── */}
+      <FadeIn>
+        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10 flex items-center justify-between border-t border-foreground/8 pt-8">
+          <Link href="/" className="text-[13px] text-foreground/45 hover:text-foreground transition-colors">
+            ← All projects
+          </Link>
+        </div>
+      </FadeIn>
 
-        {/* Deep Dive Sections: Scroll-Sync Logic */}
-        {project.sections.map((section, index) => (
-          <section key={section.label} className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] xl:grid-cols-2 gap-12 lg:gap-24 items-start">
-            
-            {/* Left Column — Scrolling Content (Multiple Images) */}
-            <div className="space-y-12">
-              {section.images.map((img, imgIdx) => (
-                <FadeIn key={imgIdx}>
-                  <div className="w-full overflow-hidden relative border border-foreground/5" style={{ aspectRatio: "4/3" }}>
-                    <Image
-                      src={img}
-                      alt={`${section.label} — image ${imgIdx + 1}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                    />
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-
-            {/* Right Column — Sticky Text (Fades in and stays fixed) */}
-            <div className="lg:sticky lg:top-32 self-start py-4">
-              <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-6">
-                0{index + 1} — {section.label}
-              </p>
-              
-              {/* Skill Stack for Section */}
-              {section.skills && (
-                <div className="flex flex-wrap gap-1.5 mb-8">
-                  <span className="text-[9px] uppercase tracking-wider text-foreground/30 mr-1 mt-1">Skill Stack</span>
-                  {section.skills.map(skill => (
-                    <span key={skill} className="text-[10px] px-2 py-0.5 rounded-full bg-foreground/[0.03] border border-foreground/5 text-foreground/50">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              <h3 className="text-[32px] sm:text-[40px] font-normal tracking-[-0.01em] text-foreground leading-[1.15] mb-8">
-                {section.heading}
-              </h3>
-              <p className="text-[16px] xl:text-[18px] leading-[1.8] xl:leading-[1.9] text-foreground/60 max-w-2xl">
-                {section.body}
-              </p>
-            </div>
-          </section>
-        ))}
-
-        {/* Outcome Section — Centered Accent */}
-        <FadeIn>
-          <div className="max-w-4xl mx-auto text-center pt-20 pb-10 border-t border-foreground/5">
-            <p className="text-[10px] tracking-[0.12em] uppercase text-foreground/40 font-medium mb-8">
-              Project Outcome
-            </p>
-            <p className="text-[32px] sm:text-[42px] font-normal leading-[1.25] tracking-[-0.02em] text-foreground italic decoration-foreground/20">
-              &ldquo;{project.outcome}&rdquo;
-            </p>
-
-            {/* Redundant Website Link Button — Bottom */}
-            {project.websiteUrl && (
-              <div className="mt-12 flex justify-center">
-                <Link 
-                  href={project.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3.5 bg-foreground text-background text-[14px] font-medium rounded-[4px] hover:bg-foreground/90 transition-all active:scale-[0.98] tracking-tight"
-                >
-                  {project.websiteLabel || "Visit Website"}
-                </Link>
-              </div>
-            )}
-          </div>
-        </FadeIn>
-
-      </div>
-
-      {/* ───────────────────────── FOOTER NAV ───────────────────────── */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-8">
-        <FadeIn>
-          <div className="flex items-center justify-between pt-8 border-t border-foreground/10 pb-24">
-            <Link href="/" className="text-[13px] text-foreground/50 hover:text-foreground transition-colors">
-              ← All Projects
-            </Link>
-            <div className="flex flex-col items-end gap-1">
-              <p className="text-[12px] tracking-[0.08em] uppercase text-foreground/30 font-medium">
-                {project.company}
-              </p>
-              {project.websiteUrl && (
-                <Link 
-                  href={project.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[11px] text-foreground/40 hover:text-foreground transition-colors font-mono"
-                >
-                  {project.websiteLabel || project.websiteUrl.replace("https://", "")}
-                </Link>
-              )}
-            </div>
-          </div>
-        </FadeIn>
-      </div>
     </article>
   );
 }

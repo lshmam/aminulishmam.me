@@ -3,7 +3,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProjectsMasonry from "@/components/ProjectsMasonry";
-import BottomDock from "@/components/BottomDock";
+
 // import VoiceAgent from "@/components/VoiceAgent";
 // import SplashScreen from "@/components/SplashScreen";
 
@@ -26,7 +26,7 @@ export default function Home() {
       </div>
       <Hero />
       <ProjectsMasonry />
-      <BottomDock />
+
 
       {/* Voice Agent UI */}
       {/* <div className="fixed inset-0 pointer-events-none z-50">

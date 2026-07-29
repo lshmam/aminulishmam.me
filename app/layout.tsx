@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import BottomDock from "@/components/BottomDock";
 import "./globals.css";
 
 const sfPro = localFont({
@@ -57,6 +58,7 @@ export default function RootLayout({
       </Script>
       <body className={`${sfPro.variable} ${tiempos.variable} font-sans`}>
         {children}
+        <BottomDock />
         <ConditionalFooter />
         <Analytics />
       </body>

@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import BottomDock from "@/components/BottomDock";
+
 import ProjectCatalog from "@/components/ProjectCatalog";
 
 export const metadata = {
@@ -23,7 +23,7 @@ export default function CatalogPage() {
         </p>
         <ProjectCatalog />
       </section>
-      <BottomDock />
+
     </main>
   );
 }
