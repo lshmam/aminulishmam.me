@@ -95,18 +95,19 @@ export default function MyTrialsPage() {
         </motion.div>
       </div>
 
-      {/* ── HERO IMAGE ── */}
+      {/* ── HERO MEDIA ── */}
       <FadeIn>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
-            <Image
-              src="/project-marketplace.png"
-              alt="MyTrials platform"
-              width={2400}
-              height={1200}
-              className="w-full h-auto"
-              priority
-            />
+          <div className="w-full aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden border border-foreground/8 shadow-xl bg-black">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover object-center"
+            >
+              <source src="/MyTrials.ai Commercial.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </FadeIn>
@@ -132,19 +133,6 @@ export default function MyTrialsPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-marketplace.png"
-              alt="MyTrials research"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── DISCOVERY PULL QUOTE ── */}
       <FadeIn>
@@ -181,19 +169,6 @@ export default function MyTrialsPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-marketplace.png"
-              alt="MyTrials problem"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── SECTION 3: THE SOLUTION ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
@@ -217,19 +192,6 @@ export default function MyTrialsPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-marketplace.png"
-              alt="MyTrials solution"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── SECTION 4: INVESTMENT ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
@@ -252,19 +214,6 @@ export default function MyTrialsPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-marketplace.png"
-              alt="MyTrials investment"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── WHAT I LEARNED ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">

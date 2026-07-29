@@ -2,8 +2,8 @@
 
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { useRef } from "react";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 function FadeIn({
@@ -32,6 +32,66 @@ function FadeIn({
 
 const SERIF = { fontFamily: "var(--font-tiempos), Georgia, serif" };
 const SANS  = { fontFamily: "'Neue Montreal', 'Helvetica Neue', Helvetica, Arial, sans-serif" };
+
+const jimScreens = [
+  { src: "/jim-1.png", caption: "Initial design and core loop mapping for the mobile app." },
+  { src: "/jim-2.png", caption: "Live form-correction interface indicating improper posture." },
+  { src: "/jim-3.png", caption: "Community progression and workout summaries in the alpha launch." },
+];
+
+function JimCarousel() {
+  const [active, setActive] = useState(0);
+
+  return (
+    <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
+      <FadeIn>
+        <div className="relative rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Image
+              src={jimScreens[active].src}
+              alt={jimScreens[active].caption}
+              width={2400}
+              height={1400}
+              className="w-full h-auto"
+            />
+          </motion.div>
+
+          <button
+            onClick={() => setActive((p) => Math.max(p - 1, 0))}
+            disabled={active === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 border border-foreground/10 flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors disabled:opacity-20"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={() => setActive((p) => Math.min(p + 1, jimScreens.length - 1))}
+            disabled={active === jimScreens.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background/80 border border-foreground/10 flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors disabled:opacity-20"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+        <p className="text-[14px] leading-[1.75] text-foreground/45 mt-5 max-w-2xl">
+          {jimScreens[active].caption}
+        </p>
+        <div className="flex items-center gap-2 mt-5">
+          {jimScreens.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`h-1 rounded-full transition-all ${i === active ? "w-8 bg-foreground/60" : "w-2 bg-foreground/15"}`}
+            />
+          ))}
+        </div>
+      </FadeIn>
+    </div>
+  );
+}
 
 export default function JimCoachPage() {
   return (
@@ -95,18 +155,19 @@ export default function JimCoachPage() {
         </motion.div>
       </div>
 
-      {/* ── HERO IMAGE ── */}
+      {/* ── HERO MEDIA ── */}
       <FadeIn>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
-            <Image
-              src="/project-mobile.png"
-              alt="Jim Coach app"
-              width={2400}
-              height={1200}
-              className="w-full h-auto"
-              priority
-            />
+          <div className="w-full aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden border border-foreground/8 shadow-xl bg-black">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover object-center"
+            >
+              <source src="/jim-box.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
       </FadeIn>
@@ -132,19 +193,7 @@ export default function JimCoachPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-mobile.png"
-              alt="Jim Coach user research"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
+
 
       {/* ── DISCOVERY PULL QUOTE ── */}
       <FadeIn>
@@ -180,37 +229,24 @@ export default function JimCoachPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-mobile.png"
-              alt="Jim Coach market research"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
-      {/* ── SECTION 3: DESIGN ── */}
+      {/* ── SECTION 3: FIGMA DESIGN ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
         <FadeIn>
           <p className="text-[11px] uppercase tracking-[0.14em] text-foreground/35 font-medium mb-4">
-            03 — Design
+            03 — Figma Design
           </p>
           <h2
             className="text-[32px] sm:text-[44px] leading-[1.15] tracking-[-0.02em] text-foreground mb-6 max-w-3xl"
             style={SERIF}
           >
-            Designing a &apos;Stern but Friendly&apos; Coach.
+            Nailing the mobile experience in Figma first.
           </h2>
           <p className="text-[17px] leading-[1.85] text-foreground/55 max-w-2xl mb-14">
-            I chose a sporty, stern font to invoke a &lsquo;coach&rsquo; feeling — he&apos;s your friend but he&apos;ll push you.
-            The JC logo resembles an apostrophe, depicting the conversational aspect of the app.
-            The UI was optimized for &lsquo;sweaty hands&rsquo; and quick glances during intense sets.
-            Every screen had to work in under 2 seconds.
+            Before writing any code, I mapped out the entire mobile application directly in Figma. 
+            The interface had a strict requirement: it needed to be optimized for &lsquo;sweaty hands&rsquo; and quick glances during intense sets. 
+            I used a sporty, stern typography style to invoke a &lsquo;coach&rsquo; feeling — someone who is your friend but will push you to your limits. 
+            Every single interaction was prototyped in Figma to ensure the core loop of tracking form and receiving immediate feedback felt completely frictionless on a mobile device.
           </p>
         </FadeIn>
       </div>
@@ -219,8 +255,8 @@ export default function JimCoachPage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
           <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
             <Image
-              src="/project-mobile.png"
-              alt="Jim Coach UI design"
+              src="/Jim-figma.png"
+              alt="Jim Coach Figma mobile design"
               width={2400}
               height={1400}
               className="w-full h-auto"
@@ -251,19 +287,7 @@ export default function JimCoachPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-mobile.png"
-              alt="Jim Coach alpha launch"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
+      <JimCarousel />
 
       {/* ── WHAT I LEARNED ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import ObjectBurst from "@/components/animations/PrismaticBurst";
 
 function FadeIn({
   children,
@@ -164,18 +165,23 @@ export default function NeuclerPage() {
         </motion.div>
       </div>
 
-      {/* ── LOGO IMAGE (first thing) ── */}
+      {/* ── HERO MEDIA (Logo + Animation) ── */}
       <FadeIn>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="w-full aspect-[16/7] rounded-2xl overflow-hidden border border-foreground/8 bg-black flex items-center justify-center shadow-xl">
-            <Image
-              src="/Frame 79.png"
-              alt="Neucler logo"
-              width={260}
-              height={260}
-              className="object-contain w-[160px] sm:w-[220px]"
-              priority
-            />
+          <div className="w-full aspect-[16/7] rounded-2xl overflow-hidden border border-foreground/8 bg-black flex items-center justify-center shadow-xl relative">
+            <div className="absolute inset-0 z-0">
+              <ObjectBurst colors={["#FF5733", "#33FFCE", "#335BFF", "#F033FF"]} />
+            </div>
+            <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+              <Image
+                src="/Frame 79.png"
+                alt="Neucler logo"
+                width={260}
+                height={260}
+                className="object-contain w-[160px] sm:w-[220px]"
+                priority
+              />
+            </div>
           </div>
         </div>
       </FadeIn>

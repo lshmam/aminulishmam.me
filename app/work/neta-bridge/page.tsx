@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { ParticlesBackground } from "@/components/animations/particles-background";
 
 function FadeIn({
   children,
@@ -95,18 +96,18 @@ export default function NetaBridgePage() {
         </motion.div>
       </div>
 
-      {/* ── HERO IMAGE ── */}
+      {/* ── HERO MEDIA ── */}
       <FadeIn>
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="w-full rounded-2xl overflow-hidden border border-foreground/8 shadow-xl">
-            <Image
-              src="/project-brand.png"
-              alt="Neta Bridge platform"
-              width={2400}
-              height={1200}
-              className="w-full h-auto"
-              priority
-            />
+          <div className="w-full aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden border border-foreground/8 shadow-xl relative bg-black">
+            <div className="absolute inset-0 z-0">
+              <ParticlesBackground id="neta-particles-page" />
+            </div>
+            <div className="absolute inset-0 z-10 flex items-center justify-center font-mono tracking-widest uppercase">
+              <h3 className="text-[32px] sm:text-[48px] md:text-[64px] font-bold text-white mix-blend-difference">
+                NETABRIDGE
+              </h3>
+            </div>
           </div>
         </div>
       </FadeIn>
@@ -137,7 +138,7 @@ export default function NetaBridgePage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
           <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
             <Image
-              src="/project-brand.png"
+              src="/neta-1.png"
               alt="Neta Bridge contact pipeline"
               width={2400}
               height={1400}
@@ -185,7 +186,7 @@ export default function NetaBridgePage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
           <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
             <Image
-              src="/project-brand.png"
+              src="/neta-3.png"
               alt="Neta Bridge deal tracking"
               width={2400}
               height={1400}
@@ -220,8 +221,8 @@ export default function NetaBridgePage() {
         <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
           <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
             <Image
-              src="/project-brand.png"
-              alt="Neta Bridge MVP"
+              src="/neta-4.png"
+              alt="Neta Bridge build process and MVP"
               width={2400}
               height={1400}
               className="w-full h-auto"
@@ -252,19 +253,6 @@ export default function NetaBridgePage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-brand.png"
-              alt="Neta Bridge competitive landscape"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── WHAT I LEARNED ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-10">
