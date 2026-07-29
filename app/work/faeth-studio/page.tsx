@@ -96,24 +96,7 @@ export default function FaethStudioPage() {
         </motion.div>
       </div>
 
-      {/* ── HERO MEDIA ── */}
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="w-full aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden border border-foreground/8 shadow-xl relative bg-black">
-            <div className="absolute inset-0 flex items-center justify-center font-mono tracking-[0.4em] uppercase">
-              <div className="flex flex-col items-center gap-3 sm:gap-4">
-                <h3 className="text-[28px] sm:text-[40px] md:text-[56px] font-bold text-white text-center">
-                  FAETH STUDIO
-                </h3>
-                <div className="h-[1px] w-16 sm:w-24 bg-white/30" />
-                <span className="text-[10px] sm:text-[13px] text-white/50 tracking-[0.2em] text-center">
-                  0-TO-1 DESIGN AGENCY
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </FadeIn>
+
 
       {/* ── SECTION 1: THE PHILOSOPHY ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
@@ -136,19 +119,6 @@ export default function FaethStudioPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-brand.png"
-              alt="Faeth Studio design philosophy"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── PULL QUOTE ── */}
       <FadeIn>
@@ -218,19 +188,6 @@ export default function FaethStudioPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24 pt-14">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-brand.png"
-              alt="Faeth Studio type system"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── SECTION 3: UI UX CRAFT ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
@@ -255,19 +212,6 @@ export default function FaethStudioPage() {
         </FadeIn>
       </div>
 
-      <FadeIn>
-        <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-24">
-          <div className="rounded-2xl overflow-hidden border border-foreground/8 shadow-2xl">
-            <Image
-              src="/project-brand.png"
-              alt="Faeth Studio interaction design"
-              width={2400}
-              height={1400}
-              className="w-full h-auto"
-            />
-          </div>
-        </div>
-      </FadeIn>
 
       {/* ── SECTION 4: CLIENT VOICE ── */}
       <div className="w-full max-w-[1200px] mx-auto px-5 sm:px-8 pb-8">
